@@ -1,4 +1,4 @@
-package com.dq.aqaranth.domain.tests.conroller;
+package com.dq.aqaranth.domain.tests.controller;
 
 import com.dq.aqaranth.domain.tests.dto.TestDTO;
 import com.dq.aqaranth.domain.tests.service.TestService;
@@ -19,8 +19,8 @@ public class TestController {
     public TestDTO test() {
         return TestDTO.builder()
                 .id(1L)
-                .title("MIN JUN JON JAL")
-                .content("BAN BAK BUL GA")
+                .title("Test")
+                .content("Title")
                 .build();
     }
 
