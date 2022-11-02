@@ -35,6 +35,11 @@ public class EmpServiceImpl implements EmpService {
 
     @Override
     public Integer empModify(EmpUpdateDTO empUpdateDTO){
-        return mapper.empUpdate(empUpdateDTO);
+        return mapper.empModify(empUpdateDTO);
+    }
+
+    @Override
+    public Integer empDelete(Long empNo) {
+        return mapper.empDelete(empNo);
     }
 }

@@ -65,4 +65,9 @@ public class EmpControllerTests {
 
         log.info(controller.empModify(empUpdateDTO));
     }
+
+    @Test
+    void empDeleteTest() {
+        log.info(controller.empDelete(13L));
+    }
 }

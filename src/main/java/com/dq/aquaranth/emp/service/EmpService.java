@@ -13,4 +13,6 @@ public interface EmpService {
     Integer empInsert(EmpDTO empDTO);
 
     Integer empModify(EmpUpdateDTO empUpdateDTO);
+
+    Integer empDelete(Long empNo);
 }

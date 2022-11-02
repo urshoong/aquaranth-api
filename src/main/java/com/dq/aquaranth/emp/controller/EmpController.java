@@ -39,4 +39,10 @@ public class EmpController {
         return modify;
     }
 
+    @DeleteMapping(value = "/delete/{empNo}")
+    public Integer empDelete(@PathVariable("empNo") Long empNo){
+        int delete = service.empDelete(empNo);
+        return delete;
+    }
+
 }

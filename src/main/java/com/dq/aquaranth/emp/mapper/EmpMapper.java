@@ -14,4 +14,6 @@ public interface EmpMapper {
     Integer empInsert(EmpDTO empDTO);
 
     Integer empModify(EmpUpdateDTO empUpdateDTO);
+
+    Integer empDelete(Long empNo);
 }

@@ -64,4 +64,9 @@ public class EmpMapperTests {
 
         log.info(mapper.empModify(empUpdateDTO));
     }
+
+    @Test
+    void empDeleteTest() {
+        log.info(mapper.empDelete(11L));
+    }
 }

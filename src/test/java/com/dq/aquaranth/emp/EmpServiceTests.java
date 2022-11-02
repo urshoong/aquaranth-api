@@ -30,10 +30,11 @@ public class EmpServiceTests {
     }
 
     @Test
-    void empCreateTest(){
+    void empInsertTest(){
         EmpDTO empDTO = EmpDTO.builder()
                 .empName("Annie")
                 .username("user09")
+                .password("userpwd09")
                 .gender("여성")
                 .empPhone("01088776655")
                 .empAddress("에버랜드")
@@ -62,5 +63,10 @@ public class EmpServiceTests {
                 .build();
 
         log.info(service.empModify(empUpdateDTO));
+    }
+
+    @Test
+    void empDeleteTest() {
+        log.info(service.empDelete(12L));
     }
 }
