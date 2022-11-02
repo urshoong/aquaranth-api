@@ -1,9 +1,6 @@
 package com.dq.aquaranth.emp.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -13,6 +10,7 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
 public class EmpDTO {
     private Long empNo;
     private String empName, username, password, gender, empPhone, empAddress, empProfile, email;

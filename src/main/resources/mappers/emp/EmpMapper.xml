@@ -10,7 +10,14 @@
     </select>
 
     <select id="empSelectOne" resultType="com.dq.aquaranth.emp.dto.EmpDTO">
-        select * from emp where emp_no = #{emp_no}
+        select * from emp where emp_no = #{empNo}
     </select>
+
+    <insert id="empInsert">
+        insert into emp (emp_name, username, password, gender, emp_phone, emp_address, emp_profile, email
+        ,last_login_time, last_login_ip ,first_hiredate, last_retiredate)
+        values (#{empName}, #{username}, #{password}, #{gender}, #{empPhone}, #{empAddress}, #{empProfile}, #{email}
+        ,#{lastLoginTime}, #{lastLoginIp} ,#{firstHiredate}, #{lastRetiredate})
+    </insert>
 
 </mapper>

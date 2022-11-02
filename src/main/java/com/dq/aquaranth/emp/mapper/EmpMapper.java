@@ -8,7 +8,9 @@ import java.util.List;
 public interface EmpMapper {
     List<EmpDTO> empList();
 
-    EmpDTO empSelectOne(Long emp_no);
+    EmpDTO empSelectOne(Long empNo);
+
+    Integer empInsert(EmpDTO empDTO);
 
 
 }

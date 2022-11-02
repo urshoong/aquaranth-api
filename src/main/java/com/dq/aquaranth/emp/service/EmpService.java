@@ -7,5 +7,7 @@ import java.util.List;
 public interface EmpService {
     List<EmpDTO> empList();
 
-    EmpDTO empRead(Long emp_no);
+    EmpDTO empRead(Long empNo);
+
+    Integer empInsert(EmpDTO empDTO);
 }

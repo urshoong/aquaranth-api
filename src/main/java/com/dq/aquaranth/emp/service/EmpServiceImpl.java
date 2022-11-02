@@ -13,7 +13,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Log4j2
 @ToString
-public class EmpImpl implements EmpService {
+public class EmpServiceImpl implements EmpService {
 
     private final EmpMapper mapper;
 
@@ -23,7 +23,12 @@ public class EmpImpl implements EmpService {
     }
 
     @Override
-    public EmpDTO empRead(Long emp_no) {
-        return mapper.empSelectOne(emp_no);
+    public EmpDTO empRead(Long empNo) {
+        return mapper.empSelectOne(empNo);
+    }
+
+    @Override
+    public Integer empInsert(EmpDTO empDTO){
+        return mapper.empInsert(empDTO);
     }
 }
