@@ -1,4 +1,4 @@
-package com.dq.aquaranth.mapper;
+package com.dq.aquaranth.employee.mapper;
 
 import com.dq.aquaranth.employee.mapper.EmployeeMapper;
 import lombok.extern.log4j.Log4j2;

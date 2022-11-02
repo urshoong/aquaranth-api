@@ -1,4 +1,4 @@
-package com.dq.aquaranth.domain.menu.service;
+package com.dq.aquaranth.menu.service;
 
 import com.dq.aquaranth.menu.service.MenuService;
 import lombok.extern.log4j.Log4j2;

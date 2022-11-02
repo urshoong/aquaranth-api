@@ -1,4 +1,4 @@
-package com.dq.aquaranth.domain.menu.mapper;
+package com.dq.aquaranth.menu.mapper;
 
 import com.dq.aquaranth.menu.dto.response.MenuResponse;
 import com.dq.aquaranth.menu.mapper.MenuMapper;
