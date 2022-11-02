@@ -7,6 +7,6 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @Log4j2
-@MapperScan(basePackages = {"com.dq.aqaranth.domain.**.mapper"})
+@MapperScan(basePackages = {"com.dq.aquaranth.**.mapper"})
 public class RootConfig {
 }

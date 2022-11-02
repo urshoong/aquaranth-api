@@ -3,7 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.dq.aqaranth.domain.company.mapper.CompanyMapper">
+<mapper namespace="com.dq.aquaranth.company.mapper.CompanyMapper">
 
     <!--회사코드, 회사명, 대표자명 출력-->
     <select id="companyList" resultType="com.dq.aquaranth.company.dto.CompanyListDTO">
