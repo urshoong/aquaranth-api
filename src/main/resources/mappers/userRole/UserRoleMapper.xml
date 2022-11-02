@@ -3,10 +3,16 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.dq.aqaranth.domain.tests.mapper.UserRoleMapper">
+<mapper namespace="com.dq.aquaranth.userRole.mapper.UserRoleMapper">
 
-    <select id="getTime" resultType="java.lang.String">
-        select now()
+    <select id="getCompanyList" resultType="com.dq.aquaranth.company.dto.CompanyDTO">
+        select company_no, company_name
+        from company
+        where role_group_use = true
+        and company_name = ${company_name}
+        <if test="search != null">
+            and role_group_name like concat('%', ${serach}, '%');
+        </if>
     </select>
 
 </mapper>
