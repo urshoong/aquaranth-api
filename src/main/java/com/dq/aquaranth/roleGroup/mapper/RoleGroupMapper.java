@@ -1,9 +1,6 @@
 package com.dq.aquaranth.roleGroup.mapper;
 
-import com.dq.aquaranth.roleGroup.dto.RoleGroupDTO;
-import com.dq.aquaranth.roleGroup.dto.RoleGroupInsertDTO;
-import com.dq.aquaranth.roleGroup.dto.RoleGroupNameUpdateDTO;
-import com.dq.aquaranth.roleGroup.dto.RoleGroupUseUpdateDTO;
+import com.dq.aquaranth.roleGroup.dto.*;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
@@ -35,8 +32,17 @@ public interface RoleGroupMapper {
     Long insert(RoleGroupDTO insertDTO);
 
     /**
+     * 권한그룹번호로 권한그룹을 수정합니다.
+     * @param updateDTO : 수정할 권한그룹 객체
+     */
+    @Update("update role_group " +
+            "set role_group_name = #{roleGroupName} ," +
+            "role_group_use = #{roleGroupUse} " +
+            "where role_group_no = #{roleGroupNo}")
+    void update(RoleGroupUpdateDTO updateDTO);
+
+    /**
      * 권한그룹번호로 권한그룹명 수정하기
-     *
      * @param updateDTO : 수정할 권한그룹 객체 (권한그룹번호, 권한그룹명)
      */
     @Update("update role_group " +
@@ -53,7 +59,6 @@ public interface RoleGroupMapper {
             "set role_group_use = #{roleGroupUse} " +
             "where role_group_no = #{roleGroupNo}")
     void updateRoleGroupUse(RoleGroupUseUpdateDTO updateDTO);
-
 
     /**
      * 권한그룹번호로 권한그룹을 삭제합니다.

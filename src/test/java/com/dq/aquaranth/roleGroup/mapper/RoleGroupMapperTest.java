@@ -1,9 +1,6 @@
 package com.dq.aquaranth.roleGroup.mapper;
 
-import com.dq.aquaranth.roleGroup.dto.RoleGroupDTO;
-import com.dq.aquaranth.roleGroup.dto.RoleGroupInsertDTO;
-import com.dq.aquaranth.roleGroup.dto.RoleGroupNameUpdateDTO;
-import com.dq.aquaranth.roleGroup.dto.RoleGroupUseUpdateDTO;
+import com.dq.aquaranth.roleGroup.dto.*;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -51,6 +48,31 @@ class RoleGroupMapperTest {
         // then
         assertNotNull(insertDTO.getRoleGroupNo());
         log.info(insertDTO);
+    }
+
+    @Test
+    @DisplayName("권한그룹번호로 권한그룹명 수정하기")
+    void update() {
+        // given
+        Long updateRoleGroupNo = 2L;
+        String updateRoleGroupName = "update 권한그룹명1"; // 바꿀 권한그룹명
+        RoleGroupDTO beforeDTO = roleGroupMapper.findById(updateRoleGroupNo); // 수정전  권한그룹
+        boolean updateRoleGroupUse = !beforeDTO.isRoleGroupUse(); // 기존 사용여부의 반대로
+
+        RoleGroupUpdateDTO updateDTO = RoleGroupUpdateDTO.builder()
+                .roleGroupNo(updateRoleGroupNo)
+                .roleGroupName(updateRoleGroupName)
+                .roleGroupUse(updateRoleGroupUse)
+                .build();
+
+        // when
+        roleGroupMapper.update(updateDTO);
+
+        // then
+        // 권한 그룹 수정이 일어나지 않았다면, updateRoleGroupNo에 대한 권한그룹명은 그대로일 것이다.
+        RoleGroupDTO afterDTO = roleGroupMapper.findById(updateRoleGroupNo);
+        assertEquals(afterDTO.getRoleGroupName(), updateRoleGroupName);
+        assertNotEquals(beforeDTO.isRoleGroupUse(), afterDTO.isRoleGroupUse());
     }
 
     @Test
