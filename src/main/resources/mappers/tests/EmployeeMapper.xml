@@ -5,7 +5,7 @@
 
 <mapper namespace="com.dq.aqaranth.domain.employee.mapper.EmployeeMapper">
 
-    <select id="employeeList" resultType="com.dq.aqaranth.domain.employee.dto.EmployeeDTO">
+    <select id="employeeList" resultType="com.dq.aquaranth.employee.dto.EmployeeDTO">
         select * from emp
     </select>
 

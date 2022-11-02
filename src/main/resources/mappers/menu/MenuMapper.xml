@@ -4,11 +4,11 @@
 
 <mapper namespace="com.dq.aqaranth.domain.menu.mapper.MenuMapper">
 
-    <select id="findAllMenus" resultType="com.dq.aqaranth.domain.menu.dto.response.MenuResponse">
+    <select id="findAllMenus" resultType="com.dq.aquaranth.menu.dto.response.MenuResponse">
         SELECT * FROM menu
     </select>
 
-    <select id="findByGnBMenus" resultType="com.dq.aqaranth.domain.menu.dto.response.MenuResponse">
+    <select id="findByGnBMenus" resultType="com.dq.aquaranth.menu.dto.response.MenuResponse">
         SELECT * FROM menu WHERE upper_menu_no IS NULL
     </select>
 

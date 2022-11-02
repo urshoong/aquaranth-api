@@ -6,7 +6,7 @@
 <mapper namespace="com.dq.aqaranth.domain.company.mapper.CompanyMapper">
 
     <!--회사코드, 회사명, 대표자명 출력-->
-    <select id="companyList" resultType="com.dq.aqaranth.domain.company.dto.CompanyListDTO">
+    <select id="companyList" resultType="com.dq.aquaranth.company.dto.CompanyListDTO">
         select company_no, company_name, owner_name, company_use from company;
     </select>
 
