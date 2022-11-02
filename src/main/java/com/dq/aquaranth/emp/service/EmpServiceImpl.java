@@ -1,6 +1,7 @@
 package com.dq.aquaranth.emp.service;
 
 import com.dq.aquaranth.emp.dto.EmpDTO;
+import com.dq.aquaranth.emp.dto.EmpUpdateDTO;
 import com.dq.aquaranth.emp.mapper.EmpMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
@@ -24,11 +25,16 @@ public class EmpServiceImpl implements EmpService {
 
     @Override
     public EmpDTO empRead(Long empNo) {
-        return mapper.empSelectOne(empNo);
+        return mapper.empRead(empNo);
     }
 
     @Override
     public Integer empInsert(EmpDTO empDTO){
         return mapper.empInsert(empDTO);
+    }
+
+    @Override
+    public Integer empModify(EmpUpdateDTO empUpdateDTO){
+        return mapper.empUpdate(empUpdateDTO);
     }
 }

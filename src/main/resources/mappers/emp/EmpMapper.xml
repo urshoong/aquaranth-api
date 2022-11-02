@@ -6,18 +6,25 @@
 <mapper namespace="com.dq.aquaranth.emp.mapper.EmpMapper">
 
     <select id="empList" resultType="com.dq.aquaranth.emp.dto.EmpDTO">
-        select * from emp where emp_no > 0
+        SELECT * FROM emp WHERE emp_no > 0
     </select>
 
-    <select id="empSelectOne" resultType="com.dq.aquaranth.emp.dto.EmpDTO">
-        select * from emp where emp_no = #{empNo}
+    <select id="empRead" resultType="com.dq.aquaranth.emp.dto.EmpDTO">
+        SELECT * FROM emp WHERE emp_no = #{empNo}
     </select>
 
     <insert id="empInsert">
-        insert into emp (emp_name, username, password, gender, emp_phone, emp_address, emp_profile, email
+        INSERT INTO emp (emp_name, username, password, gender, emp_phone, emp_address, emp_profile, email
         ,last_login_time, last_login_ip ,first_hiredate, last_retiredate)
-        values (#{empName}, #{username}, #{password}, #{gender}, #{empPhone}, #{empAddress}, #{empProfile}, #{email}
+        VALUES (#{empName}, #{username}, #{password}, #{gender}, #{empPhone}, #{empAddress}, #{empProfile}, #{email}
         ,#{lastLoginTime}, #{lastLoginIp} ,#{firstHiredate}, #{lastRetiredate})
     </insert>
+
+    <update id="empModify">
+        UPDATE emp SET emp_name = #{empName}, emp_phone = #{empPhone}
+        , emp_address = #{empAddress}, emp_profile = #{empProfile}, email = #{email}, last_login_time = #{lastLoginTime}
+        , last_login_ip = #{lastLoginIp}, last_retiredate = #{lastRetiredate}
+        WHERE emp_no = #{empNo}
+    </update>
 
 </mapper>

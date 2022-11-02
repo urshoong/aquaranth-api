@@ -1,6 +1,7 @@
 package com.dq.aquaranth.emp;
 
 import com.dq.aquaranth.emp.dto.EmpDTO;
+import com.dq.aquaranth.emp.dto.EmpUpdateDTO;
 import com.dq.aquaranth.emp.mapper.EmpMapper;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
@@ -24,8 +25,8 @@ public class EmpMapperTests {
     }
 
     @Test
-    void empSelectOneTest(){
-        log.info(mapper.empSelectOne(1L));
+    void empReadTest(){
+        log.info(mapper.empRead(1L));
     }
 
     @Test
@@ -45,5 +46,22 @@ public class EmpMapperTests {
                 .lastRetiredate(null)
                 .build();
         log.info(mapper.empInsert(empDTO));
+    }
+
+    @Test
+    void empModifyTest(){
+        EmpUpdateDTO empUpdateDTO = EmpUpdateDTO.builder()
+                .empName("정수정")
+                .empPhone("01011111111")
+                .empAddress("수정시 수정구")
+                .empProfile("profileUpdate")
+                .email("userUpdate01@naver.com")
+                .lastLoginTime(now())
+                .lastLoginIp("192.168.500.999")
+                .lastRetiredate(LocalDate.now())
+                .empNo(10L)
+                .build();
+
+        log.info(mapper.empModify(empUpdateDTO));
     }
 }

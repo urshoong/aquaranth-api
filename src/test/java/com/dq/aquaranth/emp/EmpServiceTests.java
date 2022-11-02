@@ -1,6 +1,7 @@
 package com.dq.aquaranth.emp;
 
 import com.dq.aquaranth.emp.dto.EmpDTO;
+import com.dq.aquaranth.emp.dto.EmpUpdateDTO;
 import com.dq.aquaranth.emp.service.EmpService;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
@@ -24,16 +25,15 @@ public class EmpServiceTests {
     }
 
     @Test
-    void empRead(){
+    void empReadTest(){
         log.info(service.empRead(1L));
     }
 
     @Test
-    void empCreate(){
+    void empCreateTest(){
         EmpDTO empDTO = EmpDTO.builder()
                 .empName("Annie")
                 .username("user09")
-                .password("userpwd09")
                 .gender("여성")
                 .empPhone("01088776655")
                 .empAddress("에버랜드")
@@ -45,5 +45,22 @@ public class EmpServiceTests {
                 .lastRetiredate(null)
                 .build();
         log.info(service.empInsert(empDTO));
+    }
+
+    @Test
+    void empModifyTest(){
+        EmpUpdateDTO empUpdateDTO = EmpUpdateDTO.builder()
+                .empName("양당근")
+                .empPhone("01011112222")
+                .empAddress("수정시 수정구")
+                .empProfile("profileUpdate")
+                .email("userUpdate02@naver.com")
+                .lastLoginTime(now())
+                .lastLoginIp("192.168.500.999")
+                .lastRetiredate(LocalDate.now())
+                .empNo(10L)
+                .build();
+
+        log.info(service.empModify(empUpdateDTO));
     }
 }

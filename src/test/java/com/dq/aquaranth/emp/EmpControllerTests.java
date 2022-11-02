@@ -2,6 +2,7 @@ package com.dq.aquaranth.emp;
 
 import com.dq.aquaranth.emp.controller.EmpController;
 import com.dq.aquaranth.emp.dto.EmpDTO;
+import com.dq.aquaranth.emp.dto.EmpUpdateDTO;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,5 +47,22 @@ public class EmpControllerTests {
                 .build();
 
         log.info(controller.empInsert(empDTO));
+    }
+
+    @Test
+    void empModifyTest(){
+        EmpUpdateDTO empUpdateDTO = EmpUpdateDTO.builder()
+                .empName("장조아")
+                .empPhone("01077777777")
+                .empAddress("수정시 수정구")
+                .empProfile("profileUpdate")
+                .email("userUpdate02@naver.com")
+                .lastLoginTime(now())
+                .lastLoginIp("192.168.500.999")
+                .lastRetiredate(LocalDate.now())
+                .empNo(10L)
+                .build();
+
+        log.info(controller.empModify(empUpdateDTO));
     }
 }
