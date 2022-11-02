@@ -14,4 +14,5 @@ import java.time.LocalDate;
 public class CompanyListDTO {
     private Long companyNo;
     private String companyName, ownerName;
+    private Boolean companyUse;
 }

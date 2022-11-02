@@ -14,4 +14,5 @@ public class CompanyDTO {
     private Long companyNo;
     private String companyName, companyAddress, companyTel, ownerName, businessNumber;
     private LocalDate foundingDate;
+    private Boolean companyUse;
 }
