@@ -1,6 +1,6 @@
-package com.dq.aquaranth.roleGroup.tests.service;
+package com.dq.aquaranth.tests.service;
 
-import com.dq.aquaranth.roleGroup.tests.mapper.TimeMapper;
+import com.dq.aquaranth.tests.mapper.TimeMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;

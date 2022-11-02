@@ -1,7 +1,7 @@
-package com.dq.aquaranth.roleGroup.tests.controller;
+package com.dq.aquaranth.tests.controller;
 
-import com.dq.aquaranth.roleGroup.tests.dto.TestDTO;
-import com.dq.aquaranth.roleGroup.tests.service.TestService;
+import com.dq.aquaranth.tests.dto.TestDTO;
+import com.dq.aquaranth.tests.service.TestService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.web.bind.annotation.GetMapping;
