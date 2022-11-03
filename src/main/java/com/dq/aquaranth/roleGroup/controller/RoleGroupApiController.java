@@ -29,7 +29,7 @@ public class RoleGroupApiController {
     }
 
     @PostMapping("/")
-    public RoleGroupDTO registerRoleGroup(@RequestBody RoleGroupInsertReqDTO reqDTO) {
+    public RoleGroupDTO register(@RequestBody RoleGroupInsertReqDTO reqDTO) {
         RoleGroupDTO insertDTO = RoleGroupDTO.builder()
                 .roleGroupName(reqDTO.getRoleGroupName())
                 .companyName(reqDTO.getCompanyName())
@@ -39,7 +39,7 @@ public class RoleGroupApiController {
     }
 
     @PutMapping("/")
-    public void modifyRoleGroup(@RequestBody RoleGroupModifyReqDTO reqDTO) {
+    public void modify(@RequestBody RoleGroupModifyReqDTO reqDTO) {
         RoleGroupUpdateDTO updateDTO = RoleGroupUpdateDTO.builder()
                 .roleGroupNo(reqDTO.getRoleGroupNo())
                 .roleGroupUse(reqDTO.isRoleGroupUse())
@@ -50,7 +50,7 @@ public class RoleGroupApiController {
     }
 
     @DeleteMapping("/{roleGroupNo}")
-    public void deleteRoleGroup(@PathVariable Long roleGroupNo) {
+    public void remove(@PathVariable Long roleGroupNo) {
         roleGroupService.delete(roleGroupNo);
     }
 }

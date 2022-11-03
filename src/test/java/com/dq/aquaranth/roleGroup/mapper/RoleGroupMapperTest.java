@@ -32,7 +32,7 @@ class RoleGroupMapperTest {
     @DisplayName("권한그룹을 추가합니다.")
     void insert() {
         // given
-        String newRoleGroupName = "test 권한그룹3";
+        String newRoleGroupName = "test 권한그룹666";
         boolean newRoleGroupUse = true;
         String newCompanyName = "KAKAO";
 
@@ -43,7 +43,7 @@ class RoleGroupMapperTest {
                 .build();
 
         // when
-        roleGroupMapper.insert(insertDTO); // 추가된 권한그룹번호
+        roleGroupMapper.insert(insertDTO); // 권한그룹 추가하기
 
         // then
         assertNotNull(insertDTO.getRoleGroupNo());
@@ -54,8 +54,8 @@ class RoleGroupMapperTest {
     @DisplayName("권한그룹번호로 권한그룹명 수정하기")
     void update() {
         // given
-        Long updateRoleGroupNo = 2L;
-        String updateRoleGroupName = "update 권한그룹명1"; // 바꿀 권한그룹명
+        Long updateRoleGroupNo = 6L;
+        String updateRoleGroupName = "update222 권한그룹명66666"; // 바꿀 권한그룹명
         RoleGroupDTO beforeDTO = roleGroupMapper.findById(updateRoleGroupNo); // 수정전  권한그룹
         boolean updateRoleGroupUse = !beforeDTO.isRoleGroupUse(); // 기존 사용여부의 반대로
 
@@ -69,55 +69,58 @@ class RoleGroupMapperTest {
         roleGroupMapper.update(updateDTO);
 
         // then
-        // 권한 그룹 수정이 일어나지 않았다면, updateRoleGroupNo에 대한 권한그룹명은 그대로일 것이다.
         RoleGroupDTO afterDTO = roleGroupMapper.findById(updateRoleGroupNo);
+        // 권한 그룹 수정이 일어나지 않았다면, updateRoleGroupNo에 대한 권한그룹명은 그대로일 것이다.
         assertEquals(afterDTO.getRoleGroupName(), updateRoleGroupName);
+        // 사용여부를 기존 권한그룹 사용여부의 반대값으로 수정하였기 때문에 사용여부는 서로 달라야 할 것이다.
         assertNotEquals(beforeDTO.isRoleGroupUse(), afterDTO.isRoleGroupUse());
+
+        log.info("수정 후 권한그룹 => {}", afterDTO);
     }
 
-    @Test
-    @DisplayName("권한그룹번호로 권한그룹명 수정하기")
-    void updateRoleGroupName() {
-        // given
-        Long updateRoleGroupNo = 2L;
-        String updateRoleGroupName = "update 권한그룹명1"; // 바꿀 권한그룹명
-
-        RoleGroupNameUpdateDTO updateDTO = RoleGroupNameUpdateDTO.builder()
-                .roleGroupNo(updateRoleGroupNo)
-                .roleGroupName(updateRoleGroupName)
-                .build();
-
-        // when
-        roleGroupMapper.updateRoleGroupName(updateDTO);
-
-        // then
-        // 권한 그룹 수정이 일어나지 않았다면, updateRoleGroupNo에 대한 권한그룹명은 그대로일 것이다.
-        RoleGroupDTO findDTO = roleGroupMapper.findById(updateRoleGroupNo);
-        assertEquals(findDTO.getRoleGroupName(), updateRoleGroupName);
-    }
-
-    @Test
-    @DisplayName("권한그룹번호로 권한그룹 사용여부 수정하기")
-    void updateRoleGroupUse() {
-        // given
-        Long updateRoleGroupNo = 2L;
-        RoleGroupDTO beforeDTO = roleGroupMapper.findById(updateRoleGroupNo); // 수정전  권한그룹
-        boolean updateRoleGroupUse = !beforeDTO.isRoleGroupUse(); // 기존 사용여부의 반대로
-
-        RoleGroupUseUpdateDTO updateDTO = RoleGroupUseUpdateDTO.builder()
-                .roleGroupNo(updateRoleGroupNo)
-                .roleGroupUse(updateRoleGroupUse)
-                .build();
-
-        // when
-        roleGroupMapper.updateRoleGroupUse(updateDTO);
-
-        // then
-        // 기존 사용여부의 반대로 사용여부를 수정했기 때문에,
-        // 권한그룹 수정이 정상적으로 일어났다면, 사용여부는 서로 달라야 할 것이다.
-        RoleGroupDTO afterDTO = roleGroupMapper.findById(updateRoleGroupNo);
-        assertNotEquals(beforeDTO.isRoleGroupUse(), afterDTO.isRoleGroupUse());
-    }
+//    @Test
+//    @DisplayName("권한그룹번호로 권한그룹명 수정하기")
+//    void updateRoleGroupName() {
+//        // given
+//        Long updateRoleGroupNo = 2L;
+//        String updateRoleGroupName = "update 권한그룹명1"; // 바꿀 권한그룹명
+//
+//        RoleGroupNameUpdateDTO updateDTO = RoleGroupNameUpdateDTO.builder()
+//                .roleGroupNo(updateRoleGroupNo)
+//                .roleGroupName(updateRoleGroupName)
+//                .build();
+//
+//        // when
+//        roleGroupMapper.updateRoleGroupName(updateDTO);
+//
+//        // then
+//        // 권한 그룹 수정이 일어나지 않았다면, updateRoleGroupNo에 대한 권한그룹명은 그대로일 것이다.
+//        RoleGroupDTO findDTO = roleGroupMapper.findById(updateRoleGroupNo);
+//        assertEquals(findDTO.getRoleGroupName(), updateRoleGroupName);
+//    }
+//
+//    @Test
+//    @DisplayName("권한그룹번호로 권한그룹 사용여부 수정하기")
+//    void updateRoleGroupUse() {
+//        // given
+//        Long updateRoleGroupNo = 2L;
+//        RoleGroupDTO beforeDTO = roleGroupMapper.findById(updateRoleGroupNo); // 수정전  권한그룹
+//        boolean updateRoleGroupUse = !beforeDTO.isRoleGroupUse(); // 기존 사용여부의 반대로
+//
+//        RoleGroupUseUpdateDTO updateDTO = RoleGroupUseUpdateDTO.builder()
+//                .roleGroupNo(updateRoleGroupNo)
+//                .roleGroupUse(updateRoleGroupUse)
+//                .build();
+//
+//        // when
+//        roleGroupMapper.updateRoleGroupUse(updateDTO);
+//
+//        // then
+//        // 기존 사용여부의 반대로 사용여부를 수정했기 때문에,
+//        // 권한그룹 수정이 정상적으로 일어났다면, 사용여부는 서로 달라야 할 것이다.
+//        RoleGroupDTO afterDTO = roleGroupMapper.findById(updateRoleGroupNo);
+//        assertNotEquals(beforeDTO.isRoleGroupUse(), afterDTO.isRoleGroupUse());
+//    }
 
     @Test
     @DisplayName("권한그룹번호로 권한그룹을 삭제합니다.")

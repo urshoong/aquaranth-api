@@ -2,11 +2,9 @@ package com.dq.aquaranth.roleGroup.service;
 
 import com.dq.aquaranth.roleGroup.dto.RoleGroupDTO;
 import com.dq.aquaranth.roleGroup.dto.RoleGroupUpdateDTO;
-import com.dq.aquaranth.roleGroup.mapper.RoleGroupMapper;
+import com.dq.aquaranth.roleGroup.mapper.RoleGroupAnnotationMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import net.bytebuddy.implementation.bytecode.Throw;
-import org.apache.ibatis.javassist.NotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,7 +14,7 @@ import java.util.Objects;
 @RequiredArgsConstructor
 @Log4j2
 public class RoleGroupServiceImpl implements RoleGroupService {
-    private final RoleGroupMapper roleGroupMapper;
+    private final RoleGroupAnnotationMapper roleGroupMapper;
     @Override
     public List<RoleGroupDTO> findAll() {
         log.info("권한그룹을 조회합니다");
