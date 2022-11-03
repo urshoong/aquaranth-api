@@ -17,32 +17,29 @@ public class EmpController {
     private final EmpService service;
 
     @GetMapping("/information")
-    public List<EmpDTO> empList() {
+    public List<EmpDTO> getEmpList() {
         List<EmpDTO> list = service.empList();
         return list;
     }
 
     @GetMapping("/read/{empNo}")
-    public EmpDTO empRead(@PathVariable("empNo") Long empNo) {
+    public EmpDTO getEmp(@PathVariable("empNo") Long empNo) {
         EmpDTO read = service.empRead(empNo);
         return read;
     }
 
     @PostMapping("/insert")
-    public Integer empInsert(@RequestBody EmpDTO empDTO){
-        return service.empInsert(empDTO);
+    public Long registerEmp(@RequestBody EmpDTO empInsertDTO){
+        return service.empRegister(empInsertDTO);
     }
 
     @PutMapping(value = "/modify/{empNo}")
-    public Integer empModify(@RequestBody EmpUpdateDTO empUpdateDTO){
-        int modify = service.empModify(empUpdateDTO);
-        return modify;
+    public Long modifyEmp(@RequestBody EmpUpdateDTO empUpdateDTO){
+        return service.empModify(empUpdateDTO);
     }
 
     @DeleteMapping(value = "/delete/{empNo}")
-    public Integer empDelete(@PathVariable("empNo") Long empNo){
-        int delete = service.empDelete(empNo);
-        return delete;
+    public Long removeEmp(@PathVariable("empNo") Long empNo){
+        return service.empRemove(empNo);
     }
-
 }

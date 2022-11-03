@@ -20,26 +20,26 @@ public class EmpServiceImpl implements EmpService {
 
     @Override
     public List<EmpDTO> empList() {
-        return mapper.empList();
+        return mapper.empFindAll();
     }
 
     @Override
     public EmpDTO empRead(Long empNo) {
-        return mapper.empRead(empNo);
+        return mapper.empFindById(empNo);
     }
 
     @Override
-    public Integer empInsert(EmpDTO empDTO){
-        return mapper.empInsert(empDTO);
+    public Long empRegister(EmpDTO empInsertDTO){
+        return mapper.empInsert(empInsertDTO);
     }
 
     @Override
-    public Integer empModify(EmpUpdateDTO empUpdateDTO){
-        return mapper.empModify(empUpdateDTO);
+    public Long empModify(EmpUpdateDTO empUpdateDTO){
+        return mapper.empUpdate(empUpdateDTO);
     }
 
     @Override
-    public Integer empDelete(Long empNo) {
-        return mapper.empDelete(empNo);
+    public Long empRemove(Long empNo) {
+        return mapper.empDeleteById(empNo);
     }
 }

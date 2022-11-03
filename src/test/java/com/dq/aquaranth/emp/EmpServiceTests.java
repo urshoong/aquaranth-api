@@ -45,7 +45,7 @@ public class EmpServiceTests {
                 .firstHiredate(LocalDate.now())
                 .lastRetiredate(null)
                 .build();
-        log.info(service.empInsert(empDTO));
+        log.info(service.empRegister(empDTO));
     }
 
     @Test
@@ -56,10 +56,8 @@ public class EmpServiceTests {
                 .empAddress("수정시 수정구")
                 .empProfile("profileUpdate")
                 .email("userUpdate02@naver.com")
-                .lastLoginTime(now())
-                .lastLoginIp("192.168.500.999")
-                .lastRetiredate(LocalDate.now())
-                .empNo(10L)
+                .lastRetiredate(null)
+                .empNo(16L)
                 .build();
 
         log.info(service.empModify(empUpdateDTO));
@@ -67,6 +65,6 @@ public class EmpServiceTests {
 
     @Test
     void empDeleteTest() {
-        log.info(service.empDelete(12L));
+        log.info(service.empRemove(16L));
     }
 }

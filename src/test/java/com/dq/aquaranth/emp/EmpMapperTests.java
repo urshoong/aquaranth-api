@@ -17,16 +17,16 @@ import static java.time.LocalDateTime.now;
 public class EmpMapperTests {
 
     @Autowired(required = false)
-    EmpMapper mapper;
+    EmpMapper empMapper;
 
     @Test
-    void empListTest(){
-        log.info(mapper.empList());
+    void empFindAllTest(){
+        log.info(empMapper.empFindAll());
     }
 
     @Test
-    void empReadTest(){
-        log.info(mapper.empRead(1L));
+    void empFindByIdTest(){
+        log.info(empMapper.empFindById(1L));
     }
 
     @Test
@@ -45,28 +45,27 @@ public class EmpMapperTests {
                 .firstHiredate(LocalDate.now())
                 .lastRetiredate(null)
                 .build();
-        log.info(mapper.empInsert(empDTO));
+        log.info(empMapper.empInsert(empDTO));
     }
 
     @Test
-    void empModifyTest(){
+    void empUpdateTest(){
         EmpUpdateDTO empUpdateDTO = EmpUpdateDTO.builder()
                 .empName("정수정")
                 .empPhone("01011111111")
                 .empAddress("수정시 수정구")
                 .empProfile("profileUpdate")
                 .email("userUpdate01@naver.com")
-                .lastLoginTime(now())
-                .lastLoginIp("192.168.500.999")
                 .lastRetiredate(LocalDate.now())
-                .empNo(10L)
+                .empNo(16L)
                 .build();
 
-        log.info(mapper.empModify(empUpdateDTO));
+        log.info(empMapper.empUpdate(empUpdateDTO));
     }
 
     @Test
-    void empDeleteTest() {
-        log.info(mapper.empDelete(11L));
+    void empDeleteByIdTest() {
+        //log.info(empMapper.empDeleteById(11L));
+        System.out.println(empMapper.empDeleteById(11L));
     }
 }

@@ -10,9 +10,9 @@ public interface EmpService {
 
     EmpDTO empRead(Long empNo);
 
-    Integer empInsert(EmpDTO empDTO);
+    Long empRegister(EmpDTO empInsertDTO);
 
-    Integer empModify(EmpUpdateDTO empUpdateDTO);
+    Long empModify(EmpUpdateDTO empUpdateDTO);
 
-    Integer empDelete(Long empNo);
+    Long empRemove(Long empNo);
 }
