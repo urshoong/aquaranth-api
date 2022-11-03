@@ -6,17 +6,17 @@
 <mapper namespace="com.dq.aquaranth.company.mapper.CompanyMapper">
 
     <!--회사코드, 회사명, 대표자명, 사용여부 리스트 출력-->
-    <select id="companyList" resultType="com.dq.aquaranth.company.dto.CompanyListDTO">
+    <select id="findAll" resultType="com.dq.aquaranth.company.dto.CompanyListDTO">
         select company_no, company_name, owner_name, company_use from company;
     </select>
 
     <!--회사 기본정보 출력-->
-    <select id="companyInformation" resultType="com.dq.aquaranth.company.dto.CompanyDTO">
+    <select id="findById" resultType="com.dq.aquaranth.company.dto.CompanyDTO">
         select * from company where company_no = #{companyNo};
     </select>
 
     <!--회사 기본정보 등록-->
-    <insert id="companyAdd">
+    <insert id="register">
         insert into company (
             company_no, company_name, company_address, company_tel,
             owner_name, founding_date, business_number, company_use
@@ -30,7 +30,7 @@
     </insert>
 
     <!--회사 기본정보 수정-->
-    <update id="companyModify">
+    <update id="modify">
         update company
             set company_name=#{companyName}, company_address=#{companyAddress}, company_tel=#{companyTel},
                 owner_name=#{ownerName}, company_use=#{companyUse}
@@ -38,8 +38,9 @@
     </update>
 
     <!--회사 정보 삭제-->
-    <delete id="companyDelete">
+    <delete id="removeById">
         delete from company where company_no = #{companyNo}
     </delete>
+
 
 </mapper>

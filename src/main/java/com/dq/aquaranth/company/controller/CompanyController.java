@@ -19,33 +19,43 @@ public class CompanyController {
 
     private final CompanyService companyService;
 
-    //회사코드, 회사명, 대표자명, 사용여부 리스트 출력
+    /**
+     * 회사코드, 회사명, 대표자명, 사용여부 리스트 출력
+     */
     @GetMapping("/list")
-    public List<CompanyListDTO> companyList() {
-        return companyService.companyList();
+    public List<CompanyListDTO> getCompanyList() {
+        return companyService.findAll();
     }
 
-    //회사 기본정보 출력
+    /**
+     * 회사 기본정보 출력
+     */
     @GetMapping("/information/{companyNo}")
-    public CompanyDTO companyInformation(@PathVariable Long companyNo) {
-        return companyService.companyInformation(companyNo);
+    public CompanyDTO getCompanyInformation(@PathVariable Long companyNo) {
+        return companyService.findById(companyNo);
     }
 
-    //회사 기본정보 출력
+    /**
+     * 회사 기본정보 추가
+     */
     @PostMapping("/add")
-    public Integer companyAdd(@RequestBody CompanyDTO companyDTO) {
-        return companyService.companyAdd(companyDTO);
+    public Long registerCompany(@RequestBody CompanyDTO companyDTO) {
+        return companyService.register(companyDTO);
     }
 
-    //회사 기본정보 수정
+    /**
+     * 회사 기본정보 수정
+     */
     @PutMapping("/modify/{companyNo}")
-    public Integer companyModify(@RequestBody CompanyModifyDTO companyModifyDTO) {
-        return companyService.companyModify(companyModifyDTO);
+    public Long modifyCompany(@RequestBody CompanyModifyDTO companyModifyDTO) {
+        return companyService.modify(companyModifyDTO);
     }
 
-    //회사 정보 삭제
-    @DeleteMapping("/delete/{companyNo}")
-    public Integer companyDelete(@PathVariable Long companyNo) {
-        return companyService.companyDelete(companyNo);
+    /**
+     * 회사 정보 삭제
+     */
+    @DeleteMapping("/remove/{companyNo}")
+    public Long removeCompany(@PathVariable Long companyNo) {
+        return companyService.removeById(companyNo);
     }
 }
