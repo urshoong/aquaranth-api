@@ -1,6 +1,7 @@
 package com.dq.aquaranth.roleGroup.controller;
 
 import com.dq.aquaranth.roleGroup.dto.RoleGroupDTO;
+import com.dq.aquaranth.roleGroup.dto.RoleGroupInsertReqDTO;
 import com.dq.aquaranth.roleGroup.dto.RoleGroupModifyReqDTO;
 import com.dq.aquaranth.roleGroup.dto.RoleGroupUpdateDTO;
 import com.dq.aquaranth.roleGroup.service.RoleGroupService;
@@ -27,16 +28,29 @@ public class RoleGroupApiController {
         return roleGroupService.findById(roleGroupNo);
     }
 
-    @PostMapping("/{roleGroupNo}")
-    public void modifyRoleGroup(@PathVariable Long roleGroupNo,
-                                @RequestBody RoleGroupModifyReqDTO modifyReqDTO) {
+    @PostMapping("/")
+    public RoleGroupDTO registerRoleGroup(@RequestBody RoleGroupInsertReqDTO reqDTO) {
+        RoleGroupDTO insertDTO = RoleGroupDTO.builder()
+                .roleGroupName(reqDTO.getRoleGroupName())
+                .companyName(reqDTO.getCompanyName())
+                .build();
 
+        return roleGroupService.insert(insertDTO);
+    }
+
+    @PutMapping("/")
+    public void modifyRoleGroup(@RequestBody RoleGroupModifyReqDTO reqDTO) {
         RoleGroupUpdateDTO updateDTO = RoleGroupUpdateDTO.builder()
-                .roleGroupNo(roleGroupNo)
-                .roleGroupUse(modifyReqDTO.isRoleGroupUse())
-                .roleGroupName(modifyReqDTO.getRoleGroupName())
+                .roleGroupNo(reqDTO.getRoleGroupNo())
+                .roleGroupUse(reqDTO.isRoleGroupUse())
+                .roleGroupName(reqDTO.getRoleGroupName())
                 .build();
 
         roleGroupService.update(updateDTO);
+    }
+
+    @DeleteMapping("/{roleGroupNo}")
+    public void deleteRoleGroup(@PathVariable Long roleGroupNo) {
+        roleGroupService.delete(roleGroupNo);
     }
 }

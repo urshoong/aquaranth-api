@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class RoleGroupInsertDTO {
+public class RoleGroupInsertReqDTO {
     private String roleGroupName;
     private boolean roleGroupUse;
     private String companyName;
