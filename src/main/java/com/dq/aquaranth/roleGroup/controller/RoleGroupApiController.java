@@ -18,7 +18,7 @@ import java.util.List;
 public class RoleGroupApiController {
     private final RoleGroupService roleGroupService;
 
-    @GetMapping("/")
+    @GetMapping("")
     public List<RoleGroupDTO> getRoleGroupList() {
         return roleGroupService.findAll();
     }
@@ -28,7 +28,7 @@ public class RoleGroupApiController {
         return roleGroupService.findById(roleGroupNo);
     }
 
-    @PostMapping("/")
+    @PostMapping("")
     public RoleGroupDTO register(@RequestBody RoleGroupInsertReqDTO reqDTO) {
         RoleGroupDTO insertDTO = RoleGroupDTO.builder()
                 .roleGroupName(reqDTO.getRoleGroupName())
@@ -38,7 +38,7 @@ public class RoleGroupApiController {
         return roleGroupService.insert(insertDTO);
     }
 
-    @PutMapping("/")
+    @PutMapping("")
     public void modify(@RequestBody RoleGroupModifyReqDTO reqDTO) {
         RoleGroupUpdateDTO updateDTO = RoleGroupUpdateDTO.builder()
                 .roleGroupNo(reqDTO.getRoleGroupNo())

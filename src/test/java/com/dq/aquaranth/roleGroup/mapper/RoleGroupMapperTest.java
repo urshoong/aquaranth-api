@@ -78,55 +78,12 @@ class RoleGroupMapperTest {
         log.info("수정 후 권한그룹 => {}", afterDTO);
     }
 
-//    @Test
-//    @DisplayName("권한그룹번호로 권한그룹명 수정하기")
-//    void updateRoleGroupName() {
-//        // given
-//        Long updateRoleGroupNo = 2L;
-//        String updateRoleGroupName = "update 권한그룹명1"; // 바꿀 권한그룹명
-//
-//        RoleGroupNameUpdateDTO updateDTO = RoleGroupNameUpdateDTO.builder()
-//                .roleGroupNo(updateRoleGroupNo)
-//                .roleGroupName(updateRoleGroupName)
-//                .build();
-//
-//        // when
-//        roleGroupMapper.updateRoleGroupName(updateDTO);
-//
-//        // then
-//        // 권한 그룹 수정이 일어나지 않았다면, updateRoleGroupNo에 대한 권한그룹명은 그대로일 것이다.
-//        RoleGroupDTO findDTO = roleGroupMapper.findById(updateRoleGroupNo);
-//        assertEquals(findDTO.getRoleGroupName(), updateRoleGroupName);
-//    }
-//
-//    @Test
-//    @DisplayName("권한그룹번호로 권한그룹 사용여부 수정하기")
-//    void updateRoleGroupUse() {
-//        // given
-//        Long updateRoleGroupNo = 2L;
-//        RoleGroupDTO beforeDTO = roleGroupMapper.findById(updateRoleGroupNo); // 수정전  권한그룹
-//        boolean updateRoleGroupUse = !beforeDTO.isRoleGroupUse(); // 기존 사용여부의 반대로
-//
-//        RoleGroupUseUpdateDTO updateDTO = RoleGroupUseUpdateDTO.builder()
-//                .roleGroupNo(updateRoleGroupNo)
-//                .roleGroupUse(updateRoleGroupUse)
-//                .build();
-//
-//        // when
-//        roleGroupMapper.updateRoleGroupUse(updateDTO);
-//
-//        // then
-//        // 기존 사용여부의 반대로 사용여부를 수정했기 때문에,
-//        // 권한그룹 수정이 정상적으로 일어났다면, 사용여부는 서로 달라야 할 것이다.
-//        RoleGroupDTO afterDTO = roleGroupMapper.findById(updateRoleGroupNo);
-//        assertNotEquals(beforeDTO.isRoleGroupUse(), afterDTO.isRoleGroupUse());
-//    }
 
     @Test
     @DisplayName("권한그룹번호로 권한그룹을 삭제합니다.")
     void deleteById() {
         // given
-        Long deleteRoleGroupNo = 1L;
+        Long deleteRoleGroupNo = 2L;
 
         // when
         roleGroupMapper.deleteById(deleteRoleGroupNo);
