@@ -5,9 +5,16 @@ import com.dq.aquaranth.emp.dto.EmpUpdateDTO;
 import com.dq.aquaranth.emp.service.EmpService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @Log4j2
@@ -18,23 +25,26 @@ public class EmpController {
 
     @GetMapping("/information")
     public List<EmpDTO> getEmpList() {
-        List<EmpDTO> list = service.empList();
-        return list;
+        return service.empList();
     }
+
+//    @GetMapping("/information")
+//    public Long getEmpCount(){
+//        return service.empCount();
+//    }
 
     @GetMapping("/read/{empNo}")
     public EmpDTO getEmp(@PathVariable("empNo") Long empNo) {
-        EmpDTO read = service.empRead(empNo);
-        return read;
+        return service.empRead(empNo);
     }
 
     @PostMapping("/insert")
-    public Long registerEmp(@RequestBody EmpDTO empInsertDTO){
+    public Long registerEmp(@Valid @RequestBody EmpDTO empInsertDTO){
         return service.empRegister(empInsertDTO);
     }
 
     @PutMapping(value = "/modify/{empNo}")
-    public Long modifyEmp(@RequestBody EmpUpdateDTO empUpdateDTO){
+    public Long modifyEmp(@Valid @RequestBody EmpUpdateDTO empUpdateDTO){
         return service.empModify(empUpdateDTO);
     }
 

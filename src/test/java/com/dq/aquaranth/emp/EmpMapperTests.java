@@ -32,7 +32,7 @@ public class EmpMapperTests {
     @Test
     void empInsertTest(){
         EmpDTO empDTO = EmpDTO.builder()
-                .empName("이선율")
+                .empName("김바보")
                 .username("user08")
                 .password("userpwd08")
                 .gender("남성")
@@ -42,7 +42,6 @@ public class EmpMapperTests {
                 .email("user08@naver.com")
                 .lastLoginTime(now())
                 .lastLoginIp("192.168.500.8")
-                .firstHiredate(LocalDate.now())
                 .lastRetiredate(null)
                 .build();
         log.info(empMapper.empInsert(empDTO));
@@ -52,12 +51,14 @@ public class EmpMapperTests {
     void empUpdateTest(){
         EmpUpdateDTO empUpdateDTO = EmpUpdateDTO.builder()
                 .empName("정수정")
+                .password("gi")
+                .gender("여성")
                 .empPhone("01011111111")
                 .empAddress("수정시 수정구")
                 .empProfile("profileUpdate")
                 .email("userUpdate01@naver.com")
                 .lastRetiredate(LocalDate.now())
-                .empNo(16L)
+                .empNo(22L)
                 .build();
 
         log.info(empMapper.empUpdate(empUpdateDTO));
@@ -65,7 +66,11 @@ public class EmpMapperTests {
 
     @Test
     void empDeleteByIdTest() {
-        //log.info(empMapper.empDeleteById(11L));
-        System.out.println(empMapper.empDeleteById(11L));
+        log.info(empMapper.empDeleteById(11L));
+    }
+
+    @Test
+    void empCountAll(){
+        log.info(empMapper.empCountAll());
     }
 }

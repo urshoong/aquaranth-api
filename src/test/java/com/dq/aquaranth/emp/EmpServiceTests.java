@@ -42,7 +42,6 @@ public class EmpServiceTests {
                 .email("user09@naver.com")
                 .lastLoginTime(now())
                 .lastLoginIp("192.168.500.9")
-                .firstHiredate(LocalDate.now())
                 .lastRetiredate(null)
                 .build();
         log.info(service.empRegister(empDTO));
@@ -52,6 +51,8 @@ public class EmpServiceTests {
     void empModifyTest(){
         EmpUpdateDTO empUpdateDTO = EmpUpdateDTO.builder()
                 .empName("양당근")
+                .password("modTest")
+                .gender("여성")
                 .empPhone("01011112222")
                 .empAddress("수정시 수정구")
                 .empProfile("profileUpdate")

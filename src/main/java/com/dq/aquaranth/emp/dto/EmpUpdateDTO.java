@@ -2,6 +2,7 @@ package com.dq.aquaranth.emp.dto;
 
 import lombok.*;
 
+import javax.validation.constraints.NotBlank;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -15,6 +16,10 @@ import java.time.LocalDateTime;
 @Builder
 public class EmpUpdateDTO {
     private Long empNo;
-    private String empName, empPhone, empAddress, empProfile, email;
+    @NotBlank
+    private String empName, password;
+    private String gender, empPhone, empAddress, empProfile, email;
     private LocalDate lastRetiredate;
+
+
 }
