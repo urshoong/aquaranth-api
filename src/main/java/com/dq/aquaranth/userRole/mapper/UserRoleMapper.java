@@ -7,6 +7,6 @@ import com.dq.aquaranth.userRole.dto.UserRoleRoleGroupBasedListDTO;
 import java.util.List;
 
 public interface UserRoleMapper {
-    List<UserRoleCompanyDTO> findCompanyAll();
-    List<UserRoleRoleGroupBasedListDTO> findRoleGroupByCompanyNameAndSearch(UserRoleReqRoleGroupBasedListDTO userRoleReqRoleGroupBasedListDTO);
+    List<UserRoleCompanyDTO> findCompany(Long companyNo);
+    List<UserRoleRoleGroupBasedListDTO> findRoleGroupByCompanyName(UserRoleReqRoleGroupBasedListDTO userRoleReqRoleGroupBasedListDTO);
 }

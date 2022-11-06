@@ -5,9 +5,10 @@
 
 <mapper namespace="com.dq.aquaranth.userRole.mapper.UserRoleMapper">
 
-    <select id="findCompanyAll" resultType="com.dq.aquaranth.userRole.dto.UserRoleCompanyDTO">
+    <select id="findCompany" resultType="com.dq.aquaranth.userRole.dto.UserRoleCompanyDTO">
         select company_no, company_name
         from company
+        where company_no = #{companyNo}
     </select>
 
     <select id="findRoleGroupByCompanyName" resultType="com.dq.aquaranth.userRole.dto.UserRoleRoleGroupBasedListDTO">
@@ -15,22 +16,23 @@
         from role_group
         where role_group_use = true
         and company_name = #{companyName}
-        <if test="search != null">
-            and role_group_name like concat('%', #{search}, '%')
+        <if test="roleGroupSearch != null">
+            and role_group_name like concat('%', #{roleGroupSearch}, '%')
         </if>
     </select>
+<!--
 
     <select id="findOrgaByRoleGroupNo" resultType="">
         SELECT o.company_no, c.company_name, o.dept_no, d.dept_name, o.emp_no, e.emp_name, e.username
         #      d.dept_rank #차후 직급 추가 시
         FROM (
-                SELECT og.company_no, og.dept_no, og.emp_no
+        SELECT og.company_no, og.dept_no, og.emp_no
         #      	     , ogr.role_group_no, ogr.orga_no
-                FROM orga_role ogr
-                JOIN orga og ON og.orga_no = ogr.orga_no
-                WHERE ogr.role_group_no = ${role_group_no}
-                AND og.dept_no IS NOT NULL
-                AND og.emp_no IS NOT NULL
+        FROM orga_role ogr
+        JOIN orga og ON og.orga_no = ogr.orga_no
+        WHERE ogr.role_group_no = ${role_group_no}
+        AND og.dept_no IS NOT NULL
+        AND og.emp_no IS NOT NULL
         ) o
         LEFT JOIN company c ON c.company_no = o.company_no
         LEFT JOIN dept d ON d.dept_no = o.dept_no
@@ -42,5 +44,6 @@
             # OR d.dept_rank LIKE CONCAT('%', ${search}, '%')
         </if>
     </select>
+-->
 
 </mapper>

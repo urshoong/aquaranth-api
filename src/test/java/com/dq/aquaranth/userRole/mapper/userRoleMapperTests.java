@@ -18,14 +18,17 @@ public class userRoleMapperTests {
 
     @Test
     void findCompanyAllTests(){
-        List<UserRoleCompanyDTO> list = mapper.findCompanyAll();
+        List<UserRoleCompanyDTO> list = mapper.findCompany(1L);
         list.forEach(log::info);
     }
 
     @Test
     void findRoleGroupBasedListTests(){
-        UserRoleReqRoleGroupBasedListDTO dto = UserRoleReqRoleGroupBasedListDTO.builder().companyNo(1L).companyName("DOUZONE").search("123").build();
-        List<UserRoleRoleGroupBasedListDTO> list = mapper.findRoleGroupByCompanyNameAndSearch(dto);
+        UserRoleReqRoleGroupBasedListDTO dto = UserRoleReqRoleGroupBasedListDTO.builder()
+                .companyName("DOUZONE")
+//                .roleGroupSearch("기본")
+                .build();
+        List<UserRoleRoleGroupBasedListDTO> list = mapper.findRoleGroupByCompanyName(dto);
         list.forEach(log::info);
     }
 
