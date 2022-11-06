@@ -38,7 +38,7 @@ public class EmpController {
         return service.empRead(empNo);
     }
 
-    @PostMapping("/insert")
+    @PostMapping("/register")
     public Long registerEmp(@Valid @RequestBody EmpDTO empInsertDTO){
         return service.empRegister(empInsertDTO);
     }
@@ -48,7 +48,7 @@ public class EmpController {
         return service.empModify(empUpdateDTO);
     }
 
-    @DeleteMapping(value = "/delete/{empNo}")
+    @DeleteMapping(value = "/remove/{empNo}")
     public Long removeEmp(@PathVariable("empNo") Long empNo){
         return service.empRemove(empNo);
     }
