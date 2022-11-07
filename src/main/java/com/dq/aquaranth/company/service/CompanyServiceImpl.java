@@ -3,6 +3,7 @@ package com.dq.aquaranth.company.service;
 import com.dq.aquaranth.company.dto.CompanyDTO;
 import com.dq.aquaranth.company.dto.CompanyListDTO;
 import com.dq.aquaranth.company.dto.CompanyModifyDTO;
+import com.dq.aquaranth.company.dto.CompanySearchDTO;
 import com.dq.aquaranth.company.mapper.CompanyMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -45,5 +46,11 @@ public class CompanyServiceImpl implements CompanyService{
     public Long removeById(Long companyNo) {
         log.info("회사 정보 삭제");
         return companyMapper.removeById(companyNo);
+    }
+
+    @Override
+    public List<CompanyListDTO> search(Boolean companyUse, String companySearch) {
+        log.info("회사코드, 회사명, 사용여부로 검색");
+        return companyMapper.search(companyUse, companySearch);
     }
 }
