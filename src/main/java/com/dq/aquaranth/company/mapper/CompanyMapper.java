@@ -1,8 +1,5 @@
 package com.dq.aquaranth.company.mapper;
-import com.dq.aquaranth.company.dto.CompanyDTO;
-import com.dq.aquaranth.company.dto.CompanyListDTO;
-import com.dq.aquaranth.company.dto.CompanyModifyDTO;
-import com.dq.aquaranth.company.dto.CompanySearchDTO;
+import com.dq.aquaranth.company.dto.*;
 
 import java.util.List;
 
@@ -36,4 +33,6 @@ public interface CompanyMapper {
      * 회사 코드, 회사명, 사용여부로 검색
      */
     List<CompanyListDTO> search(Boolean companyUse, String companySearch);
+
+    Long insertOrga(CompanyOrgaDTO companyOrgaDTO);
 }

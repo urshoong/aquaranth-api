@@ -1,9 +1,6 @@
 package com.dq.aquaranth.company;
 
-import com.dq.aquaranth.company.dto.CompanyDTO;
-import com.dq.aquaranth.company.dto.CompanyListDTO;
-import com.dq.aquaranth.company.dto.CompanyModifyDTO;
-import com.dq.aquaranth.company.dto.CompanySearchDTO;
+import com.dq.aquaranth.company.dto.*;
 import com.dq.aquaranth.company.service.CompanyService;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.DisplayName;
@@ -49,6 +46,7 @@ public class CompanyServiceTests {
                 .foundingDate(localDate)
                 .businessNumber("129-86-549371")
                 .companyUse(false)
+                .orgaNo(9L)
                 .build();
         log.info(companyService.insert(companyDTO));
 
