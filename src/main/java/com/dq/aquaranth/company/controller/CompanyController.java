@@ -7,7 +7,6 @@ import com.dq.aquaranth.company.dto.CompanySearchDTO;
 import com.dq.aquaranth.company.service.CompanyService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -41,7 +40,7 @@ public class CompanyController {
      */
     @PostMapping("/register")
     public Long registerCompany(@RequestBody CompanyDTO companyDTO) {
-        return companyService.register(companyDTO);
+        return companyService.insert(companyDTO);
     }
 
     /**
@@ -49,7 +48,7 @@ public class CompanyController {
      */
     @PutMapping("/modify/{companyNo}")
     public Long modifyCompany(@RequestBody CompanyModifyDTO companyModifyDTO) {
-        return companyService.modify(companyModifyDTO);
+        return companyService.update(companyModifyDTO);
     }
 
     /**
@@ -57,7 +56,7 @@ public class CompanyController {
      */
     @DeleteMapping("/remove/{companyNo}")
     public Long removeCompany(@PathVariable Long companyNo) {
-        return companyService.removeById(companyNo);
+        return companyService.deleteById(companyNo);
     }
 
     /**

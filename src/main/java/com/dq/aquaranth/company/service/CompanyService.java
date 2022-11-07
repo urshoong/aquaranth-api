@@ -11,9 +11,9 @@ public interface CompanyService {
 
     List<CompanyListDTO> findAll();
     CompanyDTO findById(Long companyNo);
-    Long register(CompanyDTO companyDTO);
-    Long modify(CompanyModifyDTO companyModifyDTO);
-    Long removeById(Long companyNo);
 
     List<CompanyListDTO> search(Boolean companyUse, String companySearch);
+    Long insert(CompanyDTO companyDTO);
+    Long update(CompanyModifyDTO companyModifyDTO);
+    Long deleteById(Long companyNo);
 }
