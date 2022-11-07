@@ -1,5 +1,6 @@
 package com.dq.aquaranth.menu.mapper;
 
+import com.dq.aquaranth.menu.dto.response.AllMenuResponse;
 import com.dq.aquaranth.menu.dto.response.MenuResponse;
 import com.dq.aquaranth.menu.mapper.MenuMapper;
 import lombok.extern.log4j.Log4j2;
@@ -21,8 +22,8 @@ class MenuMapperTest {
 
     @Test
     void findAllMenus() {
-        List<MenuResponse> menuResponses = menuMapper.findAllMenus();
-        menuResponses.forEach(log::info);
+        List<AllMenuResponse> allMenuResponses = menuMapper.findAllMenus();
+        allMenuResponses.forEach(log::info);
     }
 
     @Test

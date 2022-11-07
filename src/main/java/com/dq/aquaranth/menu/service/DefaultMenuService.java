@@ -1,5 +1,6 @@
 package com.dq.aquaranth.menu.service;
 
+import com.dq.aquaranth.menu.dto.response.AllMenuResponse;
 import com.dq.aquaranth.menu.dto.response.MenuResponse;
 import com.dq.aquaranth.menu.mapper.MenuMapper;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +15,7 @@ public class DefaultMenuService implements MenuService {
     private final MenuMapper menuMapper;
 
     @Override
-    public List<MenuResponse> findAllMenus() {
+    public List<AllMenuResponse> findAllMenus() {
         return menuMapper.findAllMenus();
     }
 
