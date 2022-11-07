@@ -1,13 +1,11 @@
 package com.dq.aquaranth.company.service;
 
-import com.dq.aquaranth.company.dto.CompanyDTO;
-import com.dq.aquaranth.company.dto.CompanyListDTO;
-import com.dq.aquaranth.company.dto.CompanyModifyDTO;
-import com.dq.aquaranth.company.dto.CompanySearchDTO;
+import com.dq.aquaranth.company.dto.*;
 import com.dq.aquaranth.company.mapper.CompanyMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -31,8 +29,17 @@ public class CompanyServiceImpl implements CompanyService{
     }
 
     @Override
+    @Transactional
     public Long insert(CompanyDTO companyDTO) {
+        log.info("orga_no와 upper_orga_no 추가");
+        CompanyOrgaDTO companyOrgaDTO = CompanyOrgaDTO
+                .builder()
+                .orgaType("company")
+                .build();
+        companyMapper.insertOrga(companyOrgaDTO);
+        log.info(companyOrgaDTO.getOrgaNo());
         log.info("회사 기본정보 추가");
+        companyDTO.setOrgaNo(companyOrgaDTO.getOrgaNo());
         return companyMapper.insert(companyDTO);
     }
 

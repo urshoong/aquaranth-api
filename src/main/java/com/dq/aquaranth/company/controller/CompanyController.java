@@ -1,9 +1,6 @@
 package com.dq.aquaranth.company.controller;
 
-import com.dq.aquaranth.company.dto.CompanyDTO;
-import com.dq.aquaranth.company.dto.CompanyListDTO;
-import com.dq.aquaranth.company.dto.CompanyModifyDTO;
-import com.dq.aquaranth.company.dto.CompanySearchDTO;
+import com.dq.aquaranth.company.dto.*;
 import com.dq.aquaranth.company.service.CompanyService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;

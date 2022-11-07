@@ -12,7 +12,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CompanyDTO {
-    private Long companyNo;
+    private Long companyNo, orgaNo;
     private String companyName, companyAddress, companyTel, ownerName, businessNumber;
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate foundingDate;
