@@ -72,17 +72,16 @@ select *
 from company;
 
 # 부서와 조직 생성
-insert into tbl_dept (company_no, dname, dept_sort, ddesc)
-values (1, '개발팀', 1, 'DEV');
-
+insert into tbl_dept (dname, dept_sort, ddesc)
+values ('개발팀', 1, 'DEV');
 # 더존의 개발팀 (orga_no=6)
 insert into orga (upper_orga_no)
 values (1);
-insert into deptmapping (dept_no, orga_no)
+insert into deptMapping (dept_no, orga_no)
 values (1, 1);
 
 select *
-from deptmapping;
+from deptMapping;
 
 # 사원과 조직 매핑
 INSERT INTO emp ( emp_name, username, `password`, gender, emp_phone, emp_address, emp_profile, email
@@ -96,7 +95,7 @@ insert into orga (upper_orga_no)
 values (6);
 
 # 정수연 사원은 orga 7번
-insert into empmapping (orga_no, emp_no, emp_rank, hiredate, retireddate)
+insert into empMapping (orga_no, emp_no, emp_rank, hiredate, retireddate)
 VALUES (7, 1, '사원', now(), null);
 
 #######################################################

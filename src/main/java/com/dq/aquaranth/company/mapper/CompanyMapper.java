@@ -20,15 +20,15 @@ public interface CompanyMapper {
     /**
      * 회사 기본정보 추가
      */
-    Long register(CompanyDTO companyDTO);
+    Long insert(CompanyDTO companyDTO);
 
     /**
      * 회사 기본정보 수정
      */
-    Long modify(CompanyModifyDTO companyModifyDTO);
+    Long update(CompanyModifyDTO companyModifyDTO);
 
     /**
      * 회사 정보 삭제
      */
-    Long removeById(Long companyNo);
+    Long deleteById(Long companyNo);
 }

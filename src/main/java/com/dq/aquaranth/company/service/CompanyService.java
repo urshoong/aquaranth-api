@@ -10,7 +10,7 @@ public interface CompanyService {
 
     List<CompanyListDTO> findAll();
     CompanyDTO findById(Long companyNo);
-    Long register(CompanyDTO companyDTO);
-    Long modify(CompanyModifyDTO companyModifyDTO);
-    Long removeById(Long companyNo);
+    Long insert(CompanyDTO companyDTO);
+    Long update(CompanyModifyDTO companyModifyDTO);
+    Long deleteById(Long companyNo);
 }

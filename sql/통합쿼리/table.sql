@@ -19,6 +19,7 @@ CREATE TABLE `company`
 CREATE TABLE `tbl_dept`
 (
     `dept_no`    bigint        NOT NULL auto_increment primary key,
+    `company_no` bigint        NOT NULL,
     `dname`      VARCHAR(200)  NOT NULL,
     `del_flag`   boolean       NOT NULL default false,
     `main_flag`  boolean       NOT NULL default true,
@@ -48,7 +49,8 @@ CREATE TABLE `emp`
 CREATE TABLE `orga`
 (
     `orga_no`       bigint NOT NULL auto_increment primary key,
-    `upper_orga_no` bigint NULL
+    `upper_orga_no` bigint NULL,
+    `orga_type` varchar(100)
 );
 
 CREATE TABLE `empMapping`
@@ -70,11 +72,14 @@ CREATE TABLE `deptMapping`
 # 메뉴 도메인
 CREATE TABLE `menu`
 (
-    `menu_no`       bigint       NOT NULL auto_increment primary key,
-    `upper_menu_no` bigint       NULL,
-    `menu_name`     VARCHAR(200) NULL,
-    `menu_icon`     VARCHAR(200) NOT NULL,
-    `menu_use`      boolean      NOT NULL
+    `menu_no`           BIGINT       NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `upper_menu_no`     BIGINT       NULL,
+    `menu_code`         VARCHAR(200) NOT NULL UNIQUE,
+    `default_menu_code` VARCHAR(200) NULL,
+    `menu_name`         VARCHAR(200) NOT NULL,
+    `menu_use`          boolean      NOT NULL DEFAULT TRUE,
+    `menu_sort`         int(11)      NOT NULL DEFAULT '99',
+    `icon_url`          VARCHAR(200) NOT NULL DEFAULT '#'
 );
 
 # 권한그룹
@@ -121,6 +126,14 @@ ALTER TABLE `company`
         )
         REFERENCES `orga` (
                            `orga_no`
+            );
+
+ALTER TABLE `tbl_dept`
+    ADD CONSTRAINT `FK_company_TO_tbl_dept_1` FOREIGN KEY (
+                                                       `company_no`
+        )
+        REFERENCES `company` (
+                           `company_no`
             );
 
 ALTER TABLE `menu`

@@ -49,7 +49,7 @@ public class CompanyServiceTests {
                 .businessNumber("129-86-549371")
                 .companyUse(false)
                 .build();
-        log.info(companyService.register(companyDTO));
+        log.info(companyService.insert(companyDTO));
 
         //등록 시 저장되는 회사코드 출력
         log.info(companyDTO.getCompanyNo());
@@ -67,13 +67,13 @@ public class CompanyServiceTests {
                 .ownerName("김동전")
                 .companyUse(false)
                 .build();
-        log.info(companyService.modify(companyModifyDTO));
+        log.info(companyService.update(companyModifyDTO));
     }
 
     @Test
     @DisplayName("회사 정보 삭제 Test 코드")
     void removeCompanyTest() {
         long companyNo = 7L;
-        log.info(companyService.removeById(companyNo));
+        log.info(companyService.deleteById(companyNo));
     }
 }

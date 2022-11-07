@@ -30,20 +30,20 @@ public class CompanyServiceImpl implements CompanyService{
     }
 
     @Override
-    public Long register(CompanyDTO companyDTO) {
+    public Long insert(CompanyDTO companyDTO) {
         log.info("회사 기본정보 추가");
-        return companyMapper.register(companyDTO);
+        return companyMapper.insert(companyDTO);
     }
 
     @Override
-    public Long modify(CompanyModifyDTO companyModifyDTO) {
+    public Long update(CompanyModifyDTO companyModifyDTO) {
         log.info("회사 기본정보 수정");
-        return companyMapper.modify(companyModifyDTO);
+        return companyMapper.update(companyModifyDTO);
     }
 
     @Override
-    public Long removeById(Long companyNo) {
+    public Long deleteById(Long companyNo) {
         log.info("회사 정보 삭제");
-        return companyMapper.removeById(companyNo);
+        return companyMapper.deleteById(companyNo);
     }
 }
