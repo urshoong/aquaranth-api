@@ -1,11 +1,12 @@
 package com.dq.aquaranth.userRole.service;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
-import org.springframework.stereotype.Service;
+import com.dq.aquaranth.userRole.dto.UserRoleCompanyDTO;
+import com.dq.aquaranth.userRole.dto.UserRoleReqRoleGroupBasedListDTO;
+import com.dq.aquaranth.userRole.dto.UserRoleRoleGroupBasedListDTO;
 
-@Service
-@RequiredArgsConstructor
-@Log4j2
-public class UserRoleService {
+import java.util.List;
+
+public interface UserRoleService {
+    List<UserRoleCompanyDTO> findCompany(Long companyNo);
+    List<UserRoleRoleGroupBasedListDTO> findRoleGroupByCompanyName(UserRoleReqRoleGroupBasedListDTO userRoleReqRoleGroupBasedListDTO);
 }
