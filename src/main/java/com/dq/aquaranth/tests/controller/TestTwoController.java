@@ -1,4 +1,4 @@
-package com.dq.aquaranth.roleGroup.tests.controller;
+package com.dq.aquaranth.tests.controller;
 
 
 import org.springframework.http.HttpStatus;

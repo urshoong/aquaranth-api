@@ -1,4 +1,4 @@
-package com.dq.aquaranth.roleGroup.tests.mapper;
+package com.dq.aquaranth.tests.mapper;
 
 public interface TimeMapper {
     String getTime();

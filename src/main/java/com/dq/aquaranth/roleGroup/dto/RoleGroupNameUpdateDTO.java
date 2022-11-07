@@ -1,4 +1,4 @@
-package com.dq.aquaranth.roleGroup.tests.dto;
+package com.dq.aquaranth.roleGroup.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,8 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class TestDTO {
-    private Long id;
-    private String title;
-    private String content;
+public class RoleGroupNameUpdateDTO {
+    private Long roleGroupNo;
+    private String roleGroupName;
 }
