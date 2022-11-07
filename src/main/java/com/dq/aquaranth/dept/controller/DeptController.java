@@ -53,8 +53,10 @@ public class DeptController {
 
     }
     //부서 리스트 출력
-    @GetMapping("/deptlist")
-    public List<DeptDTO> deptList() { return deptService.deptList(); }
+//    @GetMapping("/deptlist")
+//    public List<DeptDTO> deptList() {
+//        return deptService.deptList();
+//    }
 
 
 }

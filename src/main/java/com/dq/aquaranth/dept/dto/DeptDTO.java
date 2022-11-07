@@ -1,9 +1,5 @@
 package com.dq.aquaranth.dept.dto;
 
-<<<<<<< HEAD
-
-=======
->>>>>>> 0c2b835b8c9ceffa308a952a88b78ea33234c822
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
