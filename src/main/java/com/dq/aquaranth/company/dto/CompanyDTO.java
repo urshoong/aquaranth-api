@@ -1,5 +1,6 @@
 package com.dq.aquaranth.company.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,6 +14,7 @@ import java.time.LocalDate;
 public class CompanyDTO {
     private Long companyNo;
     private String companyName, companyAddress, companyTel, ownerName, businessNumber;
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate foundingDate;
     private Boolean companyUse;
 }

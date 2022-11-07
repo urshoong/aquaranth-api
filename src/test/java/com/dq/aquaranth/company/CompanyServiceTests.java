@@ -3,6 +3,7 @@ package com.dq.aquaranth.company;
 import com.dq.aquaranth.company.dto.CompanyDTO;
 import com.dq.aquaranth.company.dto.CompanyListDTO;
 import com.dq.aquaranth.company.dto.CompanyModifyDTO;
+import com.dq.aquaranth.company.dto.CompanySearchDTO;
 import com.dq.aquaranth.company.service.CompanyService;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.DisplayName;
@@ -75,5 +76,18 @@ public class CompanyServiceTests {
     void removeCompanyTest() {
         long companyNo = 7L;
         log.info(companyService.deleteById(companyNo));
+    }
+
+    @Test
+    @DisplayName("회사코드, 회사명, 사용여부 검색 Test 코드")
+    void searchCompanyTest() {
+//        CompanySearchDTO companySearchDTO = CompanySearchDTO
+//                .builder()
+//                .companyNo(null)
+//                .companyName(null)
+//                .companyUse(false)
+//                .build();
+        List<CompanyListDTO> companyListDTO = companyService.search(true, "DOUZONE");
+        companyListDTO.forEach(log::info);
     }
 }

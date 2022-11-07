@@ -3,6 +3,7 @@ package com.dq.aquaranth.company.controller;
 import com.dq.aquaranth.company.dto.CompanyDTO;
 import com.dq.aquaranth.company.dto.CompanyListDTO;
 import com.dq.aquaranth.company.dto.CompanyModifyDTO;
+import com.dq.aquaranth.company.dto.CompanySearchDTO;
 import com.dq.aquaranth.company.service.CompanyService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -37,7 +38,7 @@ public class CompanyController {
     /**
      * 회사 기본정보 추가
      */
-    @PostMapping("/add")
+    @PostMapping("/register")
     public Long registerCompany(@RequestBody CompanyDTO companyDTO) {
         return companyService.insert(companyDTO);
     }
@@ -56,5 +57,13 @@ public class CompanyController {
     @DeleteMapping("/remove/{companyNo}")
     public Long removeCompany(@PathVariable Long companyNo) {
         return companyService.deleteById(companyNo);
+    }
+
+    /**
+     * 회사코드, 회사명, 사용여부로 검색
+     */
+    @GetMapping("/search")
+    public List<CompanyListDTO> searchCompany(@RequestParam Boolean companyUse, String companySearch) {
+        return companyService.search(companyUse, companySearch);
     }
 }
