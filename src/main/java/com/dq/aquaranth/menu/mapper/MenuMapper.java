@@ -9,9 +9,6 @@ import java.util.List;
 public interface MenuMapper {
     List<MenuResponse> findAllMenus();
 
-//    Optional<List<MenuResponse>> findByEnableMenus();
-
     List<MenuResponse> findByGnBMenus();
-
 
 }
