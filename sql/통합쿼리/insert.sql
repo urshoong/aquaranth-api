@@ -79,7 +79,7 @@ values (1, '개발팀', 1, 'DEV');
 insert into orga (upper_orga_no)
 values (1);
 insert into deptmapping (dept_no, orga_no)
-values (1, 1);
+values (1, 6);
 
 select *
 from deptmapping;
