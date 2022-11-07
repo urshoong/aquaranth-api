@@ -1,6 +1,5 @@
 # aquaranth-api
 
-
 수정
 수정 어떻게 할거지? 
 TodoDTO 타입 데이터를 수정해서 모든 테이블 컬럼이 다 보이게 해야겠찌?
@@ -25,3 +24,7 @@ Type mismatch 에러가 떠서 select Key에 result Type을 long타입으로 바
 
 4. builder는 값을 설정하지 않으면 자동으로  null을 채우는데 직접 기본값을 설정하기 위해 사용
 
+
+## 권한그룹 등록
+
+[//]: # (TODO : add, delete)

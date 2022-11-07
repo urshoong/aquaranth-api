@@ -1,6 +1,7 @@
 package com.dq.aquaranth.menu.controller;
 
 
+import com.dq.aquaranth.menu.dto.response.AllMenuResponse;
 import com.dq.aquaranth.menu.dto.response.MenuResponse;
 import com.dq.aquaranth.menu.service.MenuService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -30,9 +31,7 @@ public class MenuController {
             responses = @ApiResponse(responseCode = "200",
                     content = @Content(mediaType = "application/json")))
     @GetMapping
-    public ResponseEntity<List<MenuResponse>> getAllMenus(){
-        return ResponseEntity.status(HttpStatus.OK)
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(menuService.findAllMenus());
+    public List<AllMenuResponse> findAllMenus(){
+        return menuService.findAllMenus();
     }
 }

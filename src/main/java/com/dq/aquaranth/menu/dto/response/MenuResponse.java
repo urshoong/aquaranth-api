@@ -12,7 +12,10 @@ import lombok.NoArgsConstructor;
 public class MenuResponse {
     private Long menuNo;
     private Long upperMenuNo;
+    private Integer menuSort;
+    private String menuCode;
+    private String defaultMenuCode;
     private String menuName;
-    private String menuIcon;
+    private String iconUrl;
     private boolean menuUse;
 }
