@@ -87,7 +87,7 @@ CREATE TABLE `role_group`
 (
     `role_group_no`   bigint       NOT NULL auto_increment primary key,
     `role_group_name` VARCHAR(200) NOT NULL,
-    `role_group_use`  boolean      NOT NULL,
+    `role_group_use`  boolean      NOT NULL default true,
     `company_name`    VARCHAR(200) NOT NULL
 );
 

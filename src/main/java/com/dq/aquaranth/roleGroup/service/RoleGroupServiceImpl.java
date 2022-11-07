@@ -6,6 +6,7 @@ import com.dq.aquaranth.roleGroup.mapper.RoleGroupMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
@@ -45,6 +46,7 @@ public class RoleGroupServiceImpl implements RoleGroupService {
         return insertDTO;
     }
 
+    @Transactional
     @Override
     public void delete(Long roleGroupNo) {
         log.info("{} 번째 권한그룹을 삭제합니다.", roleGroupNo);

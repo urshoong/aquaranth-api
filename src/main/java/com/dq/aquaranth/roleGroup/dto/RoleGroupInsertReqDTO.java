@@ -11,6 +11,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class RoleGroupInsertReqDTO {
     private String roleGroupName;
-    private boolean roleGroupUse;
     private String companyName;
+    private boolean roleGroupUse;
 }
