@@ -1,3 +1,33 @@
+drop database testdb;
+create database testdb;
+use testdb;
+
+# 조직 도메인
+CREATE TABLE `company`
+(
+    `company_no`      bigint       NOT NULL auto_increment primary key,
+    `orga_no`         bigint       NOT NULL,
+    `company_name`    VARCHAR(200) NOT NULL,
+    `company_address` VARCHAR(200) NOT NULL,
+    `company_tel`     VARCHAR(100) NULL,
+    `owner_name`      VARCHAR(100) NOT NULL,
+    `founding_date`   date         NULL,
+    `business_number` VARCHAR(100) NOT NULL,
+    `company_use`     boolean      NOT NULL default true
+);
+
+CREATE TABLE `tbl_dept`
+(
+    `dept_no`    bigint        NOT NULL auto_increment primary key,
+    `dname`      VARCHAR(200)  NOT NULL,
+    `del_flag`   boolean       NOT NULL default false,
+    `main_flag`  boolean       NOT NULL default true,
+    `dept_sort`  int(11)       NOT NULL,
+    `ddesc`      VARCHAR(1000) NULL,
+    `regdate`    timestamp     default now(),
+    `updatedate` timestamp     default now()
+);
+
 CREATE TABLE `emp`
 (
     `emp_no`          bigint       NOT NULL auto_increment primary key,
@@ -15,77 +45,10 @@ CREATE TABLE `emp`
     `last_retiredate` date         NULL
 );
 
-CREATE TABLE `company`
-(
-    `company_no`      bigint       NOT NULL auto_increment primary key,
-    `orga_no`         bigint       NOT NULL,
-    `company_name`    VARCHAR(200) NOT NULL,
-    `company_address` VARCHAR(200) NOT NULL,
-    `company_tel`     VARCHAR(100) NULL,
-    `owner_name`      VARCHAR(100) NOT NULL,
-    `founding_date`   date         NULL,
-    `business_number` VARCHAR(100) NOT NULL,
-    `company_use`     boolean      NOT NULL default true
-);
-
-CREATE TABLE `menu`
-(
-    `menu_no`       bigint       NOT NULL auto_increment primary key,
-    `upper_menu_no` bigint       NULL,
-    `menu_name`     VARCHAR(200) NULL,
-    `menu_icon`     VARCHAR(200) NOT NULL,
-    `menu_use`      boolean      NOT NULL,
-    `menu_code`     varchar(200) NOT NULL,
-    `menu_url`      varchar(200) NULL
-);
-
 CREATE TABLE `orga`
 (
     `orga_no`       bigint NOT NULL auto_increment primary key,
     `upper_orga_no` bigint NULL
-);
-
-CREATE TABLE `dept`
-(
-    `dept_no`         bigint       NOT NULL auto_increment primary key,
-    `dept_name`       VARCHAR(200) NOT NULL,
-    `dept_use`        boolean      NOT NULL,
-    `dept_management` boolean      NOT NULL,
-    `dept_sort`       int          NOT NULL
-);
-
-CREATE TABLE `role_group`
-(
-    `role_group_no`   bigint       NOT NULL auto_increment primary key,
-    `role_group_name` VARCHAR(200) NOT NULL,
-    `role_group_use`  boolean      NOT NULL,
-    `company_name`    VARCHAR(200) NOT NULL
-);
-
-CREATE TABLE `orga_role`
-(
-    `orga_role_no`  bigint NOT NULL auto_increment primary key,
-    `role_group_no` bigint NOT NULL,
-    `orga_no`       bigint NOT NULL
-);
-
-CREATE TABLE `menu_role`
-(
-    `role_group_no` bigint NOT NULL,
-    `menu_no`       bigint NOT NULL
-);
-
-CREATE TABLE `favorite`
-(
-    `favorite_no`     bigint NOT NULL auto_increment primary key,
-    `mygroup_no`      bigint NOT NULL,
-    `favorite_emp_no` bigint NOT NULL
-);
-
-CREATE TABLE `mygroup`
-(
-    `mygroup_no` bigint NOT NULL auto_increment primary key,
-    `emp_no`     bigint NOT NULL
 );
 
 CREATE TABLE `empMapping`
@@ -103,6 +66,55 @@ CREATE TABLE `deptMapping`
     `orga_no` bigint NOT NULL
 );
 
+
+# 메뉴 도메인
+CREATE TABLE `menu`
+(
+    `menu_no`       bigint       NOT NULL auto_increment primary key,
+    `upper_menu_no` bigint       NULL,
+    `menu_name`     VARCHAR(200) NULL,
+    `menu_icon`     VARCHAR(200) NOT NULL,
+    `menu_use`      boolean      NOT NULL
+);
+
+# 권한그룹
+CREATE TABLE `role_group`
+(
+    `role_group_no`   bigint       NOT NULL auto_increment primary key,
+    `role_group_name` VARCHAR(200) NOT NULL,
+    `role_group_use`  boolean      NOT NULL,
+    `company_name`    VARCHAR(200) NOT NULL
+);
+
+# 메뉴권한
+CREATE TABLE `menu_role`
+(
+    `role_group_no` bigint NOT NULL,
+    `menu_no`       bigint NOT NULL
+);
+
+
+CREATE TABLE `orga_role`
+(
+    `orga_role_no`  bigint NOT NULL auto_increment primary key,
+    `role_group_no` bigint NOT NULL,
+    `orga_no`       bigint NOT NULL
+);
+
+CREATE TABLE `mygroup`
+(
+    `mygroup_no` bigint NOT NULL auto_increment primary key,
+    `emp_no`     bigint NOT NULL
+);
+
+CREATE TABLE `favorite`
+(
+    `favorite_no`     bigint NOT NULL auto_increment primary key,
+    `mygroup_no`      bigint NOT NULL,
+    `favorite_emp_no` bigint NOT NULL
+);
+
+# 외래기 제약조건
 ALTER TABLE `company`
     ADD CONSTRAINT `FK_orga_TO_company_1` FOREIGN KEY (
                                                        `orga_no`
@@ -200,11 +212,11 @@ ALTER TABLE `empMapping`
             );
 
 ALTER TABLE `deptMapping`
-    ADD CONSTRAINT `FK_dept_TO_deptMapping_1` FOREIGN KEY (
-                                                           `dept_no`
+    ADD CONSTRAINT `FK_tbl_dept_TO_deptMapping_1` FOREIGN KEY (
+                                                               `dept_no`
         )
-        REFERENCES `dept` (
-                           `dept_no`
+        REFERENCES `tbl_dept` (
+                               `dept_no`
             );
 
 ALTER TABLE `deptMapping`
@@ -214,3 +226,4 @@ ALTER TABLE `deptMapping`
         REFERENCES `orga` (
                            `orga_no`
             );
+
