@@ -9,13 +9,15 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class MenuResponse {
+public class AllMenuResponse {
     private Long menuNo;
     private Long upperMenuNo;
     private Integer menuSort;
     private String menuCode;
+    private String url;
     private String defaultMenuCode;
     private String menuName;
     private String iconUrl;
     private boolean menuUse;
+    private Integer depth;
 }
