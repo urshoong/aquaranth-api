@@ -7,6 +7,11 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @Log4j2
 @RestController
@@ -15,7 +20,6 @@ import java.util.Map;
 public class DeptController {
 
     private final DeptService deptService;
-
     //조회
     @GetMapping("/{deptNo}")
     public DeptDTO getOne(@PathVariable("deptNo") Long deptNo) {
@@ -48,6 +52,9 @@ public class DeptController {
         return result;
 
     }
+    //부서 리스트 출력
+    @GetMapping("/deptlist")
+    public List<DeptDTO> deptList() { return deptService.deptList(); }
 
 
 }

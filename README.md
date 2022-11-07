@@ -25,5 +25,3 @@ Type mismatch 에러가 떠서 select Key에 result Type을 long타입으로 바
 
 4. builder는 값을 설정하지 않으면 자동으로  null을 채우는데 직접 기본값을 설정하기 위해 사용
 
-
-

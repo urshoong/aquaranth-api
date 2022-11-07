@@ -1,6 +1,5 @@
 package com.dq.aquaranth.dept.service;
 
-
 import com.dq.aquaranth.dept.dto.DeptDTO;
 import com.dq.aquaranth.dept.mapper.DeptMapper;
 import lombok.RequiredArgsConstructor;
@@ -42,9 +41,6 @@ public class DeptService {
         Long newDNO = deptDTO.getDeptNo();
         DeptDTO result = deptMapper.select(newDNO);
 
-        return  result;
+        return result;
     }
-
-
-
 }

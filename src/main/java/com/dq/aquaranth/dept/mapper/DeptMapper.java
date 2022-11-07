@@ -17,4 +17,5 @@ public interface DeptMapper {
 
     List<DeptDTO> list(DeptCriteria deptCriteria);
 
+    List<DeptDTO> deptList();
 }
