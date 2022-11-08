@@ -1,7 +1,6 @@
 package com.dq.aquaranth.emp;
 
-import com.dq.aquaranth.emp.dto.EmpDTO;
-import com.dq.aquaranth.emp.dto.EmpUpdateDTO;
+import com.dq.aquaranth.emp.dto.*;
 import com.dq.aquaranth.emp.service.EmpService;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
@@ -29,23 +28,24 @@ public class EmpServiceTests {
         log.info(service.empRead(1L));
     }
 
-    @Test
-    void empInsertTest(){
-        EmpDTO empDTO = EmpDTO.builder()
-                .empName("Annie")
-                .username("user09")
-                .password("userpwd09")
-                .gender("여성")
-                .empPhone("01088776655")
-                .empAddress("에버랜드")
-                .empProfile("profile")
-                .email("user09@naver.com")
-                .lastLoginTime(now())
-                .lastLoginIp("192.168.500.9")
-                .lastRetiredate(null)
-                .build();
-        log.info(service.empRegister(empDTO));
-    }
+//    @Test
+//    void empInsertTest(){
+//        EmpDTO empDTO = EmpDTO.builder()
+//                .empName("Annie")
+//                .username("user09")
+//                .password("userpwd09")
+//                .gender("여성")
+//                .empPhone("01088776655")
+//                .empAddress("에버랜드")
+//                .empProfile("profile")
+//                .email("user09@naver.com")
+//                .lastLoginTime(now())
+//                .lastLoginIp("192.168.500.9")
+//                .lastRetiredate(null)
+//                .build();
+//        log.info(service.empRegister(empDTO));
+//
+//    }
 
     @Test
     void empModifyTest(){
@@ -67,5 +67,33 @@ public class EmpServiceTests {
     @Test
     void empDeleteTest() {
         log.info(service.empRemove(16L));
+    }
+
+
+    @Test
+    void registerMethodTest() {
+        EmpInsertInformationDTO empInsertInformationDTO
+                = EmpInsertInformationDTO
+                .builder()
+                .deptNo(2L)
+                .orgaType("emp")
+                .empName("양당근")
+                .username("user")
+                .password("userpwd")
+                .gender("여성")
+                .empProfile("profile")
+                .empPhone("01099231293")
+                .empAddress("울산")
+                .empProfile("file")
+                .email("email@naver.com")
+                .lastLoginTime(now())
+                .lastLoginIp("192.168.12.11")
+                .firstHiredate(LocalDate.now())
+                .lastRetiredate(null)
+                .empRank("사원")
+                .hiredate(LocalDate.now())
+                .build();
+
+        service.empRegister(empInsertInformationDTO);
     }
 }

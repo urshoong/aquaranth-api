@@ -13,26 +13,62 @@
         SELECT * FROM emp WHERE emp_no = #{empNo}
     </select>
 
-    <insert id="empInsert" parameterType="com.dq.aquaranth.emp.dto.EmpDTO">
-        INSERT INTO emp (emp_name, username, password, gender, emp_phone, emp_address, emp_profile, email
-        ,last_login_time, last_login_ip , last_retiredate)
-        VALUES (#{empName}, #{username}, #{password}, #{gender}, #{empPhone}, #{empAddress}, #{empProfile}, #{email}
-        ,#{lastLoginTime}, #{lastLoginIp} , #{lastRetiredate})
+    <insert id="empInsert" parameterType="com.dq.aquaranth.emp.dto.EmpInsertInformationDTO">
+        INSERT INTO emp (
+            emp_name, username, password, gender,
+            emp_phone, emp_address, emp_profile, email,
+            last_login_time, last_login_ip , first_hiredate, last_retiredate
+        )
+        VALUES (
+            #{empName}, #{username}, #{password}, #{gender},
+            #{empPhone}, #{empAddress}, #{empProfile}, #{email},
+            #{lastLoginTime}, #{lastLoginIp}, #{firstHiredate} , #{lastRetiredate}
+        )
+        <selectKey keyProperty="empNo" resultType="long" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+    </insert>
+
+    <insert id="empOrgaInsert" parameterType="com.dq.aquaranth.emp.dto.EmpInsertInformationDTO">
+        INSERT INTO orga (
+            upper_orga_no, orga_type )
+        VALUES (
+            (
+                SELECT deptMapping.orga_no
+                FROM deptMapping
+                JOIN tbl_dept td ON td.dept_no = deptMapping.dept_no
+                WHERE td.dept_no = #{deptNo}
+            ),
+            #{orgaType})
+
+        <selectKey keyProperty="orgaNo" resultType="long" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+    </insert>
+
+    <insert id="empMappingInsert" parameterType="com.dq.aquaranth.emp.dto.EmpInsertInformationDTO">
+        INSERT INTO empMapping (
+            orga_no, emp_no, emp_rank, hiredate
+        )
+        VALUES (
+            #{orgaNo}, #{empNo}, #{empRank}, #{hiredate}
+        )
     </insert>
 
     <update id="empUpdate" parameterType="com.dq.aquaranth.emp.dto.EmpUpdateDTO">
-        UPDATE emp SET emp_name = #{empName}, password = #{password}, gender = #{gender}
-        ,emp_phone = #{empPhone}, emp_address = #{empAddress}, emp_profile = #{empProfile}
-        ,email = #{email}, last_retiredate = #{lastRetiredate}
+        UPDATE emp SET
+            emp_name = #{empName}, password = #{password}, gender = #{gender},
+            emp_phone = #{empPhone}, emp_address = #{empAddress}, emp_profile = #{empProfile},
+            email = #{email}, last_retiredate = #{lastRetiredate}
         WHERE emp_no = #{empNo}
     </update>
 
     <delete id="empDeleteById" parameterType="long">
-        DELETE FROM emp WHERE emp_no = #{empNo};
+        DELETE FROM emp WHERE emp_no = #{empNo}
     </delete>
 
     <select id="empCountAll" resultType="long">
-        SELECT COUNT(emp_name) FROM emp WHERE emp_no > 0;
+        SELECT COUNT(emp_name) FROM emp WHERE emp_no > 0
     </select>
 
 </mapper>
