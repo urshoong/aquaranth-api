@@ -72,5 +72,5 @@ public interface EmpMapper {
 
     Long selectLastInsertId();
 
-
+    EmpDTO findByUsername(String username);
 }

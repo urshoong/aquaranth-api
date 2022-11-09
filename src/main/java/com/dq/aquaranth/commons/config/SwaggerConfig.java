@@ -18,7 +18,7 @@ public class SwaggerConfig {
         return new Docket(DocumentationType.OAS_30)
                 .useDefaultResponseMessages(false)
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.d0uwhs.sbreacttodoserver.web.api"))
+                .apis(RequestHandlerSelectors.basePackage("com.dq.aquaranth.dept.controller"))
                 .paths(PathSelectors.any())
                 .build()
                 .apiInfo(apiInfo());
