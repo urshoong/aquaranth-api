@@ -6,6 +6,7 @@ import com.dq.aquaranth.login.jwt.JwtAuthorizationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -28,10 +29,13 @@ import java.util.Arrays;
 public class CustomSecurityConfig {
     private final UserDetailsService userDetailsService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final RedisTemplate<String, String> redisTemplate;
+
     @Bean
     public SecurityFilterChain filterChain(final HttpSecurity http) throws Exception {
         // Basic AuthenticationManager and UserDetailService Create
         AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
+
         authenticationManagerBuilder
                 .userDetailsService(userDetailsService)
                 .passwordEncoder(bCryptPasswordEncoder);
@@ -44,12 +48,12 @@ public class CustomSecurityConfig {
          *  다른 주소로 해주고 싶으면 이런방식을 사용할 수 있습니다.
          *  해당 개체를 사용하여 URL 을 변경할 수 있으며, 사용자를 지정할 수 있는 몇가지 다른 항목도 있습니다.
          */
-        JwtAuthenticationFilter authenticationFilter = new JwtAuthenticationFilter(authenticationManager);
+        JwtAuthenticationFilter authenticationFilter = new JwtAuthenticationFilter(authenticationManager, redisTemplate);
         authenticationFilter.setFilterProcessesUrl("/api/login");
 
         http
                 .csrf().disable()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.NEVER) // 세션 정책 설정
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // 세션 정책 설정
 
                 .and()
                 .cors().configurationSource(corsConfigurationSource()) // cors custom 설정

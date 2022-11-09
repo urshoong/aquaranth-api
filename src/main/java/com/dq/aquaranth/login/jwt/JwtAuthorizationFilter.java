@@ -6,7 +6,6 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.dq.aquaranth.commons.utils.SendResponseUtils;
 import lombok.extern.log4j.Log4j2;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,7 +18,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Objects;
 
 import static java.util.Arrays.stream;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
@@ -52,9 +50,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                     String username = decodedJWT.getSubject(); // token 과 함께 제공되는 사용자 이름을 줍니다.
                     String[] roles = decodedJWT.getClaim("roles").asArray(String.class); // token 의 roles 를 파싱하여 들고옴(json 배열로 되있음.)
                     Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
-                    stream(roles).forEach(role -> {
-                        authorities.add(new SimpleGrantedAuthority(role));
-                    });
+                    stream(roles).forEach(role -> authorities.add(new SimpleGrantedAuthority(role)));
 
                     // 암호가 필요없는 이유는 token 검증을 끝마쳤기 때문에 이미 유효한 token 으로 인증이 된 사용자이다.
                     UsernamePasswordAuthenticationToken authenticationToken =
@@ -69,7 +65,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                     // exception 1 : token 이 유효하지 않을 때 (token 을 확인할 수 없거나, 유효기간이 지났을 경우)
                     log.error("Error logging in: {}", exception.getMessage());
                     // error 던지기
-                    SendResponseUtils.sendBody(UNAUTHORIZED.value(), exception.getMessage(), response);
+                    SendResponseUtils.sendError(UNAUTHORIZED.value(), exception.getMessage(), response);
                 }
             } else {
                 filterChain.doFilter(request, response);
