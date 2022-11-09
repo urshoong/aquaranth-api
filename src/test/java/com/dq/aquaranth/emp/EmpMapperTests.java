@@ -28,6 +28,11 @@ public class EmpMapperTests {
         log.info(empMapper.empFindById(1L));
     }
 
+    @Test
+    void empFindOrgaTest() {
+        log.info(empMapper.empFindOrga(1L));
+    }
+
 //    @Test
 //    void empInsertTest(){
 //        EmpDTO empDTO = EmpDTO.builder()

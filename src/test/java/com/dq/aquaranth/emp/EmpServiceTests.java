@@ -28,6 +28,11 @@ public class EmpServiceTests {
         log.info(service.empRead(1L));
     }
 
+    @Test
+    void empOrgaListTest() {
+        log.info(service.empOrgaList(1L));
+    }
+
 //    @Test
 //    void empInsertTest(){
 //        EmpDTO empDTO = EmpDTO.builder()

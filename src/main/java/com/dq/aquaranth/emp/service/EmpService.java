@@ -17,6 +17,8 @@ public interface EmpService {
     ////////////insert
     void empRegister(EmpInsertInformationDTO empInsertInformationDTO);
 
+    List<EmpSelectOrga> empOrgaList(Long empNo);
+
 
 
 }

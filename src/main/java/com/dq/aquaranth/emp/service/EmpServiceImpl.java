@@ -98,7 +98,10 @@ public class EmpServiceImpl implements EmpService {
         mapper.empMappingInsert(insertEmpMapping);
     }
 
-
+    @Override
+    public List<EmpSelectOrga> empOrgaList(Long empNo) {
+        return mapper.empFindOrga(empNo);
+    }
 
 
 }

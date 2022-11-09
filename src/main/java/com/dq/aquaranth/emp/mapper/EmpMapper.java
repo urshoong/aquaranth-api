@@ -20,6 +20,11 @@ public interface EmpMapper {
      */
     EmpDTO empFindById(Long empNo);
 
+    /**
+     *
+     * @return
+     */
+    List<EmpSelectOrga> empFindOrga(Long empNo);
 
     /**
      * 새로운 사원을 추가합니다.

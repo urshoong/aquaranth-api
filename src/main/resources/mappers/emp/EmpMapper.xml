@@ -13,6 +13,17 @@
         SELECT * FROM emp WHERE emp_no = #{empNo}
     </select>
 
+    <select id="empFindOrga" resultType="com.dq.aquaranth.emp.dto.EmpSelectOrga">
+        SELECT c.company_name, td.dname, emp.emp_no, eM.emp_rank, eM.hiredate, eM.retireddate, c.company_tel, c.company_address
+        FROM emp
+            LEFT JOIN empMapping eM on emp.emp_no = eM.emp_no
+            LEFT JOIN orga o on o.orga_no = eM.orga_no
+            LEFT JOIN deptMapping dM on o.upper_orga_no = dM.orga_no
+            LEFT JOIN tbl_dept td on td.dept_no = dM.dept_no
+            LEFT JOIN company c on td.company_no = c.company_no
+        WHERE emp.emp_no = #{empNo};
+    </select>
+
     <insert id="empInsert" parameterType="com.dq.aquaranth.emp.dto.EmpInsertInformationDTO">
         INSERT INTO emp (
             emp_name, username, password, gender,
@@ -66,9 +77,5 @@
     <delete id="empDeleteById" parameterType="long">
         DELETE FROM emp WHERE emp_no = #{empNo}
     </delete>
-
-    <select id="empCountAll" resultType="long">
-        SELECT COUNT(emp_name) FROM emp WHERE emp_no > 0
-    </select>
 
 </mapper>
