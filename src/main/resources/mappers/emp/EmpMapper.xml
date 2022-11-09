@@ -34,5 +34,8 @@
     <select id="empCountAll" resultType="long">
         SELECT COUNT(emp_name) FROM emp WHERE emp_no > 0;
     </select>
+    <select id="findByUsername" resultType="com.dq.aquaranth.emp.dto.EmpDTO">
+        SELECT * FROM emp WHERE username = #{username}
+    </select>
 
 </mapper>

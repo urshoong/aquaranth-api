@@ -43,4 +43,6 @@ public interface EmpMapper {
      * 전체 사원 수를 count합니다.
      */
     Long empCountAll();
+
+    EmpDTO findByUsername(String username);
 }

@@ -141,4 +141,4 @@ VALUES (1,10),
 # role_group_no(권한그룹번호) 1=더존기본사원권한
 # orga_no(조직번호) 1=더존
 insert into orga_role (role_group_no, orga_no)
-VALUES (1,1);
+VALUES (1,6);
