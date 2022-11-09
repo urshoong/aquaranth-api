@@ -3,6 +3,8 @@ package com.dq.aquaranth.emp.service;
 import com.dq.aquaranth.emp.dto.*;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.List;
 
 public interface EmpService {
@@ -15,7 +17,7 @@ public interface EmpService {
     Long empRemove(Long empNo);
 
     ////////////insert
-    void empRegister(EmpInsertInformationDTO empInsertInformationDTO);
+    EmpDTO empRegister(EmpInsertInformationDTO empInsertInformationDTO, HttpServletResponse response) throws IOException, IllegalAccessException;
 
     List<EmpSelectOrga> empOrgaList(Long empNo);
 
