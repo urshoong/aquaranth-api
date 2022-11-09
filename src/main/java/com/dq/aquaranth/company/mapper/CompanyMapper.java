@@ -1,5 +1,9 @@
 package com.dq.aquaranth.company.mapper;
-import com.dq.aquaranth.company.dto.*;
+
+import com.dq.aquaranth.company.dto.CompanyDTO;
+import com.dq.aquaranth.company.dto.CompanyListDTO;
+import com.dq.aquaranth.company.dto.CompanyModifyDTO;
+import com.dq.aquaranth.company.dto.CompanyOrgaDTO;
 
 import java.util.List;
 
@@ -29,6 +33,7 @@ public interface CompanyMapper {
      * 회사 정보 삭제
      */
     Long deleteById(Long companyNo);
+
     /**
      * 회사 코드, 회사명, 사용여부로 검색
      */

@@ -67,8 +67,8 @@ public class UserService implements UserDetailsService {
         }
 
         emp.setPassword(passwordEncoder.encode(emp.getPassword()));
-        Long insertEmp = empMapper.empInsert(emp);
-        return empMapper.empFindById(insertEmp);
+        empMapper.empInsert(emp);
+        return empMapper.empFindById(emp.getEmpNo());
     }
 
 }

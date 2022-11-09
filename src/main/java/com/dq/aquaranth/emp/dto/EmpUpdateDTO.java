@@ -20,6 +20,4 @@ public class EmpUpdateDTO {
     private String empName, password;
     private String gender, empPhone, empAddress, empProfile, email;
     private LocalDate lastRetiredate;
-
-
 }

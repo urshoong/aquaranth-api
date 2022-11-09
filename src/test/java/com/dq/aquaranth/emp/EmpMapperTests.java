@@ -1,7 +1,6 @@
 package com.dq.aquaranth.emp;
 
-import com.dq.aquaranth.emp.dto.EmpDTO;
-import com.dq.aquaranth.emp.dto.EmpUpdateDTO;
+import com.dq.aquaranth.emp.dto.*;
 import com.dq.aquaranth.emp.mapper.EmpMapper;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
@@ -30,22 +29,51 @@ public class EmpMapperTests {
     }
 
     @Test
-    void empInsertTest(){
-        EmpDTO empDTO = EmpDTO.builder()
-                .empName("김바보")
-                .username("user08")
-                .password("userpwd08")
-                .gender("남성")
-                .empPhone("01088890009")
-                .empAddress("경주시 경주월드")
-                .empProfile("profileYul")
-                .email("user08@naver.com")
-                .lastLoginTime(now())
-                .lastLoginIp("192.168.500.8")
-                .lastRetiredate(null)
-                .build();
-        log.info(empMapper.empInsert(empDTO));
+    void empFindOrgaTest() {
+        log.info(empMapper.empFindOrga(1L));
     }
+
+//    @Test
+//    void empInsertTest(){
+//        EmpDTO empDTO = EmpDTO.builder()
+//                .empName("김바보")
+//                .username("user08")
+//                .password("userpwd08")
+//                .gender("남성")
+//                .empPhone("01088890009")
+//                .empAddress("경주시 경주월드")
+//                .empProfile("profileYul")
+//                .email("user08@naver.com")
+//                .lastLoginTime(now())
+//                .lastLoginIp("192.168.500.8")
+//                .lastRetiredate(null)
+//                .build();
+//        log.info(empMapper.empInsert(empDTO));
+//    }
+//
+//    @Test
+//    void empOrgaInsertTest(){
+//        EmpOrgaDTO empOrgaInsertDTO = EmpOrgaDTO
+//                .builder()
+//                .deptNo(5L)
+//                .orgaType("emp")
+//                .build();
+//
+//        empMapper.empOrgaInsert(empOrgaInsertDTO);
+//    }
+//
+//    @Test
+//    void empMappingInsertTest(){
+//        EmpMappingDTO empMappingDTO = EmpMappingDTO
+//                .builder()
+//                .orgaNo(24L)
+//                .empNo(1L)
+//                .empRank("사원")
+//                .hiredate(LocalDate.now())
+//                .build();
+//
+//        empMapper.empMappingInsert(empMappingDTO);
+//    }
 
     @Test
     void empUpdateTest(){
@@ -70,7 +98,8 @@ public class EmpMapperTests {
     }
 
     @Test
-    void empCountAll(){
+    void empCountAllTest(){
         log.info(empMapper.empCountAll());
     }
+
 }
