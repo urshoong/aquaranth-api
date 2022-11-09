@@ -46,6 +46,7 @@ public class RoleGroupServiceImpl implements RoleGroupService {
         return insertDTO;
     }
 
+//    TODO : 트랜잭션 처리
     @Transactional
     @Override
     public void delete(Long roleGroupNo) {
