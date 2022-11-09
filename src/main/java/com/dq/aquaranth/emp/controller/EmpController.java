@@ -31,8 +31,8 @@ public class EmpController {
 //    public Long registerEmp(@Valid @RequestBody EmpDTO empInsertDTO) {
 //        return service.empRegister(empInsertDTO);
 //    }
-    // TODO Controller에 register 작성
-    
+    // TODO Controller에 register, 조직 read 작성
+
 
     @PutMapping(value = "/modify/{empNo}")
     public Long modifyEmp(@Valid @RequestBody EmpUpdateDTO empUpdateDTO) {
