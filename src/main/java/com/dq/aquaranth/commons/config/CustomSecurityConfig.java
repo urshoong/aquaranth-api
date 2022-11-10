@@ -67,8 +67,8 @@ public class CustomSecurityConfig {
 
                 // 권한 설정
                 .authorizeHttpRequests()
-                .antMatchers("/login/**", "/api/token/refresh/**", "/user", "/api/users/register", "/api/token/save-refresh", "/api/token/refresh", "/anonymity").permitAll()
-                .anyRequest().authenticated()
+//                .antMatchers("/login/**", "/api/token/refresh/**", "/user", "/api/users/register", "/api/token/save-refresh", "/api/token/refresh", "/anonymity").permitAll()
+                .anyRequest().permitAll()
 
                 .and()
                 .logout()

@@ -72,18 +72,13 @@ public class UserService implements UserDetailsService {
         return new CustomUser(user);
     }
 
-    public EmpDTO create(EmpDTO emp, HttpServletResponse response) throws IOException {
+    public EmpDTO create(EmpDTO emp) throws IllegalAccessException, IOException {
         log.info("계정을 생성합니다. username => {}", emp.getUsername());
 
         // 이미 가입된 유저라면
         if (Objects.nonNull(empMapper.findByUsername(emp.getUsername()))) {
             log.error("이미 가입된 유저입니다. username -> " + emp.getUsername());
 
-            // error 전송
-            SendResponseUtils.sendError(CONFLICT.value(), "이미 가입된 유저입니다.", response);
-
-            // 회원가입 시 아이디 중복은 흔한 일인데 이걸 굳이 exception 을 던져서 프로그램을 뻗다이 시켜야하는가?
-//            return new User();
             throw new KeyAlreadyExistsException("이미 가입된 유저입니다. username -> " + emp.getUsername());
         }
 
