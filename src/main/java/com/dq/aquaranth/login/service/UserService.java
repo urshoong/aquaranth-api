@@ -30,6 +30,7 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
+import static com.dq.aquaranth.login.jwt.JwtProperties.*;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpStatus.CONFLICT;
 import static org.springframework.http.HttpStatus.UNAUTHORIZED;
@@ -84,72 +85,52 @@ public class UserService implements UserDetailsService {
         return empMapper.empFindById(emp.getEmpNo());
     }
 
-    public void checkRefresh(HttpServletRequest request,
-                             HttpServletResponse response) throws IOException {
-
-        // 사용자가 토큰을 갱신할 수 있도록 요청을 설정할 수 있는 다른 끝점을 만듭니다.
-        // (refresh token 을 Client 가 보내면 그것을 받아서 만료기간을 확인 후 다른 access token 을 부여할 것입니다.)
-        // 인증 헤더 찾기
-        // Client 가 refresh token 을 보낼때 Bearer 과 함께 보낼 거임.
-        String authorizationHeader = request.getHeader(AUTHORIZATION);
-
+    public Map<String, String> checkRefresh(String authorizationHeader) throws Exception{
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-            try {
-                log.info("refresh token 을 검증합니다.");
-                String refreshToken = authorizationHeader.substring("Bearer ".length());
-                Algorithm algorithm = Algorithm.HMAC256(JwtProperties.SECRET.getBytes()); // 토큰 생성할 때와 같은 알고리즘으로 풀어야함.
-                JWTVerifier verifier = JWT.require(algorithm).build();
-                DecodedJWT decodedJWT = verifier.verify(refreshToken);
+            log.info("refresh token 을 검증합니다.");
+            String refreshToken = authorizationHeader.substring("Bearer ".length());
+            Algorithm algorithm = Algorithm.HMAC256(SECRET.getBytes()); // 토큰 생성할 때와 같은 알고리즘으로 풀어야함.
+            JWTVerifier verifier = JWT.require(algorithm).build();
+            DecodedJWT decodedJWT = verifier.verify(refreshToken);
 
-                // 토큰이 유효한지 확인되면, 사용자의 이름을 가져올 수 있습니다.
-                String username = decodedJWT.getSubject(); // token 과 함께 제공되는 사용자 이름을 줍니다.
-                UserDetails user = loadUserByUsername(username);
+            // 토큰이 유효한지 확인되면, 사용자의 이름을 가져올 수 있습니다.
+            String username = decodedJWT.getSubject(); // token 과 함께 제공되는 사용자 이름을 줍니다.
+            UserDetails user = loadUserByUsername(username);
 
-                // Redis에서 저장된 Refresh Token 값을 가져온다.
-                String refreshTokenInDatabase = redisTemplate.opsForValue().get(username);
+            // Redis에서 저장된 Refresh Token 값을 가져온다.
+            String refreshTokenInDatabase = redisTemplate.opsForValue().get(username);
 
-                if (!Objects.equals(refreshToken, refreshTokenInDatabase)) {
-                    throw new IllegalAccessException();
-                }
-
-                log.info("refresh token 검증이 완료되었습니다.");
-//                refresh token 이 유효한 경우, 두개다 다시 재발급해서 클라이언트한테 던져줌
-                String accessToken = JWT.create()
-                        .withSubject(user.getUsername())
-                        .withExpiresAt(new Date(System.currentTimeMillis() + JwtProperties.ACCESS_TOKEN_EXPIRATION_TIME))
-                        .withIssuer(request.getRequestURL().toString())
-                        .withClaim("roles", user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(
-                                Collectors.toList()))
-                        .sign(algorithm);
-
-                refreshToken = JWT.create()
-                        .withSubject(user.getUsername())
-                        .withExpiresAt(new Date(System.currentTimeMillis() + JwtProperties.REFRESH_TOKEN_EXPIRATION_TIME))
-                        .withIssuer(request.getRequestURL().toString())
-                        .sign(algorithm);
-
-                /* token body 로 던지기 */
-                Map<String, String> tokens = new HashMap<>();
-                tokens.put("access_token", accessToken);
-                tokens.put("refresh_token", refreshToken);
-
-                log.info("redis 에 refresh token 을 업데이트합니다. username-> {}", user.getUsername());
-                // RefreshToken Redis에 업데이트
-                log.info("redis refresh_token 을 업데이트 합니다. username -> {}", user.getUsername());
-                redisTemplate.opsForValue().set(
-                        user.getUsername(),
-                        refreshToken,
-                        JwtProperties.REFRESH_TOKEN_EXPIRATION_TIME,
-                        TimeUnit.MILLISECONDS
-                );
-
-                response.setContentType(APPLICATION_JSON_VALUE);
-                new ObjectMapper().writeValue(response.getOutputStream(), tokens);
-            } catch (Exception exception) {
-                log.info("refresh token 검증에 실패했습니다.");
-                // exception 1 : token 이 유효하지 않을 때 (token 을 확인할 수 없거나, 유효기간이 지났을 경우)
-                SendResponseUtils.sendError(UNAUTHORIZED.value(), "[refresh_token]"+exception.getMessage(), response);
+            if (!Objects.equals(refreshToken, refreshTokenInDatabase)) {
+                log.error("refresh token이 redis에 저장되어있는 refresh token과 일치하지 않습니다");
+                throw new IllegalAccessException("refresh token이 redis에 저장되어있는 refresh token과 일치하지 않습니다");
             }
+
+            log.info("refresh token 검증이 완료되었습니다. 토큰을 생성합니다.");
+            String accessToken = JWT.create()
+                    .withSubject(user.getUsername())
+                    .withExpiresAt(new Date(System.currentTimeMillis() + ACCESS_TOKEN_EXPIRATION_TIME))
+                    .withClaim("roles", user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(
+                            Collectors.toList()))
+                    .sign(algorithm);
+
+            refreshToken = JWT.create()
+                    .withSubject(user.getUsername())
+                    .withExpiresAt(new Date(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRATION_TIME))
+                    .sign(algorithm);
+
+            Map<String, String> tokens = new HashMap<>();
+            tokens.put("access_token", accessToken);
+            tokens.put("refresh_token", refreshToken);
+
+            log.info("redis refresh_token 을 업데이트 합니다. username -> {}", user.getUsername());
+            redisTemplate.opsForValue().set(
+                    user.getUsername(),
+                    refreshToken,
+                    REFRESH_TOKEN_EXPIRATION_TIME,
+                    TimeUnit.MILLISECONDS
+            );
+
+            return tokens;
         } else {
             throw new RuntimeException("Refresh token is missing");
         }

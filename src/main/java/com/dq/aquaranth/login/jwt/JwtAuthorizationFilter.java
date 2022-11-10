@@ -19,6 +19,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import static com.dq.aquaranth.login.jwt.JwtProperties.SECRET;
+import static com.dq.aquaranth.login.jwt.JwtProperties.TOKEN_PREFIX;
 import static java.util.Arrays.stream;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpStatus.UNAUTHORIZED;
@@ -33,16 +35,12 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         if (request.getServletPath().equals("/api/login") || request.getServletPath().equals("/api/token/refresh")) {
             filterChain.doFilter(request, response);
         } else {
-            // 2. 권한 부여 헤더에 access
-            // 헤더를 가져온 다음 내가 찾고 있는 키를 전달하고, 인증 키를 찾음
             String authorizationHeader = request.getHeader(AUTHORIZATION);
-
-            //            헤더에 token 자체가 없다면 바로 오쎈필터로 갑니다.
-            if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+            if (authorizationHeader != null && authorizationHeader.startsWith(TOKEN_PREFIX)) {
                 try {
                     log.info("access token을 검증합니다.");
                     String token = authorizationHeader.substring("Bearer ".length());
-                    Algorithm algorithm = Algorithm.HMAC256(JwtProperties.SECRET.getBytes()); // 토큰 생성할 때와 같은 알고리즘으로 풀어야함.
+                    Algorithm algorithm = Algorithm.HMAC256(SECRET.getBytes()); // 토큰 생성할 때와 같은 알고리즘으로 풀어야함.
                     JWTVerifier verifier = JWT.require(algorithm).build();
                     DecodedJWT decodedJWT = verifier.verify(token);
 
@@ -66,10 +64,10 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                     // exception 1 : token 이 유효하지 않을 때 (token 을 확인할 수 없거나, 유효기간이 지났을 경우)
                     log.error("Error logging in: {}", exception.getMessage());
                     // error 던지기
-                    SendResponseUtils.sendError(UNAUTHORIZED.value(), "[access_token]"+exception.getMessage(), response);
+                    SendResponseUtils.sendError(UNAUTHORIZED.value(), "[access_token]" + exception.getMessage(), response);
                 }
             } else {
-                filterChain.doFilter(request, response);
+                SendResponseUtils.sendError(UNAUTHORIZED.value(), "[access_token] token is missing", response);
             }
         }
     }

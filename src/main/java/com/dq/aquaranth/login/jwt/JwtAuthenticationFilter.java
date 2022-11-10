@@ -2,6 +2,7 @@ package com.dq.aquaranth.login.jwt;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.dq.aquaranth.commons.utils.SendResponseUtils;
 import com.dq.aquaranth.login.dto.LoginReqDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import javax.security.auth.login.LoginException;
@@ -32,6 +34,8 @@ import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
+import static com.dq.aquaranth.login.jwt.JwtProperties.*;
+import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 // 로그인이 성공할 때마다 access token 과 refresh token 을 발급해줄 filter
@@ -70,15 +74,6 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(username, password);
 
-        // ** 인증 시도시
-        // 1. authenticate() 메서드 호출
-        // 2. 인증 프로바이더가 유저 디테일서비스의 loadUserByUsername(토큰의 첫번째 파라메터) 를 호출
-        // 3. UserDetails를 리턴받아서 토큰의 두번째 파라메터(credential)과 UserDetails(DB값)의 getPassword()함수로 비교해서 동일하면
-        // 4. Authentication 객체를 만들어서 필터체인으로 리턴해준다.
-
-        // Tip: 인증 프로바이더의 디폴트 서비스는 UserDetailsService 타입
-        // Tip: 인증 프로바이더의 디폴트 암호화 방식은 BCryptPasswordEncoder
-        // 결론은 인증 프로바이더에게 알려줄 필요가 없음.
         return authenticationManager.authenticate(authenticationToken);
     }
 
@@ -91,18 +86,18 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException {
 
         User user = (User) authentication.getPrincipal(); // 현재 인증된(로그인한) 사용자의 정보를 가져온다
-        Algorithm algorithm = Algorithm.HMAC256(JwtProperties.SECRET.getBytes());
+        Algorithm algorithm = Algorithm.HMAC256(SECRET.getBytes());
 
         String access_token = JWT.create()
                 .withSubject(user.getUsername())
-                .withExpiresAt(new Date(System.currentTimeMillis() + JwtProperties.ACCESS_TOKEN_EXPIRATION_TIME))
+                .withExpiresAt(new Date(System.currentTimeMillis() + ACCESS_TOKEN_EXPIRATION_TIME))
                 .withIssuer(request.getRequestURL().toString())
                 .withClaim("roles", user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
                 .sign(algorithm);
 
         String refresh_token = JWT.create()
                 .withSubject(user.getUsername())
-                .withExpiresAt(new Date(System.currentTimeMillis() + JwtProperties.REFRESH_TOKEN_EXPIRATION_TIME))
+                .withExpiresAt(new Date(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRATION_TIME))
                 .withIssuer(request.getRequestURL().toString())
                 .sign(algorithm);
 
@@ -117,11 +112,17 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         redisTemplate.opsForValue().set(
                 authentication.getName(),
                 refresh_token,
-                JwtProperties.REFRESH_TOKEN_EXPIRATION_TIME,
+                REFRESH_TOKEN_EXPIRATION_TIME,
                 TimeUnit.MILLISECONDS
         );
 
         response.setContentType(APPLICATION_JSON_VALUE);
         new ObjectMapper().writeValue(response.getWriter(), tokens);
+    }
+
+    @Override
+    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
+        log.warn(failed.getMessage());
+        SendResponseUtils.sendError(UNAUTHORIZED.value(), failed.getMessage(), response);
     }
 }
