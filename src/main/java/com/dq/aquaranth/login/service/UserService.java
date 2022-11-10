@@ -8,7 +8,10 @@ import com.dq.aquaranth.commons.utils.JWTUtil;
 import com.dq.aquaranth.commons.utils.SendResponseUtils;
 import com.dq.aquaranth.emp.dto.EmpDTO;
 import com.dq.aquaranth.emp.mapper.EmpMapper;
+import com.dq.aquaranth.login.domain.CustomUser;
 import com.dq.aquaranth.login.jwt.JwtProperties;
+import com.dq.aquaranth.menu.dto.response.AllMenuResponse;
+import com.dq.aquaranth.menu.mapper.MenuMapper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -47,6 +50,7 @@ public class UserService implements UserDetailsService {
     private final EmpMapper empMapper;
     private final RedisTemplate<String, String> redisTemplate;
     private final JWTUtil jwtUtil;
+    private final MenuMapper menuMapper;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -62,10 +66,10 @@ public class UserService implements UserDetailsService {
 
         log.info("user 정보를 찾았습니다 username => {}", username);
 
-//        Fixme : user 는 여러개의 권한을 가질 수 있어야 한다.
+
         Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
 
-        return new User(user.getUsername(), user.getPassword(), authorities);
+        return new CustomUser(user);
     }
 
     public EmpDTO create(EmpDTO emp, HttpServletResponse response) throws IOException {
@@ -102,10 +106,10 @@ public class UserService implements UserDetailsService {
             // Redis에서 저장된 Refresh Token 값을 가져온다.
             String refreshTokenInDatabase = redisTemplate.opsForValue().get(username);
 
-            if (!Objects.equals(refreshToken, refreshTokenInDatabase)) {
-                log.error("refresh token이 redis에 저장되어있는 refresh token과 일치하지 않습니다");
-                throw new IllegalAccessException("refresh token이 redis에 저장되어있는 refresh token과 일치하지 않습니다");
-            }
+//            if (!Objects.equals(refreshToken, refreshTokenInDatabase)) {
+//                log.error("refresh token이 redis에 저장되어있는 refresh token과 일치하지 않습니다");
+//                throw new IllegalAccessException("refresh token이 redis에 저장되어있는 refresh token과 일치하지 않습니다");
+//            }
 
             log.info("refresh token 검증이 완료되었습니다.");
             Map<String, String> tokens = jwtUtil.generateToken(username);
@@ -125,4 +129,7 @@ public class UserService implements UserDetailsService {
         }
     }
 
+    public ArrayList<AllMenuResponse> findMenusByLoginUsername(String username) {
+        return menuMapper.findMenusByLoginUsername(username);
+    }
 }

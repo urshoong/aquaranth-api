@@ -39,12 +39,12 @@ public class JWTUtil {
 
     public Map<String, Object> validateToken(String token)throws JwtException {
         log.info("token을 검증합니다.");
-        Map<String, Object> claim;
-
-        claim = Jwts.parser()
-                .setSigningKey(SECRET.getBytes()) // Set Key
-                .parseClaimsJws(token) // 파싱 및 검증, 실패 시 에러
-                .getBody();
-        return claim;
+//        Map<String, Object> claim;
+//
+//        claim = Jwts.parser()
+//                .setSigningKey(SECRET.getBytes()) // Set Key
+//                .parseClaimsJws(token) // 파싱 및 검증, 실패 시 에러
+//                .getBody();
+        return null;
     }
 }

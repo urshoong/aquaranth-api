@@ -4,6 +4,7 @@ import com.dq.aquaranth.commons.utils.JWTUtil;
 import com.dq.aquaranth.login.handler.CustomLogoutSuccessHandler;
 import com.dq.aquaranth.login.jwt.JwtAuthenticationFilter;
 import com.dq.aquaranth.login.jwt.JwtAuthorizationFilter;
+import com.dq.aquaranth.menu.service.MenuService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -32,6 +33,7 @@ public class CustomSecurityConfig {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final RedisTemplate<String, String> redisTemplate;
     private final JWTUtil jwtUtil;
+    private final MenuService menuService;
 
     @Bean
     public SecurityFilterChain filterChain(final HttpSecurity http) throws Exception {
