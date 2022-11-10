@@ -13,5 +13,5 @@ public interface MenuMapper {
 
     List<MenuResponse> findByGnBMenus();
 
-    ArrayList<AllMenuResponse> findMenusByLoginUsername(String username);
+    ArrayList<String> findMenusByLoginUsername(String username);
 }

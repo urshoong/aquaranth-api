@@ -48,7 +48,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 public class UserService implements UserDetailsService {
     private final PasswordEncoder passwordEncoder;
     private final EmpMapper empMapper;
-    private final RedisTemplate<String, String> redisTemplate;
+    private final RedisTemplate<String, Object> redisTemplate;
     private final JWTUtil jwtUtil;
     private final MenuMapper menuMapper;
 
@@ -65,11 +65,7 @@ public class UserService implements UserDetailsService {
         }
 
         log.info("user 정보를 찾았습니다 username => {}", username);
-
-
-        Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
-
-        return new CustomUser(user);
+        return new CustomUser(user, menuMapper.findMenusByLoginUsername(username));
     }
 
     public Map<String, String> checkRefresh(String authorizationHeader) throws Exception {
@@ -82,14 +78,6 @@ public class UserService implements UserDetailsService {
 
             // 토큰이 유효한지 확인되면, 사용자의 이름을 가져올 수 있습니다.
             String username = decodedJWT.getSubject(); // token 과 함께 제공되는 사용자 이름을 줍니다.
-
-            // Redis에서 저장된 Refresh Token 값을 가져온다.
-            String refreshTokenInDatabase = redisTemplate.opsForValue().get(username);
-
-//            if (!Objects.equals(refreshToken, refreshTokenInDatabase)) {
-//                log.error("refresh token이 redis에 저장되어있는 refresh token과 일치하지 않습니다");
-//                throw new IllegalAccessException("refresh token이 redis에 저장되어있는 refresh token과 일치하지 않습니다");
-//            }
 
             log.info("refresh token 검증이 완료되었습니다.");
             Map<String, String> tokens = jwtUtil.generateToken(username);
@@ -109,7 +97,7 @@ public class UserService implements UserDetailsService {
         }
     }
 
-    public ArrayList<AllMenuResponse> findMenusByLoginUsername(String username) {
+    public ArrayList<String> findMenusByLoginUsername(String username) {
         return menuMapper.findMenusByLoginUsername(username);
     }
 }

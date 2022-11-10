@@ -1,6 +1,8 @@
 package com.dq.aquaranth.login.domain;
 
 import com.dq.aquaranth.emp.dto.EmpDTO;
+import com.dq.aquaranth.menu.dto.response.AllMenuResponse;
+import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
 import lombok.ToString;
@@ -17,9 +19,11 @@ import java.util.List;
 @ToString
 public class CustomUser extends User {
     EmpDTO empDTO;
+    List<String> menuList;
 
-    public CustomUser(EmpDTO empDTO) {
+    public CustomUser(EmpDTO empDTO, List<String> menuList) {
         super(empDTO.getUsername(), empDTO.getPassword(), List.of(new SimpleGrantedAuthority("ROLE_USER")));
         this.empDTO = empDTO;
+        this.menuList = menuList;
     }
 }

@@ -31,7 +31,7 @@ import java.util.Arrays;
 public class CustomSecurityConfig {
     private final UserDetailsService userDetailsService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
-    private final RedisTemplate<String, String> redisTemplate;
+    private final RedisTemplate<String, Object> redisTemplate;
     private final JWTUtil jwtUtil;
     private final MenuService menuService;
 

@@ -2,6 +2,7 @@ package com.dq.aquaranth.login.jwt;
 
 import com.dq.aquaranth.commons.utils.JWTUtil;
 import com.dq.aquaranth.commons.utils.SendResponseUtils;
+import com.dq.aquaranth.login.domain.CustomUser;
 import com.dq.aquaranth.login.dto.LoginReqDTO;
 import com.dq.aquaranth.login.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -21,6 +22,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
@@ -34,7 +36,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private final AuthenticationManager authenticationManager;
-    private final RedisTemplate<String, String> redisTemplate;
+    private final RedisTemplate<String, Object> redisTemplate;
     private final JWTUtil jwtUtil;
 
 
@@ -76,30 +78,20 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
      */
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException {
-        User user = (User) authentication.getPrincipal(); // 현재 인증된(로그인한) 사용자의 정보를 가져온다
+        CustomUser user = (CustomUser) authentication.getPrincipal(); // 현재 인증된(로그인한) 사용자의 정보를 가져온다
         log.info("{} 님이 로그인 하였습니다.", user.getUsername());
         String cno = request.getParameter("cno");
 
         Map<String, String> tokens = jwtUtil.generateToken(user.getUsername());
 
-        /**
-         * user99
-         * 1234
-         * user99 카카오, 더존(주회사)
-         * TODO 1. 로그인성공한 사원의 주회사 조직번호를 알아옵니다. (주회사 개념이 없다면, 최초 로그인시 어떤 메뉴가 보여야 하는지 알 수 없음)
-         *      2. 해당 사원이 어떤 권한그룹을 가지고 있는지 알아옵니다.
-         *      3. 가지고온 권한그룹들이 어떤메뉴권한들을 가지고 있는지 알아옵니다.
-         *      4. 알아온 메뉴권한 리스트를 redis 에 올립니다.
-         */
-
-
-
+        ObjectMapper objectMapper = new ObjectMapper();
+        String serializedMenuList = objectMapper.writeValueAsString(user.getMenuList());
 
 //       Redis에 저장 - 만료 시간 설정을 통해 자동 삭제 처리
         log.info("redis에 refresh_token을 저장합니다.");
         redisTemplate.opsForValue().set(
                 authentication.getName(),
-                tokens.get("refresh_token"),
+                serializedMenuList,
                 REFRESH_TOKEN_EXPIRATION_TIME,
                 TimeUnit.MILLISECONDS
         );
