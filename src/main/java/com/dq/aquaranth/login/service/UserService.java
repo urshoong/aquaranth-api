@@ -64,7 +64,7 @@ public class UserService implements UserDetailsService {
         return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), authorities);
     }
 
-    public EmpDTO create(EmpDTO emp, HttpServletResponse response) throws IllegalAccessException, IOException {
+    public EmpDTO create(EmpDTO emp, HttpServletResponse response) throws IOException {
         log.info("계정을 생성합니다. username => {}", emp.getUsername());
 
         // 이미 가입된 유저라면
@@ -86,7 +86,6 @@ public class UserService implements UserDetailsService {
 
     public void checkRefresh(HttpServletRequest request,
                              HttpServletResponse response) throws IOException {
-        log.info("refresh token 을 검증합니다.");
 
         // 사용자가 토큰을 갱신할 수 있도록 요청을 설정할 수 있는 다른 끝점을 만듭니다.
         // (refresh token 을 Client 가 보내면 그것을 받아서 만료기간을 확인 후 다른 access token 을 부여할 것입니다.)
@@ -96,7 +95,7 @@ public class UserService implements UserDetailsService {
 
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             try {
-                // token 검증 작업
+                log.info("refresh token 을 검증합니다.");
                 String refreshToken = authorizationHeader.substring("Bearer ".length());
                 Algorithm algorithm = Algorithm.HMAC256(JwtProperties.SECRET.getBytes()); // 토큰 생성할 때와 같은 알고리즘으로 풀어야함.
                 JWTVerifier verifier = JWT.require(algorithm).build();
@@ -113,6 +112,7 @@ public class UserService implements UserDetailsService {
                     throw new IllegalAccessException();
                 }
 
+                log.info("refresh token 검증이 완료되었습니다.");
 //                refresh token 이 유효한 경우, 두개다 다시 재발급해서 클라이언트한테 던져줌
                 String accessToken = JWT.create()
                         .withSubject(user.getUsername())
@@ -133,7 +133,9 @@ public class UserService implements UserDetailsService {
                 tokens.put("access_token", accessToken);
                 tokens.put("refresh_token", refreshToken);
 
+                log.info("redis 에 refresh token 을 업데이트합니다. username-> {}", user.getUsername());
                 // RefreshToken Redis에 업데이트
+                log.info("redis refresh_token 을 업데이트 합니다. username -> {}", user.getUsername());
                 redisTemplate.opsForValue().set(
                         user.getUsername(),
                         refreshToken,
@@ -144,16 +146,9 @@ public class UserService implements UserDetailsService {
                 response.setContentType(APPLICATION_JSON_VALUE);
                 new ObjectMapper().writeValue(response.getOutputStream(), tokens);
             } catch (Exception exception) {
+                log.info("refresh token 검증에 실패했습니다.");
                 // exception 1 : token 이 유효하지 않을 때 (token 을 확인할 수 없거나, 유효기간이 지났을 경우)
-                response.setHeader("error", exception.getMessage());
-
-                /* error 를 body 로 던지기 (둘중 하나만 할 수 있음) */
-                response.setStatus(UNAUTHORIZED.value());
-                Map<String, String> error = new HashMap<>();
-                error.put("error_message", exception.getMessage());
-
-                response.setContentType(APPLICATION_JSON_VALUE);
-                new ObjectMapper().writeValue(response.getOutputStream(), error);
+                SendResponseUtils.sendError(UNAUTHORIZED.value(), "[refresh_token]"+exception.getMessage(), response);
             }
         } else {
             throw new RuntimeException("Refresh token is missing");

@@ -42,17 +42,9 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     private final RedisTemplate<String, String> redisTemplate;
 
-    @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-        System.out.println("지나갈게요@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-        super.doFilter(request, response, chain);
-    }
-
     /**
      * 인증 시도 호출되는 메서드
      */
-
-
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         // request에 있는 username과 password를 파싱해서 자바 Object로 받기

@@ -30,7 +30,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         // 1. 로그인 경로인지 확인 (login 은 여기에서 작업할 필요가 없기 때문.) == 아무일도 하지않을거임.
-        if (request.getServletPath().equals("/api/login")) {
+        if (request.getServletPath().equals("/api/login") || request.getServletPath().equals("/api/token/refresh")) {
             filterChain.doFilter(request, response);
         } else {
             // 2. 권한 부여 헤더에 access
@@ -40,7 +40,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             //            헤더에 token 자체가 없다면 바로 오쎈필터로 갑니다.
             if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
                 try {
-                    // token 검증 작업
+                    log.info("access token을 검증합니다.");
                     String token = authorizationHeader.substring("Bearer ".length());
                     Algorithm algorithm = Algorithm.HMAC256(JwtProperties.SECRET.getBytes()); // 토큰 생성할 때와 같은 알고리즘으로 풀어야함.
                     JWTVerifier verifier = JWT.require(algorithm).build();
@@ -60,12 +60,13 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                     // ex) Security 야! 사용자이름과, 역할(role) 등등이 여기있으니 들고가서 access 할 수 있는 자원도 결정해주고 뭐 알아서 하렴 !
                     SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 
+                    log.info("access token 검증이 완료되었습니다");
                     filterChain.doFilter(request, response);
                 } catch (Exception exception) {
                     // exception 1 : token 이 유효하지 않을 때 (token 을 확인할 수 없거나, 유효기간이 지났을 경우)
                     log.error("Error logging in: {}", exception.getMessage());
                     // error 던지기
-                    SendResponseUtils.sendError(UNAUTHORIZED.value(), exception.getMessage(), response);
+                    SendResponseUtils.sendError(UNAUTHORIZED.value(), "[access_token]"+exception.getMessage(), response);
                 }
             } else {
                 filterChain.doFilter(request, response);
