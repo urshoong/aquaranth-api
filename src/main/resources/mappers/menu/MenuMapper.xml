@@ -51,5 +51,9 @@
         WHERE upper_menu_no IS NULL
     </select>
 
+    <select id="findMenusByLoginUsername" resultType="com.dq.aquaranth.menu.dto.response.AllMenuResponse">
+
+    </select>
+
 
 </mapper>
