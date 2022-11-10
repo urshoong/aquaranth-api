@@ -26,15 +26,17 @@ public class UserApiController {
     private final UserService userService;
 
     @GetMapping("/token/refresh")
-    public void refreshTokenCheck(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public Map<String, String> refreshTokenCheck(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String authorizationHeader = request.getHeader(AUTHORIZATION);
+        Map<String, String> tokens = null;
+
         try {
-            Map<String, String> tokens = userService.checkRefresh(authorizationHeader);
-            response.setContentType(APPLICATION_JSON_VALUE);
-            new ObjectMapper().writeValue(response.getOutputStream(), tokens);
+            tokens = userService.checkRefresh(authorizationHeader);
         } catch (Exception e) {
             log.error("[refresh_token] 검증실패 이유 : {}", e.getMessage());
             SendResponseUtils.sendError(HttpStatus.UNAUTHORIZED.value(), "[refresh_token]" + e.getMessage(), response);
         }
+
+        return tokens;
     }
 }

@@ -1,38 +1,27 @@
 package com.dq.aquaranth.login.jwt;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
+import com.dq.aquaranth.commons.utils.JWTUtil;
 import com.dq.aquaranth.commons.utils.SendResponseUtils;
 import com.dq.aquaranth.login.dto.LoginReqDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
-import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import javax.security.auth.login.LoginException;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 import static com.dq.aquaranth.login.jwt.JwtProperties.*;
 import static org.springframework.http.HttpStatus.UNAUTHORIZED;
@@ -43,8 +32,8 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private final AuthenticationManager authenticationManager;
-
     private final RedisTemplate<String, String> redisTemplate;
+    private final JWTUtil jwtUtil;
 
     /**
      * 인증 시도 호출되는 메서드
@@ -84,34 +73,15 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
      */
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException {
-
         User user = (User) authentication.getPrincipal(); // 현재 인증된(로그인한) 사용자의 정보를 가져온다
-        Algorithm algorithm = Algorithm.HMAC256(SECRET.getBytes());
-
-        String access_token = JWT.create()
-                .withSubject(user.getUsername())
-                .withExpiresAt(new Date(System.currentTimeMillis() + ACCESS_TOKEN_EXPIRATION_TIME))
-                .withIssuer(request.getRequestURL().toString())
-                .withClaim("roles", user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
-                .sign(algorithm);
-
-        String refresh_token = JWT.create()
-                .withSubject(user.getUsername())
-                .withExpiresAt(new Date(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRATION_TIME))
-                .withIssuer(request.getRequestURL().toString())
-                .sign(algorithm);
-
         log.info("{} 님이 로그인 하였습니다.", user.getUsername());
+        Map<String, String> tokens = jwtUtil.generateToken(user.getUsername());
 
-        /* token body 로 던지기 */
-        Map<String, String> tokens = new HashMap<>();
-        tokens.put("access_token", access_token);
-        tokens.put("refresh_token", refresh_token);
-
-//        // Redis에 저장 - 만료 시간 설정을 통해 자동 삭제 처리
+//       Redis에 저장 - 만료 시간 설정을 통해 자동 삭제 처리
+        log.info("redis에 refresh_token을 저장합니다.");
         redisTemplate.opsForValue().set(
                 authentication.getName(),
-                refresh_token,
+                tokens.get("refresh_token"),
                 REFRESH_TOKEN_EXPIRATION_TIME,
                 TimeUnit.MILLISECONDS
         );
