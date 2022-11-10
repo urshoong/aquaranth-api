@@ -24,7 +24,7 @@ public interface EmpMapper {
      *
      * @return
      */
-    List<EmpSelectOrga> empFindOrga(Long empNo);
+    List<EmpSelectOrga> empOrgaFindById(Long empNo);
 
     /**
      * 새로운 사원을 추가합니다.
@@ -40,15 +40,6 @@ public interface EmpMapper {
      * @param empOrgaInsertDTO : 조직에 추가될 사원 정보 객체
      */
     Long empOrgaInsert(EmpOrgaDTO empOrgaInsertDTO);
-
-    /**
-     * 사원에 대한 조직 정보를 알기 위해
-     * 사원-조직 매핑 테이블에
-     * 사원 정보와 조직 정보를 추가합니다.
-     *
-     * @param empMappingDTO : 사원-조직 매핑 정보 객체
-     */
-    Long empMappingInsert(EmpMappingDTO empMappingDTO);
 
 
     /**
@@ -70,7 +61,6 @@ public interface EmpMapper {
      */
     Long empCountAll();
 
-    Long selectLastInsertId();
 
     EmpDTO findByUsername(String username);
 }

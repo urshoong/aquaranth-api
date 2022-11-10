@@ -2,10 +2,12 @@ package com.dq.aquaranth.emp.service;
 
 import com.dq.aquaranth.emp.dto.*;
 import com.dq.aquaranth.emp.mapper.EmpMapper;
+import com.dq.aquaranth.emp.mapper.EmpMappingMapper;
 import com.dq.aquaranth.login.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,18 +16,18 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 
 import static java.time.LocalDateTime.now;
 
 @Service
 @RequiredArgsConstructor
 @Log4j2
-
 public class EmpServiceImpl implements EmpService {
 
     private final EmpMapper mapper;
-
-    private final UserService userService;
+    private final EmpMappingMapper mappingMapper;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public List<EmpDTO> empList() {
@@ -49,69 +51,38 @@ public class EmpServiceImpl implements EmpService {
 
     @Override
     @Transactional
-    public EmpDTO empRegister(EmpInsertInformationDTO reqDTO, HttpServletResponse response) throws IOException, IllegalAccessException {
+    public EmpDTO insert(EmpOrgaDTO orgaReqDTO, EmpDTO empReqDTO, EmpMappingDTO mapperReqDTO) throws IllegalAccessException {
+        // 이미 가입된 유저라면
+        if (Objects.nonNull(mapper.findByUsername(empReqDTO.getUsername()))) {
+            log.error("이미 가입된 유저입니다. username -> " + empReqDTO.getUsername());
+            throw new KeyAlreadyExistsException("이미 가입된 유저입니다. username -> " + empReqDTO.getUsername());
+        }
 
-        // 1. 조직 테이블 insert
-        EmpOrgaDTO insertEmpOrga = EmpOrgaDTO
-                .builder()
-                .deptNo(reqDTO.getDeptNo())
-                .orgaType(reqDTO.getOrgaType())
-                .build();
+        // 조직 테이블 insert
+        mapper.empOrgaInsert(orgaReqDTO);
 
-        log.info(mapper.empOrgaInsert(insertEmpOrga));
+        // 조직 테이블의 last_insert_id 저장
+        Long orgaNo = orgaReqDTO.getOrgaNo();
 
-        log.info(insertEmpOrga);
+        // 사원 테이블 insert
+        empReqDTO.setPassword(passwordEncoder.encode(empReqDTO.getPassword()));
+        mapper.empInsert(empReqDTO);
 
-        //조직 테이블의 last_insert_id 저장
-        Long orgaId = insertEmpOrga.getOrgaNo();
+        // 사원 테이블의 last_insert_id 저장
+        Long empNo = empReqDTO.getEmpNo();
 
-        log.info(orgaId);
+        // 사원매핑 테이블 insert
+        mapperReqDTO.setOrgaNo(orgaNo);
+        mapperReqDTO.setEmpNo(empNo);
+        mappingMapper.empMappingInsert(mapperReqDTO);
 
-        // 2. 사원 테이블 insert
-        EmpDTO insertEmp = EmpDTO
-                .builder()
-                .empName(reqDTO.getEmpName())
-                .username(reqDTO.getUsername())
-                .password(reqDTO.getPassword())
-                .gender(reqDTO.getGender())
-                .empPhone(reqDTO.getEmpPhone())
-                .empAddress(reqDTO.getEmpAddress())
-                .empProfile(reqDTO.getEmpProfile())
-                .email(reqDTO.getEmail())
-                .lastLoginTime(now())
-                .lastLoginIp("192.168.500.55")
-                .firstHiredate(LocalDate.now())
-                .lastRetiredate(null)
-                .build();
-
-
-//        log.info(mapper.empInsert(insertEmp));
-
-        EmpDTO insertEmpDTO = userService.create(insertEmp, response);
-
-        //사원 테이블의 last_insert_id 저장
-        Long empId = insertEmp.getEmpNo();
-
-        log.info(empId);
-
-        // 3. 사원매핑 테이블 insert
-        EmpMappingDTO insertEmpMapping = EmpMappingDTO
-                .builder()
-                .empNo(empId)
-                .orgaNo(orgaId)
-                .empRank("사원")
-                .hiredate(LocalDate.now())
-                .build();
-
-        mapper.empMappingInsert(insertEmpMapping);
-
-
-        return insertEmpDTO;
+        return empReqDTO;
     }
+
 
     @Override
     public List<EmpSelectOrga> empOrgaList(Long empNo) {
-        return mapper.empFindOrga(empNo);
+        return mapper.empOrgaFindById(empNo);
     }
 
 

@@ -13,8 +13,10 @@
         SELECT * FROM emp WHERE emp_no = #{empNo}
     </select>
 
-    <select id="empFindOrga" resultType="com.dq.aquaranth.emp.dto.EmpSelectOrga">
-        SELECT c.company_name, td.dname, emp.emp_no, eM.emp_rank, eM.hiredate, eM.retireddate, c.company_tel, c.company_address
+    <select id="empOrgaFindById" resultType="com.dq.aquaranth.emp.dto.EmpSelectOrga">
+        SELECT c.company_name, td.dname, emp.emp_no, eM.emp_rank,
+                eM.hiredate, eM.retireddate, c.company_tel, c.company_address,
+                o.orga_no
         FROM emp
             LEFT JOIN empMapping eM on emp.emp_no = eM.emp_no
             LEFT JOIN orga o on o.orga_no = eM.orga_no
@@ -33,7 +35,7 @@
         VALUES (
             #{empName}, #{username}, #{password}, #{gender},
             #{empPhone}, #{empAddress}, #{empProfile}, #{email},
-            #{lastLoginTime}, #{lastLoginIp}, #{firstHiredate} , #{lastRetiredate}
+            now(), #{lastLoginIp}, now() , null
         )
         <selectKey keyProperty="empNo" resultType="long" order="AFTER">
             SELECT LAST_INSERT_ID()
@@ -50,20 +52,11 @@
                 JOIN tbl_dept td ON td.dept_no = deptMapping.dept_no
                 WHERE td.dept_no = #{deptNo}
             ),
-            #{orgaType})
+            'emp')
 
         <selectKey keyProperty="orgaNo" resultType="long" order="AFTER">
             SELECT LAST_INSERT_ID()
         </selectKey>
-    </insert>
-
-    <insert id="empMappingInsert" parameterType="com.dq.aquaranth.emp.dto.EmpInsertInformationDTO">
-        INSERT INTO empMapping (
-            orga_no, emp_no, emp_rank, hiredate
-        )
-        VALUES (
-            #{orgaNo}, #{empNo}, #{empRank}, #{hiredate}
-        )
     </insert>
 
     <update id="empUpdate" parameterType="com.dq.aquaranth.emp.dto.EmpUpdateDTO">
