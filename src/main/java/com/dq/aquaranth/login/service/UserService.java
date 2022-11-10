@@ -72,21 +72,6 @@ public class UserService implements UserDetailsService {
         return new CustomUser(user);
     }
 
-    public EmpDTO create(EmpDTO emp) throws IllegalAccessException, IOException {
-        log.info("계정을 생성합니다. username => {}", emp.getUsername());
-
-        // 이미 가입된 유저라면
-        if (Objects.nonNull(empMapper.findByUsername(emp.getUsername()))) {
-            log.error("이미 가입된 유저입니다. username -> " + emp.getUsername());
-
-            throw new KeyAlreadyExistsException("이미 가입된 유저입니다. username -> " + emp.getUsername());
-        }
-
-        emp.setPassword(passwordEncoder.encode(emp.getPassword()));
-        empMapper.empInsert(emp);
-        return empMapper.empFindById(emp.getEmpNo());
-    }
-
     public Map<String, String> checkRefresh(String authorizationHeader) throws Exception {
         if (authorizationHeader != null && authorizationHeader.startsWith(TOKEN_PREFIX)) {
             log.info("refresh token 을 검증합니다.");
