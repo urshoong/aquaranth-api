@@ -1,37 +1,42 @@
 package com.dq.aquaranth.login.jwt;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
+import com.dq.aquaranth.commons.utils.JWTUtil;
+import com.dq.aquaranth.commons.utils.SendResponseUtils;
 import com.dq.aquaranth.login.dto.LoginReqDTO;
+import com.dq.aquaranth.login.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import javax.security.auth.login.LoginException;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import java.util.stream.Collectors;
+import java.util.concurrent.TimeUnit;
+
+import static com.dq.aquaranth.login.jwt.JwtProperties.*;
+import static org.springframework.http.HttpStatus.UNAUTHORIZED;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 // 로그인이 성공할 때마다 access token 과 refresh token 을 발급해줄 filter
 @Log4j2
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private final AuthenticationManager authenticationManager;
+    private final RedisTemplate<String, String> redisTemplate;
+    private final JWTUtil jwtUtil;
+
 
     /**
      * 인증 시도 호출되는 메서드
@@ -61,14 +66,6 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(username, password);
 
-        // 1. authenticate() 메서드 호출
-        // 2. 인증 프로바이더가 유저 디테일서비스의 loadUserByUsername(토큰의 첫번째 파라메터) 를 호출
-        // 3. UserDetails를 리턴받아서 토큰의 두번째 파라메터(credential)과 UserDetails(DB값)의 getPassword()함수로 비교해서 동일하면
-        // 4. Authentication 객체를 만들어서 필터체인으로 리턴해준다.
-
-        // Tip: 인증 프로바이더의 디폴트 서비스는 UserDetailsService 타입
-        // Tip: 인증 프로바이더의 디폴트 암호화 방식은 BCryptPasswordEncoder
-        // 결론은 인증 프로바이더에게 알려줄 필요가 없음.
         return authenticationManager.authenticate(authenticationToken);
     }
 
@@ -78,37 +75,42 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
      * 성공적으로 로그인 한 후 refresh token 을 제공하는 메서드
      */
     @Override
-    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException, ServletException {
+    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException {
         User user = (User) authentication.getPrincipal(); // 현재 인증된(로그인한) 사용자의 정보를 가져온다
-        Algorithm algorithm = Algorithm.HMAC256(JwtProperties.SECRET.getBytes());
-
-        String access_token = JWT.create()
-                .withSubject(user.getUsername())
-                .withExpiresAt(new Date(System.currentTimeMillis() + JwtProperties.ACCESS_TOKEN_EXPIRATION_TIME))
-                .withIssuer(request.getRequestURL().toString())
-                .withClaim("roles", user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
-                .sign(algorithm);
-
-        String refresh_token = JWT.create()
-                .withSubject(user.getUsername())
-                .withExpiresAt(new Date(System.currentTimeMillis() + JwtProperties.REFRESH_TOKEN_EXPIRATION_TIME))
-                .withIssuer(request.getRequestURL().toString())
-                .sign(algorithm);
-
         log.info("{} 님이 로그인 하였습니다.", user.getUsername());
+        String cno = request.getParameter("cno");
 
-        /* token header 로 던지기 */
-//        response.setHeader("access_token", access_token);
-//        response.setHeader("refresh_token", refresh_token);
+        Map<String, String> tokens = jwtUtil.generateToken(user.getUsername());
 
-        /* token body 로 던지기 */
-        Map<String, String> tokens = new HashMap<>();
-        tokens.put("access_token", access_token);
-        tokens.put("refresh_token", refresh_token);
+        /**
+         * user99
+         * 1234
+         * user99 카카오, 더존(주회사)
+         * TODO 1. 로그인성공한 사원의 주회사 조직번호를 알아옵니다. (주회사 개념이 없다면, 최초 로그인시 어떤 메뉴가 보여야 하는지 알 수 없음)
+         *      2. 해당 사원이 어떤 권한그룹을 가지고 있는지 알아옵니다.
+         *      3. 가지고온 권한그룹들이 어떤메뉴권한들을 가지고 있는지 알아옵니다.
+         *      4. 알아온 메뉴권한 리스트를 redis 에 올립니다.
+         */
 
-        request.setAttribute("tokens", tokens);
 
-        request.getRequestDispatcher("/api/token/save-refresh").forward(request, response);
 
+
+//       Redis에 저장 - 만료 시간 설정을 통해 자동 삭제 처리
+        log.info("redis에 refresh_token을 저장합니다.");
+        redisTemplate.opsForValue().set(
+                authentication.getName(),
+                tokens.get("refresh_token"),
+                REFRESH_TOKEN_EXPIRATION_TIME,
+                TimeUnit.MILLISECONDS
+        );
+
+        response.setContentType(APPLICATION_JSON_VALUE);
+        new ObjectMapper().writeValue(response.getWriter(), tokens);
+    }
+
+    @Override
+    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
+        log.warn(failed.getMessage());
+        SendResponseUtils.sendError(UNAUTHORIZED.value(), failed.getMessage(), response);
     }
 }

@@ -1,7 +1,6 @@
 package com.dq.aquaranth.commons.utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.SneakyThrows;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -16,7 +15,7 @@ public class SendResponseUtils {
         throw new UnsupportedOperationException("utils class 는 생성할 수 없습니다.");
     }
 
-    public static void sendBody(int statusCode, String errorMsg, HttpServletResponse response) throws IOException {
+    public static void sendError(int statusCode, String errorMsg, HttpServletResponse response) throws IOException {
         response.setStatus(statusCode);
         Map<String, String> error = new HashMap<>();
         error.put("error_message", errorMsg);
