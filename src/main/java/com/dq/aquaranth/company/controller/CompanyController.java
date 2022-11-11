@@ -2,8 +2,10 @@ package com.dq.aquaranth.company.controller;
 
 import com.dq.aquaranth.company.dto.*;
 import com.dq.aquaranth.company.service.CompanyService;
+import com.dq.aquaranth.login.domain.CustomUser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -44,7 +46,9 @@ public class CompanyController {
      * 회사 기본정보 수정
      */
     @PutMapping("/modify/{companyNo}")
-    public Long modifyCompany(@RequestBody CompanyModifyDTO companyModifyDTO) {
+    public Long modifyCompany(@RequestBody CompanyModifyDTO companyModifyDTO, Authentication authentication) {
+        CustomUser customUser = (CustomUser) authentication.getPrincipal();
+        companyModifyDTO.setModUser(customUser.getEmpDTO().getEmpName());
         return companyService.update(companyModifyDTO);
     }
 

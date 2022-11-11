@@ -35,6 +35,7 @@ public class CompanyServiceImpl implements CompanyService{
         CompanyOrgaDTO companyOrgaDTO = CompanyOrgaDTO
                 .builder()
                 .orgaType("company")
+                .regUser("admin")
                 .build();
         companyMapper.insertOrga(companyOrgaDTO);
         log.info(companyOrgaDTO.getOrgaNo());
