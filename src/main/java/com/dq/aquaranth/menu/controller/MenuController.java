@@ -28,6 +28,6 @@ public class MenuController {
                     content = @Content(mediaType = "application/json")))
     @GetMapping
     public List<MenuResponseDTO> findAllMenus(){
-        return menuService.findAllMenus();
+        return menuService.findAllMenuInformation();
     }
 }

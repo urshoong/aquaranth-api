@@ -1,65 +1,67 @@
 package com.dq.aquaranth.menu.service;
 
+import com.dq.aquaranth.menu.dto.request.MenuUpdateDTO;
+import com.dq.aquaranth.menu.dto.response.MenuResponseDTO;
+import com.dq.aquaranth.menu.mapper.MenuMapper;
 import lombok.extern.log4j.Log4j2;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.SetOperations;
-import org.springframework.data.redis.core.ValueOperations;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
+import java.util.Objects;
+import java.util.Optional;
+
+import static com.dq.aquaranth.menu.constant.MenuCode.BOARD;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 
 @Log4j2
-@SpringBootTest
 class DefaultMenuServiceTest {
 
-
-
     @Autowired
-    private MenuService menuService;
-
-    @Autowired
-    private RedisTemplate<String, Object> redisTemplate;
+    MenuService menuService;
 
     @Test
-    void findAllMenus() {
-        menuService.findAllMenus().forEach(log::info);
+    @DisplayName(value = "전체 메뉴를 조회")
+    void findAll() {
+        List<MenuResponseDTO> menuResponseDTOList = menuService.findAll();
+        menuResponseDTOList.forEach(log::info);
+        assertThat(menuResponseDTOList).isNotNull();
     }
 
     @Test
-    void redisTest(){
-        String key = "redistest";
-        //when
-        ValueOperations<String, Object> stringObjectValueOperations = redisTemplate.opsForValue();
-        List<String> stringList = new ArrayList<>();
-        stringList.add("Test");
-        stringList.add("Test");
-        stringList.add("Test");
-        stringList.add("Test");
-        stringList.add("Test");
-        //given
-        stringObjectValueOperations.set(key, stringList);
-        //then
-        String data = (String) stringObjectValueOperations.get(key);
-        log.info(data);
+    @DisplayName(value = "menuNo 값을 이용한 특정 메뉴를 조회")
+    void findByMenuNo() {
+        Long menuNo = 5L;
+        Optional<MenuResponseDTO> menuResponseDTO = menuService.findByMenuNo(menuNo);
+        log.info(menuResponseDTO);
+        assertThat(menuResponseDTO).isPresent();
     }
 
     @Test
-    void redisTest1() {
-        //when
-        SetOperations<String, Object> setOperations = redisTemplate.opsForSet();
-        //given
-        setOperations.add("user98", "h", "e", "l", "l", "o");
-
-        Set<Object> stringSet = setOperations.members("user98");
-
-        //then
-
-        log.info(stringSet);
+    @DisplayName(value = "menuCode 값을 이용한 특정 메뉴를 조회")
+    void findByMenuCode() {
+        String menuCode = BOARD.getCode();
+        Optional<MenuResponseDTO> menuResponseDTO = menuService.findByMenuCode(menuCode);
+        log.info(menuResponseDTO);
+        assertThat(menuResponseDTO).isPresent();
     }
 
+    @Test
+    @DisplayName(value = "메뉴 상태 업데이트")
+    void update() {
+        Long menuNo = 12L;
+        String menuName = "구글 드라이브";
+        MenuUpdateDTO menuUpdateDTO = MenuUpdateDTO.builder()
+                .menuNo(menuNo)
+                .menuName(menuName)
+                .menuUse(false)
+                .menuOrder(99L)
+                .build();
+        menuService.update(menuUpdateDTO);
+        Optional<MenuResponseDTO> expectedMenuResponseDto = menuService.findByMenuNo(menuNo);
+        assertThat(Objects.requireNonNull(expectedMenuResponseDto.orElseGet(() -> null)).getMenuName()).isEqualTo(menuName);
+    }
 }

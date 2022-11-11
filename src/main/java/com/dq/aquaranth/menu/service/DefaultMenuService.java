@@ -8,6 +8,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -15,14 +16,20 @@ public class DefaultMenuService implements MenuService {
 
     private final MenuMapper menuMapper;
 
+
     @Override
-    public List<MenuResponseDTO> findAllMenus() {
-        return null;
+    public List<MenuResponseDTO> findAll() {
+        return menuMapper.findAll();
     }
 
     @Override
-    public List<MenuResponseDTO> findByGnbMenus() {
-        return null;
+    public Optional<MenuResponseDTO> findByMenuNo(Long menuNo) {
+        return menuMapper.findByMenuNo(menuNo);
+    }
+
+    @Override
+    public Optional<MenuResponseDTO> findByMenuCode(String menuCode) {
+        return menuMapper.findByMenuCode(menuCode);
     }
 
     @Override
@@ -31,9 +38,7 @@ public class DefaultMenuService implements MenuService {
     }
 
     @Override
-    public List<MenuResponseDTO> findByMenu() {
-        return null;
+    public List<MenuResponseDTO> findAllMenuInformation() {
+        return menuMapper.findAllMenuInformation();
     }
-
-
 }
