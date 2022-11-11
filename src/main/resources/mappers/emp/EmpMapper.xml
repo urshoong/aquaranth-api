@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE mapper
-        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.dq.aquaranth.emp.mapper.EmpMapper">
 
@@ -10,7 +9,7 @@
     </select>
 
     <select id="empFindById" resultType="com.dq.aquaranth.emp.dto.EmpDTO">
-        SELECT * FROM emp WHERE emp_no = #{empNo}
+        SELECT * FROM tbl_emp WHERE emp_no = #{empNo}
     </select>
 
     <select id="empOrgaFindById" resultType="com.dq.aquaranth.emp.dto.EmpSelectOrga">
@@ -76,6 +75,6 @@
     </select>
 
     <select id="findByUsername" resultType="com.dq.aquaranth.emp.dto.EmpDTO">
-        SELECT * FROM emp WHERE username = #{username}
+        SELECT * FROM tbl_emp WHERE username = #{username}
     </select>
 </mapper>

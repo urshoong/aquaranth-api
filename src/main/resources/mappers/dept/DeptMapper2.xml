@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE mapper
-        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.dq.aquaranth.dept.mapper.DeptMapper2">
 
@@ -39,7 +38,22 @@
         select * from tbl_dept order by deptNo asc limit #{skip}, #{size}
     </select>
 
-
-
-
+    <select id="findByUsername" resultType="com.dq.aquaranth.dept.dto.DeptDTO2">
+        select t.*
+        from (with recursive findDept as (select to1.orga_no, to1.upper_orga_no, to1.orga_type
+                                          from tbl_orga to1
+                                                   join tbl_emp_mapping tem on to1.orga_no = tem.orga_no
+                                                   join tbl_emp te on te.emp_no = tem.emp_no
+                                                   join tbl_dept_mapping m on to1.upper_orga_no = m.orga_no
+                                          where te.username = #{username}
+                                            and m.dept_main = true
+                                          union all
+                                          select to2.orga_no, to2.upper_orga_no, to2.orga_type
+                                          from tbl_orga to2
+                                                   join findDept fd on fd.upper_orga_no = to2.orga_no)
+              select f.orga_no, f.orga_type
+              from findDept f) x
+                 join tbl_dept_mapping td on td.orga_no = x.orga_no
+                 join tbl_dept t on t.dept_no = td.dept_no
+    </select>
 </mapper>
