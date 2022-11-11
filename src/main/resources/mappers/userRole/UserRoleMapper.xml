@@ -20,30 +20,55 @@
             and role_group_name like concat('%', #{roleGroupSearch}, '%')
         </if>
     </select>
-<!--
 
-    <select id="findOrgaByRoleGroupNo" resultType="">
-        SELECT o.company_no, c.company_name, o.dept_no, d.dept_name, o.emp_no, e.emp_name, e.username
-        #      d.dept_rank #차후 직급 추가 시
+    <select id="findOrgaByRoleGroupNo" resultType="com.dq.aquaranth.userRole.dto.UserRoleGroupBasedUserListDTO">
+        SELECT em.orga_no em_orga_no
+             , dt.orga_no dt_orga_no
+             , c.orga_no com_orga_no
+             , dt.dept_no
+             , c.company_no
+             , em.emp_no
+             , em.emp_name
+             , em.username
+             , em.emp_rank
+             , dt.dept_no
+             , dt.dname
+             , c.company_name
         FROM (
-        SELECT og.company_no, og.dept_no, og.emp_no
-        #      	     , ogr.role_group_no, ogr.orga_no
-        FROM orga_role ogr
-        JOIN orga og ON og.orga_no = ogr.orga_no
-        WHERE ogr.role_group_no = ${role_group_no}
-        AND og.dept_no IS NOT NULL
-        AND og.emp_no IS NOT NULL
-        ) o
-        LEFT JOIN company c ON c.company_no = o.company_no
-        LEFT JOIN dept d ON d.dept_no = o.dept_no
-        LEFT JOIN emp e ON e.emp_no = o.emp_no
-        <if test="search != null">
-            WHERE d.dept_name LIKE concat('%', ${search}, '%')
-            OR e.emp_name LIKE CONCAT('%', ${search}, '%')
-            OR e.username LIKE CONCAT('%', ${search}, '%')
-            # OR d.dept_rank LIKE CONCAT('%', ${search}, '%')
+                SELECT d.dept_no, d.company_no, d.dname, d.dept_sort
+                , o.orga_no, o.orga_type
+                FROM tbl_dept d
+                LEFT JOIN deptMapping dm ON dm.dept_no = d.dept_no
+                LEFT JOIN orga o ON o.orga_no = dm.orga_no
+                WHERE d.del_flag = FALSE
+                AND d.main_flag = TRUE
+                AND d.company_no = #{companyNo}  ## 회사 구분
+        ) dt
+        JOIN (
+                SELECT e.emp_no, e.emp_name, e.username
+                , em.emp_rank, o.upper_orga_no, o.orga_no
+                FROM emp e
+                LEFT JOIN empMapping em ON em.emp_no = e.emp_no
+                LEFT JOIN orga o ON o.orga_no = em.orga_no
+        ) em ON em.upper_orga_no = dt.orga_no
+        JOIN company c ON c.company_no = dt.company_no AND c.company_use = TRUE
+        WHERE em.upper_orga_no in (
+                                    SELECT o.orga_no
+                                    FROM role_group rg
+                                    JOIN orga_role or2 ON or2.role_group_no = rg.role_group_no
+                                    JOIN orga o ON o.orga_no = or2.orga_no
+                                    WHERE rg.role_group_use = TRUE
+                                    AND rg.role_group_no = #{roleGroupNo}
+                                    )
+        <if test="userListSearch != null">
+        AND (
+            dt.dname LIKE CONCAT('%', #{userListSearch}, '%') OR
+            em.emp_rank LIKE CONCAT('%', #{userListSearch}, '%') OR
+            em.emp_name LIKE CONCAT('%', #{userListSearch}, '%') OR
+            em.username LIKE CONCAT('%', #{userListSearch}, '%')
+        )
         </if>
     </select>
--->
+
 
 </mapper>

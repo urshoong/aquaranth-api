@@ -1,8 +1,6 @@
 package com.dq.aquaranth.userRole.mapper;
 
-import com.dq.aquaranth.userRole.dto.UserRoleCompanyDTO;
-import com.dq.aquaranth.userRole.dto.UserRoleReqRoleGroupBasedListDTO;
-import com.dq.aquaranth.userRole.dto.UserRoleRoleGroupBasedListDTO;
+import com.dq.aquaranth.userRole.dto.*;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,5 +30,17 @@ public class userRoleMapperTests {
         list.forEach(log::info);
     }
 
+    @Test
+    void findRoleGroupBasedUserListTests(){
+        log.info("findRoleGroupBasedUserListTests ...");
+        UserRoleReqGroupBasedUserListDTO userRoleReqGroupBasedUserListDTO = UserRoleReqGroupBasedUserListDTO.builder()
+                .roleGroupNo(3L)
+                .companyNo(1L)
+//                .userListSearch("개발")
+                .build();
+
+        List<UserRoleGroupBasedUserListDTO> list = mapper.findOrgaByRoleGroupNo(userRoleReqGroupBasedUserListDTO);
+        list.forEach(log::info);
+    }
 
 }
