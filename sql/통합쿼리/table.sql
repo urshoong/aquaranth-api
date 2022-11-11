@@ -1,5 +1,5 @@
 drop database testdb;
-create database testdb;
+create database testdb DEFAULT CHARACTER SET utf8mb4 DEFAULT COLLATE utf8mb4_general_ci;
 use testdb;
 
 # 조직 도메인
@@ -16,18 +16,39 @@ CREATE TABLE `company`
     `company_use`     boolean      NOT NULL default true
 );
 
-CREATE TABLE `tbl_dept`
+# CREATE TABLE `tbl_dept`
+# (
+#     `dept_no`    bigint        NOT NULL auto_increment primary key,
+#     `company_no` bigint        NOT NULL,
+#     `dname`      VARCHAR(200)  NOT NULL,
+#     `del_flag`   boolean       NOT NULL default false,
+#     `main_flag`  boolean       NOT NULL default true,
+#     `dept_sort`  int(11)       NOT NULL,
+#     `ddesc`      VARCHAR(1000) NULL,
+#     `regdate`    timestamp     default now(),
+#     `updatedate` timestamp     default now()
+# );
+
+create table tbl_dept
 (
-    `dept_no`    bigint        NOT NULL auto_increment primary key,
-    `company_no` bigint        NOT NULL,
-    `dname`      VARCHAR(200)  NOT NULL,
-    `del_flag`   boolean       NOT NULL default false,
-    `main_flag`  boolean       NOT NULL default true,
-    `dept_sort`  int(11)       NOT NULL,
-    `ddesc`      VARCHAR(1000) NULL,
-    `regdate`    timestamp     default now(),
-    `updatedate` timestamp     default now()
+    dept_no       bigint auto_increment primary key,
+    upper_dept_no bigint                                    null,
+    company_no    bigint                                    not null,
+    dname         varchar(200)                              not null,
+    del_flag      tinyint(1)    default 0                   not null,
+    main_flag     tinyint(1)    default 1                   not null,
+    dept_sort     int           default 1                   not null,
+    ddesc         varchar(1000) default ''                  null,
+    gno           int                                       null,
+    ord           int                                       null,
+    depth         int                                       null,
+    regdate       timestamp     default current_timestamp() not null,
+    updatedate    timestamp     default current_timestamp() not null,
+    last_dno      bigint                                    null,
+    constraint FK_dept_TO_dept_1
+        foreign key (upper_dept_no) references tbl_dept (dept_no)
 );
+
 
 CREATE TABLE `emp`
 (
@@ -53,6 +74,17 @@ CREATE TABLE `orga`
     `orga_type` varchar(100)
 );
 
+# CREATE TABLE `orga`
+# (
+#     `orga_no`       bigint auto_increment primary key comment '조직 번호',
+#     `upper_orga_no` bigint comment '부모의 orga_no',
+#     `orga_type`     varchar(100) not null comment '조직 타입',
+#     `gno`           bigint not null comment '그룹 번호',
+#     `depth`         bigint not null comment '깊이&들여쓰기',
+#     `order_no`      bigint not null comment '정렬순번',
+#     `last_id`       bigint comment '마지막으로 작업한 자손의 orga_no'
+# );
+
 CREATE TABLE `empMapping`
 (
     `orga_no`     bigint       NOT NULL,
@@ -65,7 +97,8 @@ CREATE TABLE `empMapping`
 CREATE TABLE `deptMapping`
 (
     `dept_no` bigint NOT NULL,
-    `orga_no` bigint NOT NULL
+    `orga_no` bigint NOT NULL,
+    `dept_main` boolean NOT NULL DEFAULT false
 );
 
 
@@ -79,7 +112,8 @@ CREATE TABLE `menu`
     `menu_name`         VARCHAR(200) NOT NULL,
     `menu_use`          boolean      NOT NULL DEFAULT TRUE,
     `menu_sort`         int(11)      NOT NULL DEFAULT '99',
-    `icon_url`          VARCHAR(200) NOT NULL DEFAULT '#'
+    `icon_url`          VARCHAR(200) NOT NULL DEFAULT '#',
+    `required_menu`     boolean      NOT NULL DEFAULT false
 );
 
 # 권한그룹
