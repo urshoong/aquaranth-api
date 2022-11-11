@@ -1,9 +1,10 @@
 package com.dq.aquaranth.menu.service;
 
-import com.dq.aquaranth.menu.dto.response.AllMenuResponse;
-import com.dq.aquaranth.menu.dto.response.MenuResponse;
+import com.dq.aquaranth.menu.dto.request.MenuUpdateDTO;
+import com.dq.aquaranth.menu.dto.response.MenuResponseDTO;
 import com.dq.aquaranth.menu.mapper.MenuMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,12 +16,24 @@ public class DefaultMenuService implements MenuService {
     private final MenuMapper menuMapper;
 
     @Override
-    public List<AllMenuResponse> findAllMenus() {
-        return menuMapper.findAllMenus();
+    public List<MenuResponseDTO> findAllMenus() {
+        return null;
     }
 
     @Override
-    public List<MenuResponse> findByGnbMenus() {
-        return menuMapper.findByGnBMenus();
+    public List<MenuResponseDTO> findByGnbMenus() {
+        return null;
     }
+
+    @Override
+    public Integer update(MenuUpdateDTO menuUpdateDTO) {
+        return menuMapper.update(menuUpdateDTO);
+    }
+
+    @Override
+    public List<MenuResponseDTO> findByMenu() {
+        return null;
+    }
+
+
 }

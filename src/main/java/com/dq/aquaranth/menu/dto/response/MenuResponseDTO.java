@@ -5,19 +5,25 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AllMenuResponse {
+public class MenuResponseDTO {
     private Long menuNo;
     private Long upperMenuNo;
-    private Integer menuSort;
-    private String menuCode;
-    private String url;
-    private String defaultMenuCode;
     private String menuName;
-    private String iconUrl;
+    private String menuIcon;
+    private Long menuOrder;
+    private String menuCode;
+    private String defaultMenuCode;
     private boolean menuUse;
-    private Integer depth;
+    private boolean menuRequired;
+    private boolean menuAdmin;
+    private String regUser;
+    private String modUser;
+    private LocalDateTime regDate;
+    private LocalDateTime modDate;
 }

@@ -4,52 +4,69 @@
 
 <mapper namespace="com.dq.aquaranth.menu.mapper.MenuMapper">
 
-    <select id="findAllMenus" resultType="com.dq.aquaranth.menu.dto.response.AllMenuResponse">
-        WITH RECURSIVE CTE AS (SELECT menu_no,
-                                      menu_name,
-                                      icon_url,
-                                      menu_sort,
-                                      IFNULL(upper_menu_no, 0) AS upper_menu_no,
-                                      menu_code                as URL,
-                                      1                        AS depth,
-                                      default_menu_code,
-                                      menu_use,
-                                      menu_code
-                               FROM menu
-                               WHERE IFNULL(upper_menu_no, 0) = 0
-                               UNION ALL
-                               SELECT m.menu_no,
-                                      m.menu_name,
-                                      m.icon_url,
-                                      m.menu_sort,
-                                      IFNULL(m.upper_menu_no, 0),
-                                      concat(C.URL, '/', m.menu_code) AS id_path,
-                                      1 + C.depth                     AS CLEVEL,
-                                      m.default_menu_code,
-                                      m.menu_use,
-                                      m.menu_code
-                               FROM menu m
-                                        INNER JOIN CTE C ON C.menu_no = m.upper_menu_no)
-        SELECT menu_no                  AS menu_no,
-               menu_name                AS menu_name,
-               icon_url,
-               menu_sort,
-               IFNULL(upper_menu_no, 0) AS upper_menu_no,
-               URL,
-               depth,
-               default_menu_code,
-               menu_use,
-               menu_code
-        FROM CTE
-        ORDER BY URL
-        ;
+    <select id="findAll" resultType="com.dq.aquaranth.menu.dto.response.MenuResponseDTO">
+        SELECT *
+        FROM tbl_menu
     </select>
 
-    <select id="findByGnBMenus" resultType="com.dq.aquaranth.menu.dto.response.MenuResponse">
+    <select id="findByMenuNo" resultType="com.dq.aquaranth.menu.dto.response.MenuResponseDTO">
         SELECT *
-        FROM menu
+        FROM tbl_menu
+        WHERE menu_no = #{menuNo}
+    </select>
+
+    <select id="findByMenuCode" resultType="com.dq.aquaranth.menu.dto.response.MenuResponseDTO">
+        SELECT *
+        FROM tbl_menu
+        WHERE menu_code = #{menuCode}
+    </select>
+
+    <delete id="delete">
+        DELETE
+        FROM tbl_menu
+        WHERE menu_code = #{menuCode
+        }
+    </delete>
+
+    <update id="update">
+        UPDATE tbl_menu
+        SET menu_name  = #{menuName},
+            menu_order = #{menuOrder},
+            menu_use   = #{menuUse}
+        WHERE menu_no = #{menuNo}
+    </update>
+
+    <select id="findAllMenuInformation" resultType="com.dq.aquaranth.menu.dto.response.MenuResponseDTO">
+        with recursive etc as (select menu_no
+                                    , upper_menu_no
+                                    , menu_code
+                                    , menu_name
+                                    , 0                    depth
+                                    , concat(menu_no)   AS NO_PATH
+                                    , concat(menu_code) AS ROUTE_PATH
+                               from tbl_menu
+                               where upper_menu_no IS NULL
+                               union all
+                               select m.menu_no
+                                    , m.upper_menu_no
+                                    , m.menu_code
+                                    , m.menu_name
+                                    , depth + 1
+                                    , concat(NO_PATH, '->', m.menu_no)     AS NO_PATH
+                                    , concat(ROUTE_PATH, '/', m.menu_code) AS ROUTE_PATH
+                               from etc e
+                                        join tbl_menu m on e.menu_no = m.upper_menu_no)
+        select *
+        from etc
+        # FIXME : MENU_ORDER
+    </select>
+
+    <select id="findByUpperMenuNoIsNull" resultType="com.dq.aquaranth.menu.dto.response.MenuResponseDTO">
+        SELECT *
+        FROM tbl_menu
         WHERE upper_menu_no IS NULL
     </select>
+
 
     <select id="findMenusByLoginUsername" resultType="string">
         select distinct m.menu_code
@@ -73,4 +90,55 @@
                  join tbl_menu m on mr.menu_no = m.menu_no
         order by f.orga_type
     </select>
+
+
+    <select id="findByMenuCodeUnderRecursive" resultType="com.dq.aquaranth.menu.dto.response.MenuResponseDTO">
+        with recursive etc as (select menu_no
+                                    , upper_menu_no
+                                    , menu_code
+                                    , menu_name
+                                    , 0                    depth
+                                    , concat(menu_no)   AS NO_PATH
+                                    , concat(menu_code) AS ROUTE_PATH
+                               from tbl_menu
+                               where menu_code = #{menuCode}
+                               union all
+                               select m.menu_no
+                                    , m.upper_menu_no
+                                    , m.menu_code
+                                    , m.menu_name
+                                    , depth + 1
+                                    , concat(NO_PATH, '->', m.menu_no)     AS NO_PATH
+                                    , concat(ROUTE_PATH, '/', m.menu_code) AS ROUTE_PATH
+                               from etc e
+                                        join tbl_menu m on e.menu_no = m.upper_menu_no)
+        select *
+        from etc
+    </select>
+
+    <select id="findByMenuCodeUpperRecursive" resultType="com.dq.aquaranth.menu.dto.response.MenuResponseDTO">
+        with recursive etc as (select menu_no
+                                    , upper_menu_no
+                                    , menu_code
+                                    , menu_name
+                                    , 0                    depth
+                                    , concat(menu_no)   AS NO_PATH
+                                    , concat(menu_code) AS ROUTE_PATH
+                               from tbl_menu
+                               where menu_code = #{menuCode}
+                               union all
+                               select m.menu_no
+                                    , m.upper_menu_no
+                                    , m.menu_code
+                                    , m.menu_name
+                                    , depth + 1
+                                    , concat(NO_PATH, '->', m.menu_no)     AS NO_PATH
+                                    , concat(ROUTE_PATH, '/', m.menu_code) AS ROUTE_PATH
+                               from etc e
+                                        join tbl_menu m on e.upper_menu_no = m.menu_no)
+        select *
+        from etc
+    </select>
+
+
 </mapper>
