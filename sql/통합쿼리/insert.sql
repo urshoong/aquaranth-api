@@ -1,6 +1,7 @@
 # 1. 회사와, 조직 추가
-insert into orga (upper_orga_no, orga_type)
-values (null, 'company');
+insert into orga (upper_orga_no)
+values (null);
+
 insert into company (orga_no, company_name, company_address, company_tel, company_use, owner_name, founding_date,
                      business_number)
 values (last_insert_id(), 'DOUZONE',
@@ -11,8 +12,8 @@ values (last_insert_id(), 'DOUZONE',
         '2003-06-01',
         '134-81-08473');
 
-insert into orga (upper_orga_no, orga_type)
-values (null, 'company');
+insert into orga (upper_orga_no)
+values (null);
 insert into company (orga_no, company_name, company_address, company_tel, company_use, owner_name, founding_date,
                      business_number)
 values (last_insert_id(),
@@ -24,8 +25,8 @@ values (last_insert_id(),
         '1995-02-01',
         '120-81-41578');
 
-insert into orga (upper_orga_no, orga_type)
-values (null, 'company');
+insert into orga (upper_orga_no)
+values (null);
 insert into company (orga_no, company_name, company_address, company_tel, company_use, owner_name, founding_date,
                      business_number)
 values (last_insert_id(),
@@ -37,8 +38,8 @@ values (last_insert_id(),
         '1953-08-01',
         '104-81-29553');
 
-insert into orga (upper_orga_no, orga_type)
-values (null, 'company');
+insert into orga (upper_orga_no)
+values (null);
 insert into company (orga_no, company_name, company_address, company_tel, company_use, owner_name, founding_date,
                      business_number)
 values (last_insert_id(),
@@ -50,8 +51,8 @@ values (last_insert_id(),
         '2013-07-01',
         '120-88-03579');
 
-insert into orga (upper_orga_no, orga_type)
-values (null, 'company');
+insert into orga (upper_orga_no)
+values (null);
 insert into company (orga_no, company_name, company_address, company_tel, company_use, owner_name, founding_date,
                      business_number)
 values (last_insert_id(),
@@ -75,8 +76,8 @@ insert into tbl_dept (company_no, dname, dept_sort, ddesc)
 values (1, '개발팀', 1, 'DEV');
 
 # 더존의 개발팀 (orga_no=6)
-insert into orga (upper_orga_no, orga_type)
-values (1, 'dept');
+insert into orga (upper_orga_no)
+values (1);
 insert into deptmapping (dept_no, orga_no)
 values (1, 6);
 
@@ -91,7 +92,7 @@ VALUES ( '정수연', 'user01', 'userpwd01', '여성', '01088873822'
 
 # 더존의 개발팀의 정수연 사원
 # orga no 6번이 개발팀이다.
-insert into orga (upper_orga_no, orga_type)
+insert into orga (upper_orga_no)
 values (6);
 
 # 정수연 사원은 orga 7번
@@ -141,57 +142,3 @@ VALUES (1,10),
 # orga_no(조직번호) 1=더존
 insert into orga_role (role_group_no, orga_no)
 VALUES (1,6);
-
-
-## 부서정보 일괄 입력
-#	dept_no		dname	orga_no		upper_orga_no
-#	1			개발팀	6			1
-#	2			개발1팀	8			6
-#	3			개발2팀	9			6
-#	4			개발3팀	10			6
-#	5			인사팀	11			1
-#	6			인사1팀	12			17
-#	7			인사2팀	13			17
-
-insert into tbl_dept ( company_no, dname, dept_sort, ddesc)
-values (1, '개발 1팀', 1, 'DEV 1');
-insert into tbl_dept ( company_no, dname, dept_sort, ddesc)
-values (1, '개발 2팀', 1, 'DEV 2');
-insert into tbl_dept ( company_no, dname, dept_sort, ddesc)
-values (1, '개발 3팀', 1, 'DEV 3');
-insert into tbl_dept ( company_no, dname, dept_sort, ddesc)
-values (1, '인사팀', 1, 'HR');
-insert into tbl_dept ( company_no, dname, dept_sort, ddesc)
-values (1, '인사 1팀', 1, 'HR 1');
-insert into tbl_dept ( company_no, dname, dept_sort, ddesc)
-values (1, '인사 2팀', 1, 'HR 2');
-
-INSERT INTO orga (upper_orga_no, orga_type) VALUES (6, 'dept');
-INSERT INTO orga (upper_orga_no, orga_type) VALUES (6, 'dept');
-INSERT INTO orga (upper_orga_no, orga_type) VALUES (6, 'dept');
-INSERT INTO orga (upper_orga_no, orga_type) VALUES (1, 'dept');
-INSERT INTO orga (upper_orga_no, orga_type) VALUES (11, 'dept');
-INSERT INTO orga (upper_orga_no, orga_type) VALUES (11, 'dept');
-
-INSERT INTO deptMapping (dept_no, orga_no) VALUES (2, 8);
-INSERT INTO deptMapping (dept_no, orga_no) VALUES (3, 9);
-INSERT INTO deptMapping (dept_no, orga_no) VALUES (4, 10);
-INSERT INTO deptMapping (dept_no, orga_no) VALUES (5, 11);
-INSERT INTO deptMapping (dept_no, orga_no) VALUES (6, 12);
-INSERT INTO deptMapping (dept_no, orga_no) VALUES (7, 13);
-
-
-
-
-## 출력해야 하는 데이터는 조직정보(회사>부서), 직급, 이름(ID)
-# 기본 정보로 부여되어 있는 권한은 더존 기본사원 권한이며 더존>개발팀(부서)에 부여되어 있다
-
-# 더존 기본권한그룹을 더존(회사)에 부여
-INSERT INTO orga_role (role_group_no, orga_no)
-VALUES (4, 1);
-# test 222 권한을 강도영(사원)에 부여
-INSERT INTO orga_role (role_group_no, orga_no)
-VALUES (2, 14);
-# test 333 권한을 더존>개발1팀(부서)에 부여
-INSERT INTO orga_role (role_group_no, orga_no)
-VALUES (3, 8);

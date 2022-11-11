@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dq.aquaranth.dept.mapper.DeptMapper2">
+
+    <select id="select" resultType="com.dq.aquaranth.dept.dto.DeptDTO2">
+        select * from tbl_dept where deptNo = #{deptNo}
+    </select>
+
+    <insert id="insert">
+        <selectKey keyProperty="deptNo" order="AFTER" resultType="long">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+
+        insert into tbl_dept ( upperDeptNo, dname, mainflag,deptSort, ddesc)
+        values (#{upperDeptNo}, #{dname}, #{mainflag}, #{deptSort} , #{ddesc})
+    </insert>
+
+    <delete id="delete">
+        delete from tbl_dept where deptNo = #{deptNo}
+    </delete>
+
+    <update id="update">
+            update tbl_dept
+            set
+            upperDeptNo = #{upperDeptNo},
+            dname = #{dname},
+            delflag = #{delflag},
+            mainflag = #{mainflag},
+            deptSort = #{deptSort},
+            ddesc = #{ddesc},
+            updatedate = now()
+            where deptNo = #{deptNo}
+    </update>
+
+    <select id="getList" resultType="com.dq.aquaranth.dept.dto.DeptDTO2">
+        select * from tbl_dept order by deptNo asc limit #{skip}, #{size}
+    </select>
+
+
+
+
+</mapper>

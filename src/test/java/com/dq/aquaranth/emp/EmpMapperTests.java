@@ -1,8 +1,8 @@
 package com.dq.aquaranth.emp;
 
-import com.dq.aquaranth.emp.dto.EmpDTO;
-import com.dq.aquaranth.emp.dto.EmpUpdateDTO;
+import com.dq.aquaranth.emp.dto.*;
 import com.dq.aquaranth.emp.mapper.EmpMapper;
+import com.dq.aquaranth.emp.mapper.EmpMappingMapper;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +18,7 @@ public class EmpMapperTests {
 
     @Autowired(required = false)
     EmpMapper empMapper;
+    EmpMappingMapper empMappingMapper;
 
     @Test
     void empFindAllTest(){
@@ -27,6 +28,11 @@ public class EmpMapperTests {
     @Test
     void empFindByIdTest(){
         log.info(empMapper.empFindById(1L));
+    }
+
+    @Test
+    void empOrgaFindByIdTest() {
+        log.info(empMapper.empOrgaFindById(1L));
     }
 
     @Test
@@ -40,11 +46,30 @@ public class EmpMapperTests {
                 .empAddress("경주시 경주월드")
                 .empProfile("profileYul")
                 .email("user08@naver.com")
-                .lastLoginTime(now())
-                .lastLoginIp("192.168.500.8")
-                .lastRetiredate(null)
                 .build();
         log.info(empMapper.empInsert(empDTO));
+    }
+
+    @Test
+    void empOrgaInsertTest(){
+        EmpOrgaDTO empOrgaInsertDTO = EmpOrgaDTO
+                .builder()
+                .deptNo(5L)
+                .build();
+
+        empMapper.empOrgaInsert(empOrgaInsertDTO);
+    }
+
+    @Test
+    void empMappingInsertTest(){
+        EmpMappingDTO empMappingDTO = EmpMappingDTO
+                .builder()
+                .orgaNo(24L)
+                .empNo(1L)
+                .empRank("사원")
+                .build();
+
+        empMappingMapper.empMappingInsert(empMappingDTO);
     }
 
     @Test
@@ -64,13 +89,15 @@ public class EmpMapperTests {
         log.info(empMapper.empUpdate(empUpdateDTO));
     }
 
+
     @Test
     void empDeleteByIdTest() {
         log.info(empMapper.empDeleteById(11L));
     }
 
     @Test
-    void empCountAll(){
+    void empCountAllTest(){
         log.info(empMapper.empCountAll());
     }
+
 }
