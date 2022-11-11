@@ -2,10 +2,13 @@ package com.dq.aquaranth.login.jwt;
 
 import com.dq.aquaranth.commons.utils.JWTUtil;
 import com.dq.aquaranth.commons.utils.SendResponseUtils;
+import com.dq.aquaranth.emp.mapper.EmpMapper;
 import com.dq.aquaranth.login.domain.CustomUser;
 import com.dq.aquaranth.login.dto.LoginReqDTO;
+import com.dq.aquaranth.login.dto.RedisDTO;
 import com.dq.aquaranth.login.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -67,7 +70,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(username, password);
-
+        log.info("authenticationToken 생성" + authenticationToken);
         return authenticationManager.authenticate(authenticationToken);
     }
 
@@ -78,20 +81,22 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
      */
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException {
-        CustomUser user = (CustomUser) authentication.getPrincipal(); // 현재 인증된(로그인한) 사용자의 정보를 가져온다
-        log.info("{} 님이 로그인 하였습니다.", user.getUsername());
-        String cno = request.getParameter("cno");
+        CustomUser customUser = (CustomUser) authentication.getPrincipal(); // 현재 인증된(로그인한) 사용자의 정보를 가져온다
+        log.info("{} 님이 로그인 하였습니다.", customUser.getUsername());
 
-        Map<String, String> tokens = jwtUtil.generateToken(user.getUsername());
+        Map<String, String> tokens = jwtUtil.generateToken(customUser.getUsername());
 
+        log.info("성공한 유저 인증객체 CustomUser-> {}", customUser);
         ObjectMapper objectMapper = new ObjectMapper();
-        String serializedMenuList = objectMapper.writeValueAsString(user.getMenuList());
+        String loginUserInfo = objectMapper
+                .registerModule(new JavaTimeModule())
+                .writeValueAsString(customUser);
 
 //       Redis에 저장 - 만료 시간 설정을 통해 자동 삭제 처리
-        log.info("redis에 refresh_token을 저장합니다.");
+        log.info("redis에 menu list를 저장합니다.");
         redisTemplate.opsForValue().set(
                 authentication.getName(),
-                serializedMenuList,
+                loginUserInfo,
                 REFRESH_TOKEN_EXPIRATION_TIME,
                 TimeUnit.MILLISECONDS
         );

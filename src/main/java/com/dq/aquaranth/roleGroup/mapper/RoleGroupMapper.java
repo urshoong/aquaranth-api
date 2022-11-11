@@ -1,10 +1,7 @@
 package com.dq.aquaranth.roleGroup.mapper;
 
-import com.dq.aquaranth.roleGroup.dto.RoleGroupDTO;
-import com.dq.aquaranth.roleGroup.dto.RoleGroupNameUpdateDTO;
+import com.dq.aquaranth.roleGroup.domain.RoleGroup;
 import com.dq.aquaranth.roleGroup.dto.RoleGroupUpdateDTO;
-import com.dq.aquaranth.roleGroup.dto.RoleGroupUseUpdateDTO;
-import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -13,7 +10,7 @@ public interface RoleGroupMapper {
     /**
      * 권한그룹들을 조회합니다.
      */
-    List<RoleGroupDTO> findAll();
+    List<RoleGroup> findAll();
 
     /**
      * 권한그룹번호로 권한그룹들을 조회합니다.
@@ -21,14 +18,14 @@ public interface RoleGroupMapper {
      * @param roleGroupNo : 찾으려는 권한그룹번호입니다.
      * @return 찾은 권한그룹을 전부 반환합니다.
      */
-    RoleGroupDTO findById(Long roleGroupNo);
+    RoleGroup findById(Long roleGroupNo);
 
     /**
      * 권한그룹 등록
      *
-     * @param insertDTO : 등록할 권한그룹 객체
+     * @param roleGroup : 등록할 권한그룹 객체
      */
-    Long insert(RoleGroupDTO insertDTO);
+    Long insert(RoleGroup roleGroup);
 
     /**
      * 권한그룹번호로 권한그룹을 수정합니다.

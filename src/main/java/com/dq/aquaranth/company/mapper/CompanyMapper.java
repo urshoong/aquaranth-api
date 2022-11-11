@@ -40,4 +40,6 @@ public interface CompanyMapper {
     List<CompanyListDTO> search(Boolean companyUse, String companySearch);
 
     Long insertOrga(CompanyOrgaDTO companyOrgaDTO);
+
+    CompanyDTO findByUsername(String username);
 }
