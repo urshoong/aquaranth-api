@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+
 /**
  * 사원을 넣을 때,
  * 사원에게 매핑될 조직 부서와
@@ -15,7 +17,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class EmpOrgaDTO {
-    private Long orgaNo;
+    private Long orgaNo, upperOrgaNo;
     private Long deptNo;
-    private String orgaType;
+    private String orgaType, regUser, modUser;
+    private LocalDate regDate, modDate;
 }

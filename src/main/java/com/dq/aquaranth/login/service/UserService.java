@@ -80,18 +80,8 @@ public class UserService implements UserDetailsService {
             String username = decodedJWT.getSubject(); // token 과 함께 제공되는 사용자 이름을 줍니다.
 
             log.info("refresh token 검증이 완료되었습니다.");
-            Map<String, String> tokens = jwtUtil.generateToken(username);
 
-
-            log.info("redis refresh_token 을 업데이트 합니다. username -> {}", username);
-            redisTemplate.opsForValue().set(
-                    username,
-                    tokens.get("refresh_token"),
-                    REFRESH_TOKEN_EXPIRATION_TIME,
-                    TimeUnit.MILLISECONDS
-            );
-
-            return tokens;
+            return jwtUtil.generateToken(username);
         } else {
             throw new RuntimeException("Refresh token is missing");
         }

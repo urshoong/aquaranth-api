@@ -12,8 +12,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class EmpMappingDTO {
-    private Long orgaNo;
-    private Long empNo;
-    private String empRank;
-    private LocalDate hiredate;
+    private Long orgaNo, empNo;
+    private String empRole, empRank, regUser, regDate, modUser, modDate;
+    private LocalDate hiredDate, retiredDate;
 }
