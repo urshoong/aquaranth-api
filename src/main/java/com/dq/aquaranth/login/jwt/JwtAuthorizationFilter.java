@@ -6,11 +6,14 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.dq.aquaranth.commons.utils.JWTUtil;
 import com.dq.aquaranth.commons.utils.SendResponseUtils;
+import com.dq.aquaranth.login.domain.CustomUser;
+import com.dq.aquaranth.login.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -33,6 +36,7 @@ import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 @RequiredArgsConstructor
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
     private final JWTUtil jwtUtil;
+    private final UserDetailsService userDetailsService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -56,9 +60,11 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 //                    String[] roles = decodedJWT.getClaim("roles").asArray(String.class); // token 의 roles 를 파싱하여 들고옴(json 배열로 되있음.)
 //                    stream(roles).forEach(role -> authorities.add(new SimpleGrantedAuthority(role)));
 
+                    CustomUser customUser = (CustomUser) userDetailsService.loadUserByUsername(username);
+
                     // 암호가 필요없는 이유는 token 검증을 끝마쳤기 때문에 이미 유효한 token 으로 인증이 된 사용자이다.
                     UsernamePasswordAuthenticationToken authenticationToken =
-                            new UsernamePasswordAuthenticationToken(username, null, authorities);
+                            new UsernamePasswordAuthenticationToken(customUser, null, customUser.getAuthorities());
 
                     // SpringSecurity 를 호출한 다음 Context 를 들고와서 인증을 설정한 다음 인증 토큰을 전달합니다.
                     // ex) Security 야! 사용자이름과, 역할(role) 등등이 여기있으니 들고가서 access 할 수 있는 자원도 결정해주고 뭐 알아서 하렴 !
