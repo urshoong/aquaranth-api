@@ -13,13 +13,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class DefaultMenuService implements MenuService {
 
-    private final RedisTemplate<String, Object> redisTemplate;
-
     private final MenuMapper menuMapper;
 
     @Override
     public List<MenuResponseDTO> findAllMenus() {
-        return menuMapper.findAllMenus();
+        return null;
     }
 
     @Override

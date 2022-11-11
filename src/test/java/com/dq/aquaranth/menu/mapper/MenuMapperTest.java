@@ -62,36 +62,10 @@ class MenuMapperTest {
                 .menuNo(menuNo)
                 .menuName(menuName)
                 .menuUse(false)
-                .menuSort(99)
+                .menuOrder(99L)
                 .build();
         menuMapper.update(menuUpdateDTO);
         Optional<MenuResponseDTO> expectedMenuResponseDto = menuMapper.findByMenuNo(menuNo);
         assertThat(Objects.requireNonNull(expectedMenuResponseDto.orElseGet(() -> null)).getMenuName()).isEqualTo(menuName);
     }
-
-
-    @Test
-    @DisplayName(value = "권한과 관련없이 모든 메뉴를 조회합니다.")
-    void findAllMenus() {
-        List<MenuResponseDTO> menuResponsDTOS = menuMapper.findAllMenus();
-        menuResponsDTOS.forEach(log::info);
-    }
-//
-//    @Test
-//    void findByGnBMenus() {
-//        List<MenuResponseDTO> menuResponses = menuMapper.findByGnBMenus();
-//        menuResponses.forEach(log::info);
-//    }
-//
-//    @Test
-//    @DisplayName(value = "권한과 관련없이 모든 메뉴를 조회합니다.")
-//    void update() {
-//        MenuUpdateDTO menuUpdateDTO = MenuUpdateDTO.builder()
-//                .menuName("구글 드라이브")
-//                .menuUse(false)
-//                .menuSort(99)
-//                .build();
-//
-//
-//    }
 }

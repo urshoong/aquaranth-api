@@ -5,45 +5,25 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.dq.aquaranth.commons.utils.JWTUtil;
-import com.dq.aquaranth.commons.utils.SendResponseUtils;
-import com.dq.aquaranth.company.dto.CompanyDTO;
 import com.dq.aquaranth.company.mapper.CompanyMapper;
-import com.dq.aquaranth.dept.dto.DeptDTO2;
 import com.dq.aquaranth.dept.mapper.DeptMapper2;
 import com.dq.aquaranth.emp.dto.EmpDTO;
 import com.dq.aquaranth.emp.mapper.EmpMapper;
 import com.dq.aquaranth.login.domain.CustomUser;
-import com.dq.aquaranth.login.jwt.JwtProperties;
-import com.dq.aquaranth.menu.dto.response.AllMenuResponse;
 import com.dq.aquaranth.menu.mapper.MenuMapper;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.http.HttpStatus;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.management.openmbean.KeyAlreadyExistsException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.*;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
+import java.util.List;
+import java.util.Map;
 
-import static com.dq.aquaranth.login.jwt.JwtProperties.*;
-import static org.springframework.http.HttpHeaders.AUTHORIZATION;
-import static org.springframework.http.HttpStatus.CONFLICT;
-import static org.springframework.http.HttpStatus.UNAUTHORIZED;
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import static com.dq.aquaranth.login.jwt.JwtProperties.SECRET;
+import static com.dq.aquaranth.login.jwt.JwtProperties.TOKEN_PREFIX;
 
 @Service
 @RequiredArgsConstructor
