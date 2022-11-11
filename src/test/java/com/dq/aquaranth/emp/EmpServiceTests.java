@@ -69,7 +69,7 @@ public class EmpServiceTests {
                 .empAddress("수정시 수정구")
                 .empProfile("profileUpdate")
                 .email("userUpdate02@naver.com")
-                .lastRetiredate(null)
+                .lastRetiredDate(null)
                 .empNo(16L)
                 .build();
 
@@ -80,7 +80,6 @@ public class EmpServiceTests {
     void empDeleteTest() {
         log.info(service.empRemove(16L));
     }
-
 
 //    @Test
 //    void registerTest() throws IOException, IllegalAccessException {
@@ -292,29 +291,39 @@ public class EmpServiceTests {
 
     @Test
     void empInsertTest() throws IllegalAccessException{
+        String registrant = "종현";
+
+        // 조직
         EmpOrgaDTO empOrgaDTO = EmpOrgaDTO.builder()
-                .deptNo(3L)
+                .deptNo(11L)
+                .regUser(registrant) //등록자
                 .build();
 
         Long orgaId = empOrgaDTO.getOrgaNo();
 
+        // 사원
         EmpDTO empDTO = EmpDTO.builder()
-                .empName("수요일")
-                .username("user19")
-                .password("test")
-                .gender("여성")
-                .empProfile("profile")
-                .empPhone("01099231293")
-                .empAddress("부산시")
-                .email("email@naver.com")
+                .empName("user") //이름
+                .username("user") //id
+                .password("user") //비번
+                .gender("남성")   //성별
+                .empPhone("01011111111") //휴대폰 번호
+                .empAddress("부산시") //주소
+                .empProfile("profile") //프로필 사진
+                .email("email@naver.com") //이메일
+                .firstHiredDate(LocalDate.now())//첫입사일
+                .regUser(registrant) //등록자
                 .build();
 
         Long empId = empDTO.getEmpNo();
 
+        // 매핑테이블
         EmpMappingDTO empMappingDTO = EmpMappingDTO.builder()
                 .orgaNo(orgaId)
                 .empNo(empId)
-                .empRank("과장")
+                .empRole("ROLE_USER") //사용자권한
+                .empRank("사원") //직급
+                .regUser(registrant)
                 .build();
 
             service.insert(empOrgaDTO, empDTO, empMappingDTO);
