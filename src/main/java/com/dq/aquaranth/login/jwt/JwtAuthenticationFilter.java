@@ -74,16 +74,16 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
      */
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException {
-        CustomUser user = (CustomUser) authentication.getPrincipal(); // 현재 인증된(로그인한) 사용자의 정보를 가져온다
-        log.info("{} 님이 로그인 하였습니다.", user.getUsername());
+        CustomUser customUser = (CustomUser) authentication.getPrincipal(); // 현재 인증된(로그인한) 사용자의 정보를 가져온다
+        log.info("{} 님이 로그인 하였습니다.", customUser.getUsername());
 
-        Map<String, String> tokens = jwtUtil.generateToken(user.getUsername());
+        Map<String, String> tokens = jwtUtil.generateToken(customUser.getUsername());
 
-        log.info("성공한 유저 인증객체 CustomUser-> {}", user);
+        log.info("성공한 유저 인증객체 CustomUser-> {}", customUser);
         ObjectMapper objectMapper = new ObjectMapper();
         String loginUserInfo = objectMapper
                 .registerModule(new JavaTimeModule())
-                .writeValueAsString(user);
+                .writeValueAsString(customUser);
 
 //       Redis에 저장 - 만료 시간 설정을 통해 자동 삭제 처리
         log.info("redis에 menu list를 저장합니다.");

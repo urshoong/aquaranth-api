@@ -15,8 +15,8 @@ public class EmpDTO {
     private Long empNo;
     @NotBlank
     private String empName, username, password;
-    private String gender, empPhone, empAddress, empProfile, email;
+    private String gender, empPhone, empAddress, empProfile, email, lastLoginIp
+                  , regUser, regDate, modUser, modDate;
     private LocalDateTime lastLoginTime;
-    private String lastLoginIp;
-    private LocalDate firstHiredate, lastRetiredate;
+    private LocalDate firstHiredDate, lastRetiredDate;
 }

@@ -11,6 +11,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CompanyModifyDTO {
     private Long companyNo;
-    private String companyName, companyAddress, companyTel, ownerName;
+    private String companyName, companyAddress, companyTel, ownerName, modUser;
     private Boolean companyUse;
 }

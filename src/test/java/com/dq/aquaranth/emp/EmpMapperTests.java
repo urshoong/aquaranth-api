@@ -76,13 +76,13 @@ public class EmpMapperTests {
     void empUpdateTest(){
         EmpUpdateDTO empUpdateDTO = EmpUpdateDTO.builder()
                 .empName("정수정")
-                .password("gi")
                 .gender("여성")
                 .empPhone("01011111111")
                 .empAddress("수정시 수정구")
                 .empProfile("profileUpdate")
                 .email("userUpdate01@naver.com")
-                .lastRetiredate(LocalDate.now())
+                .lastRetiredDate(LocalDate.now())
+                .regUser("종현")
                 .empNo(22L)
                 .build();
 
@@ -93,11 +93,6 @@ public class EmpMapperTests {
     @Test
     void empDeleteByIdTest() {
         log.info(empMapper.empDeleteById(11L));
-    }
-
-    @Test
-    void empCountAllTest(){
-        log.info(empMapper.empCountAll());
     }
 
 }

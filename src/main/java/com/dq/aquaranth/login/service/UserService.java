@@ -5,12 +5,9 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.dq.aquaranth.commons.utils.JWTUtil;
-import com.dq.aquaranth.company.mapper.CompanyMapper;
-import com.dq.aquaranth.dept.mapper.DeptMapper2;
 import com.dq.aquaranth.emp.dto.EmpDTO;
 import com.dq.aquaranth.emp.mapper.EmpMapper;
 import com.dq.aquaranth.login.domain.CustomUser;
-import com.dq.aquaranth.menu.mapper.MenuMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,41 +16,32 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-import static com.dq.aquaranth.login.jwt.JwtProperties.SECRET;
-import static com.dq.aquaranth.login.jwt.JwtProperties.TOKEN_PREFIX;
+import static com.dq.aquaranth.login.jwt.JwtProperties.*;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
 @Slf4j
 public class UserService implements UserDetailsService {
-    private final CompanyMapper companyMapper;
-    private final DeptMapper2 deptMapper;
     private final EmpMapper empMapper;
     private final JWTUtil jwtUtil;
-    private final MenuMapper menuMapper;
+    private final UserSessionService userSessionService;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         log.info("사용자가 로그인을 시도합니다. username => {}", username);
 
-        // 로그인한 사원의 회사, 부서, 볼수있는 메뉴리스트
         EmpDTO empDTO = empMapper.findByUsername(username);
         if (empDTO == null) {
             log.error("사원 정보가 db에 존재하지 않습니다.");
             throw new UsernameNotFoundException("User not found in the database");
         }
         log.info("사원 정보를 찾았습니다 username => {}", username);
-
-//        TODO : 쿼리짜서 아래주석 잘 돌아가도록 할 것 .
-//        CompanyDTO companyDTO = companyMapper.findByUsername(username); // 로그인한 유저의 회사정보
-//        DeptDTO2 deptDTO = deptMapper.findByUsername(username); // 로그인한 유저의 부서정보
-        List<String> menuList = menuMapper.findMenusByLoginUsername(username); // 로그인한 유저가 접근할 수 있는 메뉴들
-
-        return new CustomUser(null, null, empDTO, menuList);
+        CustomUser customUser = userSessionService.findUserInfoInDatabase(empDTO);
+        log.info("custom user 객체 ->{}",customUser.toString());
+        return customUser;
     }
 
     //    TODO : 오쏘라에서 체크하는게 맞지 않을까?
