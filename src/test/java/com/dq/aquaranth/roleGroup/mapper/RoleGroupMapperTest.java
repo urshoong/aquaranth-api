@@ -1,5 +1,6 @@
 package com.dq.aquaranth.roleGroup.mapper;
 
+import com.dq.aquaranth.roleGroup.domain.RoleGroup;
 import com.dq.aquaranth.roleGroup.dto.*;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.DisplayName;
@@ -32,22 +33,23 @@ class RoleGroupMapperTest {
     @DisplayName("권한그룹을 추가합니다.")
     void insert() {
         // given
-        String newRoleGroupName = "test 권한그룹666";
+        String newRoleGroupName = "test 권한그룹2";
         boolean newRoleGroupUse = true;
-        String newCompanyName = "KAKAO";
+        Long newCompanyNo = 2L; // MEGA ZONE
 
-        RoleGroupDTO insertDTO = RoleGroupDTO.builder()
+        RoleGroup insertRoleGroup = RoleGroup.builder()
                 .roleGroupName(newRoleGroupName)
                 .roleGroupUse(newRoleGroupUse)
-                .companyName(newCompanyName)
+                .companyNo(newCompanyNo)
+                .regUser("종현")
                 .build();
 
         // when
-        roleGroupMapper.insert(insertDTO); // 권한그룹 추가하기
-
+        roleGroupMapper.insert(insertRoleGroup); // 권한그룹 추가하기
+        log.info(insertRoleGroup.getRoleGroupNo());
         // then
-        assertNotNull(insertDTO.getRoleGroupNo());
-        log.info(insertDTO);
+        assertNotNull(insertRoleGroup.getRoleGroupNo());
+        log.info(insertRoleGroup);
     }
 
     @Test
@@ -56,20 +58,22 @@ class RoleGroupMapperTest {
         // given
         Long updateRoleGroupNo = 6L;
         String updateRoleGroupName = "update222 권한그룹명66666"; // 바꿀 권한그룹명
-        RoleGroupDTO beforeDTO = roleGroupMapper.findById(updateRoleGroupNo); // 수정전  권한그룹
+        RoleGroup beforeDTO = roleGroupMapper.findById(updateRoleGroupNo); // 수정전  권한그룹
         boolean updateRoleGroupUse = !beforeDTO.isRoleGroupUse(); // 기존 사용여부의 반대로
 
         RoleGroupUpdateDTO updateDTO = RoleGroupUpdateDTO.builder()
                 .roleGroupNo(updateRoleGroupNo)
                 .roleGroupName(updateRoleGroupName)
                 .roleGroupUse(updateRoleGroupUse)
+                .companyNo(2L)
+                .modUser("종현")
                 .build();
 
         // when
         roleGroupMapper.update(updateDTO);
 
         // then
-        RoleGroupDTO afterDTO = roleGroupMapper.findById(updateRoleGroupNo);
+        RoleGroup afterDTO = roleGroupMapper.findById(updateRoleGroupNo);
         // 권한 그룹 수정이 일어나지 않았다면, updateRoleGroupNo에 대한 권한그룹명은 그대로일 것이다.
         assertEquals(afterDTO.getRoleGroupName(), updateRoleGroupName);
         // 사용여부를 기존 권한그룹 사용여부의 반대값으로 수정하였기 때문에 사용여부는 서로 달라야 할 것이다.
@@ -83,7 +87,7 @@ class RoleGroupMapperTest {
     @DisplayName("권한그룹번호로 권한그룹을 삭제합니다.")
     void deleteById() {
         // given
-        Long deleteRoleGroupNo = 2L;
+        Long deleteRoleGroupNo = 8L;
 
         // when
         roleGroupMapper.deleteById(deleteRoleGroupNo);

@@ -1,6 +1,7 @@
 package com.dq.aquaranth.commons.config;
 
 import com.dq.aquaranth.commons.utils.JWTUtil;
+import com.dq.aquaranth.emp.mapper.EmpMapper;
 import com.dq.aquaranth.login.handler.CustomLogoutSuccessHandler;
 import com.dq.aquaranth.login.jwt.JwtAuthenticationFilter;
 import com.dq.aquaranth.login.jwt.JwtAuthorizationFilter;
@@ -33,7 +34,7 @@ public class CustomSecurityConfig {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final RedisTemplate<String, Object> redisTemplate;
     private final JWTUtil jwtUtil;
-    private final MenuService menuService;
+    private final EmpMapper empMapper;
 
     @Bean
     public SecurityFilterChain filterChain(final HttpSecurity http) throws Exception {
@@ -67,7 +68,7 @@ public class CustomSecurityConfig {
 
                 // 권한 설정
                 .authorizeHttpRequests()
-//                .antMatchers("/login/**", "/api/token/refresh/**", "/user", "/api/users/register", "/api/token/save-refresh", "/api/token/refresh", "/anonymity").permitAll()
+//                .antMatchers("/api/menu").hasRole("ROLE_ADMIN")
                 .anyRequest().permitAll()
 
                 .and()
@@ -78,7 +79,7 @@ public class CustomSecurityConfig {
                 .and()
                 .authenticationManager(authenticationManager)
                 .addFilter(authenticationFilter) // 인증필터
-                .addFilterBefore(new JwtAuthorizationFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class); // 권한필터, 모든 요청을 받으려면 다른 필터들 보다 먼저 처리되어야 한다.
+                .addFilterBefore(new JwtAuthorizationFilter(jwtUtil, userDetailsService), UsernamePasswordAuthenticationFilter.class); // 권한필터, 모든 요청을 받으려면 다른 필터들 보다 먼저 처리되어야 한다.
 
         return http.build();
     }

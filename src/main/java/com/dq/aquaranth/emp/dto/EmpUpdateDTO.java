@@ -18,6 +18,6 @@ public class EmpUpdateDTO {
     private Long empNo;
     @NotBlank
     private String empName, password;
-    private String gender, empPhone, empAddress, empProfile, email;
-    private LocalDate lastRetiredate;
+    private String gender, empPhone, empAddress, empProfile, email, regUser;
+    private LocalDate lastRetiredDate;
 }

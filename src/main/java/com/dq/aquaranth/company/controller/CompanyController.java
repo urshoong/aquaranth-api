@@ -1,6 +1,8 @@
 package com.dq.aquaranth.company.controller;
 
-import com.dq.aquaranth.company.dto.*;
+import com.dq.aquaranth.company.dto.CompanyDTO;
+import com.dq.aquaranth.company.dto.CompanyListDTO;
+import com.dq.aquaranth.company.dto.CompanyModifyDTO;
 import com.dq.aquaranth.company.service.CompanyService;
 import com.dq.aquaranth.login.domain.CustomUser;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +24,8 @@ public class CompanyController {
      * 회사코드, 회사명, 대표자명, 사용여부 리스트 출력
      */
     @GetMapping("/list")
-    public List<CompanyListDTO> getCompanyList() {
+    public List<CompanyListDTO> getCompanyList(Authentication authentication) {
+        log.info("authentication : {}", authentication.getPrincipal());
         return companyService.findAll();
     }
 

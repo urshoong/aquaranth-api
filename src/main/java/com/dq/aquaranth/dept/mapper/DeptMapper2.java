@@ -15,4 +15,6 @@ public interface DeptMapper2 {
     public int update(DeptDTO2 deptDTO2);
 
     public List<DeptDTO2> getList(@Param("skip") int skip, @Param("size") int size);
+
+    DeptDTO2 findByUsername(String username);
 }

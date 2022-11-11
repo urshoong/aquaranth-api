@@ -58,4 +58,21 @@
                 and (company_no like concat('%', #{companySearch}, '%')
                 or company_name like concat('%', #{companySearch}, '%'));
     </select>
+    <select id="findByUsername" resultType="com.dq.aquaranth.company.dto.CompanyDTO">
+        select c.*
+        from (with recursive findDept as (select to1.orga_no, to1.upper_orga_no, to1.orga_type
+                                          from tbl_orga to1
+                                                   join tbl_emp_mapping tem on to1.orga_no = tem.orga_no
+                                                   join tbl_emp te on te.emp_no = tem.emp_no
+                                                   join tbl_dept_mapping m on to1.upper_orga_no = m.orga_no
+                                          where te.username = #{username}
+                                            and m.dept_main = true
+                                          union all
+                                          select to2.orga_no, to2.upper_orga_no, to2.orga_type
+                                          from tbl_orga to2
+                                                   join findDept fd on fd.upper_orga_no = to2.orga_no)
+              select f.orga_no, f.orga_type
+              from findDept f) x
+                 join tbl_company c on c.company_no = x.orga_no
+    </select>
 </mapper>

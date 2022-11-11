@@ -10,6 +10,9 @@ import java.time.LocalDateTime;
 @Data
 @Builder
 public class EmpInsertInformationDTO {
+
+    private String regUser, empRole;
+
     //사원 정보
     private Long empNo;
     @NotBlank
