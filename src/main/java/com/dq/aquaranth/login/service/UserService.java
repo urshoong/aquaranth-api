@@ -6,6 +6,10 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.dq.aquaranth.commons.utils.JWTUtil;
 import com.dq.aquaranth.commons.utils.SendResponseUtils;
+import com.dq.aquaranth.company.dto.CompanyDTO;
+import com.dq.aquaranth.company.mapper.CompanyMapper;
+import com.dq.aquaranth.dept.dto.DeptDTO2;
+import com.dq.aquaranth.dept.mapper.DeptMapper2;
 import com.dq.aquaranth.emp.dto.EmpDTO;
 import com.dq.aquaranth.emp.mapper.EmpMapper;
 import com.dq.aquaranth.login.domain.CustomUser;
@@ -46,9 +50,9 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @Transactional
 @Slf4j
 public class UserService implements UserDetailsService {
-    private final PasswordEncoder passwordEncoder;
+    private final CompanyMapper companyMapper;
+    private final DeptMapper2 deptMapper;
     private final EmpMapper empMapper;
-    private final RedisTemplate<String, Object> redisTemplate;
     private final JWTUtil jwtUtil;
     private final MenuMapper menuMapper;
 
@@ -56,18 +60,23 @@ public class UserService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         log.info("사용자가 로그인을 시도합니다. username => {}", username);
 
-        // find user
-        EmpDTO user = empMapper.findByUsername(username);
-
-        if (user == null) {
-            log.error("user 정보가 db에 존재하지 않습니다.");
+        // 로그인한 사원의 회사, 부서, 볼수있는 메뉴리스트
+        EmpDTO empDTO = empMapper.findByUsername(username);
+        if (empDTO == null) {
+            log.error("사원 정보가 db에 존재하지 않습니다.");
             throw new UsernameNotFoundException("User not found in the database");
         }
+        log.info("사원 정보를 찾았습니다 username => {}", username);
 
-        log.info("user 정보를 찾았습니다 username => {}", username);
-        return new CustomUser(user, menuMapper.findMenusByLoginUsername(username));
+//        TODO : 쿼리짜서 아래주석 잘 돌아가도록 할 것 .
+//        CompanyDTO companyDTO = companyMapper.findByUsername(username); // 로그인한 유저의 회사정보
+//        DeptDTO2 deptDTO = deptMapper.findByUsername(username); // 로그인한 유저의 부서정보
+        List<String> menuList = menuMapper.findMenusByLoginUsername(username); // 로그인한 유저가 접근할 수 있는 메뉴들
+
+        return new CustomUser(null, null, empDTO, menuList);
     }
 
+    //    TODO : 오쏘라에서 체크하는게 맞지 않을까?
     public Map<String, String> checkRefresh(String authorizationHeader) throws Exception {
         if (authorizationHeader != null && authorizationHeader.startsWith(TOKEN_PREFIX)) {
             log.info("refresh token 을 검증합니다.");
@@ -80,24 +89,10 @@ public class UserService implements UserDetailsService {
             String username = decodedJWT.getSubject(); // token 과 함께 제공되는 사용자 이름을 줍니다.
 
             log.info("refresh token 검증이 완료되었습니다.");
-            Map<String, String> tokens = jwtUtil.generateToken(username);
 
-
-            log.info("redis refresh_token 을 업데이트 합니다. username -> {}", username);
-            redisTemplate.opsForValue().set(
-                    username,
-                    tokens.get("refresh_token"),
-                    REFRESH_TOKEN_EXPIRATION_TIME,
-                    TimeUnit.MILLISECONDS
-            );
-
-            return tokens;
+            return jwtUtil.generateToken(username);
         } else {
             throw new RuntimeException("Refresh token is missing");
         }
-    }
-
-    public ArrayList<String> findMenusByLoginUsername(String username) {
-        return menuMapper.findMenusByLoginUsername(username);
     }
 }
