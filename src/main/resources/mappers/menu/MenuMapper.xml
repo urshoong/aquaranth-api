@@ -4,7 +4,41 @@
 
 <mapper namespace="com.dq.aquaranth.menu.mapper.MenuMapper">
 
-    <select id="findAllMenus" resultType="com.dq.aquaranth.menu.dto.response.AllMenuResponse">
+    <select id="findAll" resultType="com.dq.aquaranth.menu.dto.response.MenuResponseDTO">
+        SELECT *
+        FROM menu
+    </select>
+
+    <select id="findByMenuNo" resultType="com.dq.aquaranth.menu.dto.response.MenuResponseDTO">
+        SELECT *
+        FROM menu
+        WHERE menu_no = #{menuNo}
+    </select>
+
+    <select id="findByMenuCode" resultType="com.dq.aquaranth.menu.dto.response.MenuResponseDTO">
+        SELECT *
+        FROM menu
+        WHERE menu_code = #{menuCode}
+    </select>
+
+    <delete id="delete">
+        DELETE
+        FROM menu
+        WHERE menu_code = #{menuCode
+        }
+    </delete>
+
+    <update id="update">
+        UPDATE menu
+        SET menu_name = #{menuName},
+            menu_sort = #{menuSort},
+            menu_use  = #{menuUse},
+            icon_url  = #{menuUse}
+        WHERE menu_no = #{menuNo}
+    </update>
+
+
+    <select id="findAllMenus" resultType="com.dq.aquaranth.menu.dto.response.MenuResponseDTO">
         WITH RECURSIVE CTE AS (SELECT menu_no,
                                       menu_name,
                                       icon_url,
@@ -45,12 +79,6 @@
         ;
     </select>
 
-    <select id="findByGnBMenus" resultType="com.dq.aquaranth.menu.dto.response.MenuResponse">
-        SELECT *
-        FROM menu
-        WHERE upper_menu_no IS NULL
-    </select>
-
     <select id="findMenusByLoginUsername" resultType="string">
         select distinct m.menu_code
         from (WITH RECURSIVE findMainOrga AS
@@ -59,7 +87,33 @@
                                            inner join empMapping eM on orga.orga_no = eM.orga_no
                                            inner join emp e on eM.emp_no = e.emp_no
                                            join deptMapping d on orga.upper_orga_no = d.orga_no
-                                  where username = #{username} and d.dept_main = true
+                                  where username = #{username}
+                                    and d.dept_main = true
+                                  UNION ALL
+                                  select o.orga_no, o.upper_orga_no, o.orga_type
+                                  from findMainOrga f
+                                           inner join orga o on f.upper_orga_no = o.orga_no)
+              select f.orga_no, f.orga_type
+              from findMainOrga f) as f
+                 inner join orga_role o on o.orga_no = f.orga_no
+                 inner join role_group rg on o.role_group_no = rg.role_group_no
+                 join menu_role mr on rg.role_group_no = mr.role_group_no
+                 join menu m on mr.menu_no = m.menu_no
+        order by f.orga_type
+    </select>
+    <select id="findByUpperMenuNoIsNull" resultType="com.dq.aquaranth.menu.dto.response.MenuResponseDTO">
+
+    </select>
+    <select id="findMyUnderMenu" resultType="com.dq.aquaranth.menu.dto.response.MenuResponseDTO">
+
+        select distinct m.menu_name, m.menu_code, f.orga_type
+        from (WITH RECURSIVE findMainOrga AS
+                                 (select orga.orga_no, orga.upper_orga_no, orga.orga_type
+                                  from orga
+                                           inner join empMapping eM on orga.orga_no = eM.orga_no
+                                           inner join emp e on eM.emp_no = e.emp_no
+                                           join deptMapping d on orga.upper_orga_no = d.orga_no
+                                  where username = 'user02' and d.dept_main = true
                                   UNION ALL
                                   select o.orga_no, o.upper_orga_no, o.orga_type
                                   from findMainOrga f
@@ -72,5 +126,8 @@
                  join menu_role mr on rg.role_group_no = mr.role_group_no
                  join menu m on mr.menu_no = m.menu_no
         order by f.orga_type
+        ;
+
     </select>
+
 </mapper>

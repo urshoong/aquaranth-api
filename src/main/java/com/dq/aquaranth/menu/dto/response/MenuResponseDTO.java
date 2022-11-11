@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AllMenuResponse {
+public class MenuResponseDTO {
     private Long menuNo;
     private Long upperMenuNo;
     private Integer menuSort;

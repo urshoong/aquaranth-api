@@ -1,15 +1,18 @@
 package com.dq.aquaranth.menu.service;
 
-import com.dq.aquaranth.menu.dto.response.AllMenuResponse;
-import com.dq.aquaranth.menu.dto.response.MenuResponse;
+import com.dq.aquaranth.menu.dto.request.MenuUpdateDTO;
+import com.dq.aquaranth.menu.dto.response.MenuResponseDTO;
 
 import java.util.List;
 
 public interface MenuService {
 
-    List<AllMenuResponse> findAllMenus();
+    List<MenuResponseDTO> findAllMenus();
 
-    List<MenuResponse> findByGnbMenus();
+    List<MenuResponseDTO> findByGnbMenus();
 
+    Integer update(MenuUpdateDTO menuUpdateDTO);
+
+    List<MenuResponseDTO> findByMenu();
 
 }
