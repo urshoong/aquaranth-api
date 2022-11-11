@@ -7,4 +7,5 @@ public interface UserSessionService {
     CustomUser findUserInfoInDatabase(EmpDTO empDTO);
 
     CustomUser findUserInfoInRedis(String username);
+
 }

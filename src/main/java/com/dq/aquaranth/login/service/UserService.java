@@ -39,8 +39,10 @@ public class UserService implements UserDetailsService {
             throw new UsernameNotFoundException("User not found in the database");
         }
         log.info("사원 정보를 찾았습니다 username => {}", username);
+
+//        FIXME : test 가 끝나면 인라인화
         CustomUser customUser = userSessionService.findUserInfoInDatabase(empDTO);
-        log.info("custom user 객체 ->{}",customUser.toString());
+        log.info("custom user 객체 ->{}", customUser.toString());
         return customUser;
     }
 
