@@ -1,6 +1,6 @@
 package com.dq.aquaranth.roleGroup.service;
 
-import com.dq.aquaranth.roleGroup.dto.RoleGroupDTO;
+import com.dq.aquaranth.roleGroup.domain.RoleGroup;
 import com.dq.aquaranth.roleGroup.dto.RoleGroupUpdateDTO;
 import com.dq.aquaranth.roleGroup.mapper.RoleGroupMapper;
 import lombok.RequiredArgsConstructor;
@@ -17,13 +17,13 @@ import java.util.Objects;
 public class RoleGroupServiceImpl implements RoleGroupService {
     private final RoleGroupMapper roleGroupMapper;
     @Override
-    public List<RoleGroupDTO> findAll() {
+    public List<RoleGroup> findAll() {
         log.info("권한그룹을 조회합니다");
         return roleGroupMapper.findAll();
     }
 
     @Override
-    public RoleGroupDTO findById(Long roleGroupNo) {
+    public RoleGroup findById(Long roleGroupNo) {
         log.info("{} 번째 권한그룹을 조회합니다", roleGroupNo);
         return roleGroupMapper.findById(roleGroupNo);
     }
@@ -35,7 +35,7 @@ public class RoleGroupServiceImpl implements RoleGroupService {
     }
 
     @Override
-    public RoleGroupDTO insert(RoleGroupDTO insertDTO) {
+    public RoleGroup insert(RoleGroup insertDTO) {
         Long result = roleGroupMapper.insert(insertDTO);
         log.info("권한그룹을 등록합니다. 등록된 권한그룹번호 => {}", insertDTO.getRoleGroupNo());
 
@@ -52,7 +52,7 @@ public class RoleGroupServiceImpl implements RoleGroupService {
     public void delete(Long roleGroupNo) {
         log.info("{} 번째 권한그룹을 삭제합니다.", roleGroupNo);
 
-        RoleGroupDTO findDTO = roleGroupMapper.findById(roleGroupNo);
+        RoleGroup findDTO = roleGroupMapper.findById(roleGroupNo);
 
         if (Objects.isNull(findDTO)) {
             log.error("삭제하려는 권한그룹은 존재하지 않습니다");

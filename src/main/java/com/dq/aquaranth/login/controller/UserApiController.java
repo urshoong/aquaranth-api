@@ -27,7 +27,6 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RequestMapping("/api")
 public class UserApiController {
     private final UserService userService;
-    private final UserSessionService userSessionService;
 
     @GetMapping("/token/refresh")
     public Map<String, String> refreshTokenCheck(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -43,10 +42,5 @@ public class UserApiController {
         }
 
         return tokens;
-    }
-
-    @GetMapping("/user/company/{username}")
-    public void getCompany(@PathVariable String username) {
-        CompanyDTO companyDTO = userSessionService.findCompanyByUsername(username);
     }
 }

@@ -11,6 +11,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.time.LocalDate;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 @SpringBootTest
 @Log4j2
 public class CompanyServiceTests {
@@ -47,6 +49,7 @@ public class CompanyServiceTests {
                 .businessNumber("129-86-549371")
                 .companyUse(false)
                 .orgaNo(9L)
+                .regUser("admin")
                 .build();
         log.info(companyService.insert(companyDTO));
 
@@ -57,34 +60,36 @@ public class CompanyServiceTests {
     @Test
     @DisplayName("회사 기본정보 수정 Test 코드")
     void modifyCompanyTest() {
+        Long modCompanyNo = 6L;
+        String modUser = "테스트 수정자";
+
+        assertNotNull(companyService.findById(modCompanyNo));
+
         CompanyModifyDTO companyModifyDTO = CompanyModifyDTO
                 .builder()
-                .companyNo(7L)
+                .companyNo(modCompanyNo)
                 .companyName("MOMSTOUCH")
                 .companyAddress("서울특별시 강동구 천호대로 1077")
                 .companyTel("02-418-8884")
                 .ownerName("김동전")
                 .companyUse(false)
+                .modUser(modUser)
                 .build();
+
+
         log.info(companyService.update(companyModifyDTO));
     }
 
     @Test
     @DisplayName("회사 정보 삭제 Test 코드")
     void removeCompanyTest() {
-        long companyNo = 7L;
+        long companyNo = 6L;
         log.info(companyService.deleteById(companyNo));
     }
 
     @Test
     @DisplayName("회사코드, 회사명, 사용여부 검색 Test 코드")
     void searchCompanyTest() {
-//        CompanySearchDTO companySearchDTO = CompanySearchDTO
-//                .builder()
-//                .companyNo(null)
-//                .companyName(null)
-//                .companyUse(false)
-//                .build();
         List<CompanyListDTO> companyListDTO = companyService.search(true, "DOUZONE");
         companyListDTO.forEach(log::info);
     }
