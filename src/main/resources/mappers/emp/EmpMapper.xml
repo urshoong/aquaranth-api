@@ -9,7 +9,9 @@
     </select>
 
     <select id="findById" resultType="com.dq.aquaranth.emp.dto.EmpDTO">
-        SELECT * FROM tbl_emp WHERE emp_no = #{empNo}
+        SELECT *
+        FROM tbl_emp
+        WHERE emp_no = #{empNo}
     </select>
 
     <select id="orgaFindById" resultType="com.dq.aquaranth.emp.dto.EmpSelectOrga">
@@ -74,7 +76,9 @@
     </delete>
 
     <select id="findByUsername" resultType="com.dq.aquaranth.emp.dto.EmpDTO">
-        SELECT * FROM tbl_emp WHERE username = #{username}
+        SELECT *
+        FROM tbl_emp
+        WHERE username = #{username}
     </select>
 
 

@@ -4,30 +4,28 @@ import com.dq.aquaranth.commons.utils.JWTUtil;
 import com.dq.aquaranth.commons.utils.SendResponseUtils;
 import com.dq.aquaranth.login.domain.CustomUser;
 import com.dq.aquaranth.login.dto.LoginReqDTO;
-import com.dq.aquaranth.login.service.UserService;
+import com.dq.aquaranth.login.dto.RedisDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
-import static com.dq.aquaranth.login.jwt.JwtProperties.*;
+import static com.dq.aquaranth.login.jwt.JwtProperties.REFRESH_TOKEN_EXPIRATION_TIME;
 import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -67,7 +65,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(username, password);
-
+        log.info("authenticationToken 생성" + authenticationToken);
         return authenticationManager.authenticate(authenticationToken);
     }
 
@@ -78,20 +76,27 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
      */
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException {
-        CustomUser user = (CustomUser) authentication.getPrincipal(); // 현재 인증된(로그인한) 사용자의 정보를 가져온다
-        log.info("{} 님이 로그인 하였습니다.", user.getUsername());
-        String cno = request.getParameter("cno");
+        CustomUser customUser = (CustomUser) authentication.getPrincipal(); // 현재 인증된(로그인한) 사용자의 정보를 가져온다
+        log.info("{} 님이 로그인 하였습니다.", customUser.getUsername());
 
-        Map<String, String> tokens = jwtUtil.generateToken(user.getUsername());
+        Map<String, String> tokens = jwtUtil.generateToken(customUser.getUsername());
 
+        log.info("성공한 유저 인증객체 CustomUser-> {}", customUser);
         ObjectMapper objectMapper = new ObjectMapper();
-        String serializedMenuList = objectMapper.writeValueAsString(user.getMenuList());
+        String loginUserInfo = objectMapper
+                .registerModule(new JavaTimeModule())
+                .writeValueAsString(RedisDTO.builder()
+                        .company(customUser.getCompanyDTO())
+                        .dept(customUser.getDeptDTO2())
+                        .emp(customUser.getEmpDTO())
+                        .menuList(customUser.getMenuList())
+                        .build());
 
 //       Redis에 저장 - 만료 시간 설정을 통해 자동 삭제 처리
-        log.info("redis에 refresh_token을 저장합니다.");
+        log.info("redis에 유저 정보를 저장합니다. {} 초 후 만료됨.",REFRESH_TOKEN_EXPIRATION_TIME);
         redisTemplate.opsForValue().set(
                 authentication.getName(),
-                serializedMenuList,
+                loginUserInfo,
                 REFRESH_TOKEN_EXPIRATION_TIME,
                 TimeUnit.MILLISECONDS
         );
@@ -101,8 +106,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     }
 
     @Override
-    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
+    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException {
         log.warn(failed.getMessage());
-        SendResponseUtils.sendError(UNAUTHORIZED.value(), failed.getMessage(), response);
+        SendResponseUtils.sendError(499, failed.getMessage(), response);
     }
 }

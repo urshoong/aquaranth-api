@@ -10,12 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserRoleGroupBasedUserListDTO {
-    Long companyNo;
-    Long deptNo;
-    Long empNo;
-    String companyName;
-    String deptName;
-    String empName;
-    String username;
-    //String deptRank
+    Long companyNo,deptNo,empNo;
+    Long comOrgaNo,dtOrgaNo,emOrgaNo;
+    String companyName,deptName,empName,username,emp_rank;
 }

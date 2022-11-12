@@ -1,17 +1,11 @@
 package com.dq.aquaranth.roleGroup.service;
 
-import com.dq.aquaranth.roleGroup.dto.RoleGroupDTO;
-import com.dq.aquaranth.roleGroup.dto.RoleGroupModifyReqDTO;
-import com.dq.aquaranth.roleGroup.dto.RoleGroupUpdateDTO;
-import lombok.RequiredArgsConstructor;
+import com.dq.aquaranth.roleGroup.domain.RoleGroup;
 import lombok.extern.log4j.Log4j2;
-import org.apache.ibatis.javassist.NotFoundException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -27,7 +21,7 @@ class RoleGroupServiceImplTest {
     void delete_fail_throwException() {
         // given
         Long deleteNo = 6L; // 존재하지 않는 권한그룹번호
-        RoleGroupDTO findDTO = roleGroupService.findById(deleteNo);
+        RoleGroup findDTO = roleGroupService.findById(deleteNo);
 
         // when & then
         assertThrows(RuntimeException.class, () -> roleGroupService.delete(deleteNo));
@@ -38,7 +32,7 @@ class RoleGroupServiceImplTest {
     void delete_success() {
         // given
         Long deleteNo = 5L; // 존재하는 권한그룹번호
-        RoleGroupDTO findDTO = roleGroupService.findById(deleteNo);
+        RoleGroup findDTO = roleGroupService.findById(deleteNo);
         log.info("삭제할 권한그룹 {}", findDTO);
 
         // when

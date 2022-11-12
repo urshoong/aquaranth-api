@@ -1,9 +1,6 @@
 package com.dq.aquaranth.userRole.controller;
 
-import com.dq.aquaranth.userRole.dto.UserRoleCompanyDTO;
-import com.dq.aquaranth.userRole.dto.UserRoleReqGroupBasedUserListDTO;
-import com.dq.aquaranth.userRole.dto.UserRoleReqRoleGroupBasedListDTO;
-import com.dq.aquaranth.userRole.dto.UserRoleRoleGroupBasedListDTO;
+import com.dq.aquaranth.userRole.dto.*;
 import com.dq.aquaranth.userRole.service.UserRoleService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -27,5 +24,10 @@ public class UserRoleController {
     @GetMapping("/roleGroupList")
     public List<UserRoleRoleGroupBasedListDTO> findRoleGroupByCompanyName(UserRoleReqRoleGroupBasedListDTO userRoleReqRoleGroupBasedListDTO){
         return userRoleService.findRoleGroupByCompanyName(userRoleReqRoleGroupBasedListDTO);
+    }
+
+    @GetMapping("/roleGroupUserList")
+    public List<UserRoleGroupBasedUserListDTO> findOrgaByRoleGroupNo(UserRoleReqGroupBasedUserListDTO userRoleReqGroupBasedUserListDTO){
+        return userRoleService.findOrgaByRoleGroupNo(userRoleReqGroupBasedUserListDTO);
     }
 }

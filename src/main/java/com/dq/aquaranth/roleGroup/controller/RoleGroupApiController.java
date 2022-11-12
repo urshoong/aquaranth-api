@@ -1,8 +1,7 @@
 package com.dq.aquaranth.roleGroup.controller;
 
-import com.dq.aquaranth.roleGroup.dto.RoleGroupDTO;
+import com.dq.aquaranth.roleGroup.domain.RoleGroup;
 import com.dq.aquaranth.roleGroup.dto.RoleGroupInsertReqDTO;
-import com.dq.aquaranth.roleGroup.dto.RoleGroupModifyReqDTO;
 import com.dq.aquaranth.roleGroup.dto.RoleGroupUpdateDTO;
 import com.dq.aquaranth.roleGroup.service.RoleGroupService;
 import lombok.RequiredArgsConstructor;
@@ -19,34 +18,30 @@ public class RoleGroupApiController {
     private final RoleGroupService roleGroupService;
 
     @GetMapping("")
-    public List<RoleGroupDTO> getRoleGroupList() {
+    public List<RoleGroup> getRoleGroupList() {
         return roleGroupService.findAll();
     }
 
     @GetMapping("/{roleGroupNo}")
-    public RoleGroupDTO getRoleGroup(@PathVariable Long roleGroupNo) {
+    public RoleGroup getRoleGroup(@PathVariable Long roleGroupNo) {
         return roleGroupService.findById(roleGroupNo);
     }
 
     @PostMapping("")
-    public RoleGroupDTO register(@RequestBody RoleGroupInsertReqDTO reqDTO) {
-        RoleGroupDTO insertDTO = RoleGroupDTO.builder()
+    public RoleGroup register(@RequestBody RoleGroupInsertReqDTO reqDTO) {
+        RoleGroup insertRoleGroup = RoleGroup.builder()
                 .roleGroupName(reqDTO.getRoleGroupName())
-                .companyName(reqDTO.getCompanyName())
+                .roleGroupUse(reqDTO.isRoleGroupUse())
+                .companyNo(reqDTO.getCompanyNo())
+                .regUser(reqDTO.getRegUser())
                 .build();
 
-        return roleGroupService.insert(insertDTO);
+        return roleGroupService.insert(insertRoleGroup);
     }
 
     @PutMapping("")
-    public void modify(@RequestBody RoleGroupModifyReqDTO reqDTO) {
-        RoleGroupUpdateDTO updateDTO = RoleGroupUpdateDTO.builder()
-                .roleGroupNo(reqDTO.getRoleGroupNo())
-                .roleGroupUse(reqDTO.isRoleGroupUse())
-                .roleGroupName(reqDTO.getRoleGroupName())
-                .build();
-
-        roleGroupService.update(updateDTO);
+    public void modify(@RequestBody RoleGroupUpdateDTO reqDTO) {
+        roleGroupService.update(reqDTO);
     }
 
     @DeleteMapping("/{roleGroupNo}")
