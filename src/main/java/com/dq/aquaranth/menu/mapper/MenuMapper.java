@@ -19,7 +19,7 @@ public interface MenuMapper {
 
 
     /**
-     * 모든 메뉴에 대한 정보를 가져옵니다.
+     * URL 정보를 포함한 모든 메뉴를 조회합니다.
      * @return
      */
     List<MenuResponseDTO> findAllMenuInformation();
@@ -31,20 +31,20 @@ public interface MenuMapper {
     List<MenuResponseDTO> findByUpperMenuNoIsNull();
 
     /**
-     * 하위부서 메뉴코드를 이용하여
+     * 하위 메뉴코드를 이용하여
      * 재귀탐색을 통해
      * 상위메뉴번호가 null일때 까지 조회합니다.
      * @return
      */
-    List<MenuResponseDTO> findByMenuCodeUpperRecursive();
+    List<MenuResponseDTO> findByMenuCodeUpperRecursive(String menuCode);
 
     /**
-     * 상위부서 메뉴코드를 이용하여
+     * 상위 메뉴코드를 이용하여
      * 재귀탐색을 통해
      * 모든 하위메뉴를 조회합니다.
      * @return
      */
-    List<MenuResponseDTO> findByMenuCodeUnderRecursive();
+    List<MenuResponseDTO> findByMenuCodeUnderRecursive(String menuCode);
 
     /**
      * Username을 이용하여
@@ -52,7 +52,7 @@ public interface MenuMapper {
      * 모든 메뉴 목록을 가져옵니다.
      * @return
      */
-    List<String> findMenusByLoginUsername(String username);
+    List<MenuResponseDTO> findMenusByLoginUsername(String username);
 
 
 }

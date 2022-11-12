@@ -3,6 +3,7 @@ package com.dq.aquaranth.login.domain;
 import com.dq.aquaranth.company.dto.CompanyDTO;
 import com.dq.aquaranth.dept.dto.DeptDTO2;
 import com.dq.aquaranth.emp.dto.EmpDTO;
+import com.dq.aquaranth.menu.dto.response.MenuResponseDTO;
 import lombok.Getter;
 import lombok.ToString;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -16,9 +17,9 @@ public class CustomUser extends User {
     CompanyDTO companyDTO;
     DeptDTO2 deptDTO2;
     EmpDTO empDTO;
-    List<String> menuList;
+    List<MenuResponseDTO> menuList;
 
-    public CustomUser(CompanyDTO companyDTO, DeptDTO2 deptDTO2, EmpDTO empDTO, List<String> menuList) {
+    public CustomUser(CompanyDTO companyDTO, DeptDTO2 deptDTO2, EmpDTO empDTO, List<MenuResponseDTO> menuList) {
         super(empDTO.getUsername(), empDTO.getPassword(), List.of(new SimpleGrantedAuthority("ROLE_USER")));
         this.companyDTO = companyDTO;
         this.deptDTO2 = deptDTO2;

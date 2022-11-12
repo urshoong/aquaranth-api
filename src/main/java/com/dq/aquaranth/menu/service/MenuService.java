@@ -18,4 +18,12 @@ public interface MenuService {
 
     List<MenuResponseDTO> findAllMenuInformation();
 
+    List<MenuResponseDTO> findByUpperMenuNoIsNull();
+
+    List<MenuResponseDTO> findByMenuCodeUpperRecursive(String menuCode);
+
+    List<MenuResponseDTO> findByMenuCodeUnderRecursive(String menuCode);
+
+    List<MenuResponseDTO> findMenusByLoginUsername(String username);
+
 }

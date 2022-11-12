@@ -4,7 +4,6 @@ import com.dq.aquaranth.menu.dto.request.MenuUpdateDTO;
 import com.dq.aquaranth.menu.dto.response.MenuResponseDTO;
 import com.dq.aquaranth.menu.mapper.MenuMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -40,5 +39,26 @@ public class DefaultMenuService implements MenuService {
     @Override
     public List<MenuResponseDTO> findAllMenuInformation() {
         return menuMapper.findAllMenuInformation();
+    }
+
+    @Override
+    public List<MenuResponseDTO> findByUpperMenuNoIsNull() {
+        return menuMapper.findByUpperMenuNoIsNull();
+
+    }
+
+    @Override
+    public List<MenuResponseDTO> findByMenuCodeUpperRecursive(String menuCode) {
+        return menuMapper.findByMenuCodeUpperRecursive(menuCode);
+    }
+
+    @Override
+    public List<MenuResponseDTO> findByMenuCodeUnderRecursive(String menuCode) {
+        return menuMapper.findByMenuCodeUnderRecursive(menuCode);
+    }
+
+    @Override
+    public List<MenuResponseDTO> findMenusByLoginUsername(String username) {
+        return menuMapper.findMenusByLoginUsername(username);
     }
 }

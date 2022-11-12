@@ -16,14 +16,17 @@ public class MenuResponseDTO {
     private Long upperMenuNo;
     private String menuName;
     private String menuIcon;
-    private Long menuOrder;
-    private String menuCode;
-    private String defaultMenuCode;
     private boolean menuUse;
+    private String menuCode;
     private boolean menuRequired;
     private boolean menuAdmin;
     private String regUser;
-    private String modUser;
     private LocalDateTime regDate;
+    private String modUser;
     private LocalDateTime modDate;
+    private Long menuOrder;
+    private String menuDefault;
+    private Long depth;
+    private String noPath;
+    private String url;
 }
