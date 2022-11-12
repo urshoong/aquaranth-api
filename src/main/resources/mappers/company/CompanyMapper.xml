@@ -69,6 +69,7 @@
                 or company_name like concat('%', #{companySearch}, '%'));
     </select>
 
+<<<<<<< HEAD
     <!--사용자 아이디에 맞는 회사 정보 출력-->
     <select id="findByUsername" resultType="com.dq.aquaranth.company.dto.CompanyDTO">
         select c.*
@@ -90,6 +91,8 @@
 
 
     <!--조직토 트리 정보 출력-->
+=======
+>>>>>>> 84bb86c71e7a88886d241c2bd5851f4b223f3e59
     <select id="orgaTree" resultType="com.dq.aquaranth.company.dto.OrgaTreeDTO">
         with recursive orgaTree(orga_no, tree_name, gno, ord, depth) as (
             select o1.orga_no

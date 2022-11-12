@@ -67,7 +67,11 @@ public class CompanyServiceImpl implements CompanyService{
 
     @Override
     public List<OrgaTreeDTO> orgaTree() {
+<<<<<<< HEAD
         log.info("조직토 트리 정보 출력");
+=======
+        log.info("조직토 트리");
+>>>>>>> 84bb86c71e7a88886d241c2bd5851f4b223f3e59
         return companyMapper.orgaTree();
     }
 }

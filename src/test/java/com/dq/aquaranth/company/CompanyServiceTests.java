@@ -97,4 +97,17 @@ public class CompanyServiceTests {
         List<CompanyListDTO> companyListDTO = companyService.search(true, "DOUZONE");
         companyListDTO.forEach(log::info);
     }
+
+    @Test
+    @DisplayName("조직도 트리")
+    void orgaTreeTest() {
+        List<OrgaTreeDTO> orgaTreeDTO = companyService.orgaTree();
+
+        orgaTreeDTO.forEach((tree) -> {
+            String depthStr = " ";
+            StringBuffer treeStr = new StringBuffer(depthStr.repeat(Math.toIntExact(tree.getDepth())));
+            treeStr.append(tree.getTreeName());
+            log.info(treeStr);
+        });
+    }
 }

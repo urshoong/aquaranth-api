@@ -46,6 +46,7 @@ public interface CompanyMapper {
      */
     List<CompanyListDTO> search(Boolean companyUse, String companySearch);
 
+<<<<<<< HEAD
     /**
      * 사용자 아이디에 맞는 회사 정보 출력
      */
@@ -54,5 +55,9 @@ public interface CompanyMapper {
     /**
      * 조직도 트리 정보 출력
      */
+=======
+    Long insertOrga(CompanyOrgaDTO companyOrgaDTO);
+
+>>>>>>> 84bb86c71e7a88886d241c2bd5851f4b223f3e59
     List<OrgaTreeDTO> orgaTree();
 }

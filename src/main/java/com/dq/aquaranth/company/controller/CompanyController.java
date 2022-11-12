@@ -69,9 +69,12 @@ public class CompanyController {
         return companyService.search(companyUse, companySearch);
     }
 
+<<<<<<< HEAD
     /**
      * 조직도 트리 정보 출력
      */
+=======
+>>>>>>> 84bb86c71e7a88886d241c2bd5851f4b223f3e59
     @GetMapping("/tree")
     public List<OrgaTreeDTO> orgaTree() {
         return companyService.orgaTree();
