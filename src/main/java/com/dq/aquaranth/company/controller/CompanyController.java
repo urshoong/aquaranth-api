@@ -67,4 +67,9 @@ public class CompanyController {
     public List<CompanyListDTO> searchCompany(@RequestParam Boolean companyUse, String companySearch) {
         return companyService.search(companyUse, companySearch);
     }
+
+    @GetMapping("/tree")
+    public List<OrgaTreeDTO> orgaTree() {
+        return companyService.orgaTree();
+    }
 }

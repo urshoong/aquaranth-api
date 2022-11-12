@@ -58,4 +58,29 @@
                 and (company_no like concat('%', #{companySearch}, '%')
                 or company_name like concat('%', #{companySearch}, '%'));
     </select>
+
+    <select id="orgaTree" resultType="com.dq.aquaranth.company.dto.OrgaTreeDTO">
+        with recursive orgaTree(orga_no, tree_name, gno, ord, depth) as (
+            select o1.orga_no
+                 , tc.company_name
+                 , tc.company_no
+                 , ifnull(o1.upper_orga_no, 0) as ord
+                 , ifnull(o1.upper_orga_no, 0) as depth
+            from tbl_orga o1
+                     join tbl_company tc on o1.orga_no = tc.orga_no
+            union all
+            select o2.orga_no
+                 , td.dept_name
+                 , td.gno
+                 , td.ord
+                 , td.depth
+            from orgaTree ot1
+                     join tbl_orga o2 on o2.upper_orga_no = ot1.orga_no
+                     join tbl_dept_mapping tdm on o2.orga_no = tdm.orga_no
+                     join tbl_dept td on td.dept_no = tdm.dept_no
+        )
+        select orga_no, tree_name, gno, ord, depth
+        from orgaTree ot2
+        order by ot2.gno, ot2.ord;
+    </select>
 </mapper>

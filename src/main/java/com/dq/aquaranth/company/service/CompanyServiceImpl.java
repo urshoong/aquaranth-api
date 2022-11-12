@@ -61,4 +61,10 @@ public class CompanyServiceImpl implements CompanyService{
         log.info("회사코드, 회사명, 사용여부로 검색");
         return companyMapper.search(companyUse, companySearch);
     }
+
+    @Override
+    public List<OrgaTreeDTO> orgaTree() {
+        log.info("조직토 트리");
+        return companyMapper.orgaTree();
+    }
 }

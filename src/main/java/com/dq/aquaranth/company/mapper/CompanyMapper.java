@@ -1,9 +1,6 @@
 package com.dq.aquaranth.company.mapper;
 
-import com.dq.aquaranth.company.dto.CompanyDTO;
-import com.dq.aquaranth.company.dto.CompanyListDTO;
-import com.dq.aquaranth.company.dto.CompanyModifyDTO;
-import com.dq.aquaranth.company.dto.CompanyOrgaDTO;
+import com.dq.aquaranth.company.dto.*;
 
 import java.util.List;
 
@@ -40,4 +37,6 @@ public interface CompanyMapper {
     List<CompanyListDTO> search(Boolean companyUse, String companySearch);
 
     Long insertOrga(CompanyOrgaDTO companyOrgaDTO);
+
+    List<OrgaTreeDTO> orgaTree();
 }

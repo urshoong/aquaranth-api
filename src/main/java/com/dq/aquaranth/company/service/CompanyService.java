@@ -12,5 +12,6 @@ public interface CompanyService {
     Long update(CompanyModifyDTO companyModifyDTO);
     Long deleteById(Long companyNo);
     List<CompanyListDTO> search(Boolean companyUse, String companySearch);
+    List<OrgaTreeDTO> orgaTree();
 }
 
