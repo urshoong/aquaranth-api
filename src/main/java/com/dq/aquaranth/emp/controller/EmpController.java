@@ -19,17 +19,17 @@ public class EmpController {
 
     @GetMapping("/information")
     public List<EmpDTO> getEmpList() {
-        return service.empList();
+        return service.findAll();
     }
 
     @GetMapping("/read/{empNo}")
     public EmpDTO getEmp(@PathVariable("empNo") Long empNo) {
-        return service.empRead(empNo);
+        return service.findById(empNo);
     }
 
     @GetMapping("/readOrga/{empNo}")
     public List<EmpSelectOrga> empOrgaList(@PathVariable("empNo") Long empNo) {
-        return service.empOrgaList(empNo);
+        return service.findAllOrga(empNo);
     }
 
 
@@ -102,11 +102,11 @@ public class EmpController {
 
     @PutMapping(value = "/modify/{empNo}")
     public Long modifyEmp(@Valid @RequestBody EmpUpdateDTO empUpdateDTO) {
-        return service.empModify(empUpdateDTO);
+        return service.update(empUpdateDTO);
     }
 
     @DeleteMapping(value = "/remove/{empNo}")
     public Long removeEmp(@PathVariable("empNo") Long empNo) {
-        return service.empRemove(empNo);
+        return service.delete(empNo);
     }
 }

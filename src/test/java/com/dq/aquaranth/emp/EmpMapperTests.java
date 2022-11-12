@@ -22,17 +22,17 @@ public class EmpMapperTests {
 
     @Test
     void empFindAllTest(){
-        log.info(empMapper.empFindAll());
+        log.info(empMapper.findAll());
     }
 
     @Test
     void empFindByIdTest(){
-        log.info(empMapper.empFindById(1L));
+        log.info(empMapper.findById(1L));
     }
 
     @Test
     void empOrgaFindByIdTest() {
-        log.info(empMapper.empOrgaFindById(1L));
+        log.info(empMapper.orgaFindById(1L));
     }
 
     @Test
@@ -47,7 +47,7 @@ public class EmpMapperTests {
                 .empProfile("profileYul")
                 .email("user08@naver.com")
                 .build();
-        log.info(empMapper.empInsert(empDTO));
+        log.info(empMapper.insert(empDTO));
     }
 
     @Test
@@ -57,7 +57,7 @@ public class EmpMapperTests {
                 .deptNo(5L)
                 .build();
 
-        empMapper.empOrgaInsert(empOrgaInsertDTO);
+        empMapper.orgaInsert(empOrgaInsertDTO);
     }
 
     @Test
@@ -86,13 +86,13 @@ public class EmpMapperTests {
                 .empNo(22L)
                 .build();
 
-        log.info(empMapper.empUpdate(empUpdateDTO));
+        log.info(empMapper.update(empUpdateDTO));
     }
 
 
     @Test
     void empDeleteByIdTest() {
-        log.info(empMapper.empDeleteById(11L));
+        log.info(empMapper.deleteById(11L));
     }
 
 }

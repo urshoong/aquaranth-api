@@ -4,15 +4,15 @@
 
 <mapper namespace="com.dq.aquaranth.emp.mapper.EmpMapper">
 
-    <select id="empFindAll" resultType="com.dq.aquaranth.emp.dto.EmpDTO">
+    <select id="findAll" resultType="com.dq.aquaranth.emp.dto.EmpDTO">
         SELECT * FROM tbl_emp WHERE emp_no > 0
     </select>
 
-    <select id="empFindById" resultType="com.dq.aquaranth.emp.dto.EmpDTO">
+    <select id="findById" resultType="com.dq.aquaranth.emp.dto.EmpDTO">
         SELECT * FROM tbl_emp WHERE emp_no = #{empNo}
     </select>
 
-    <select id="empOrgaFindById" resultType="com.dq.aquaranth.emp.dto.EmpSelectOrga">
+    <select id="orgaFindById" resultType="com.dq.aquaranth.emp.dto.EmpSelectOrga">
         SELECT tc.company_name, td.dept_name, tem.emp_rank, tem.emp_no,
             tem.hired_date, tem.reg_date, tc.company_tel, tc.company_address,
             tor.orga_no
@@ -25,7 +25,7 @@
         WHERE tbl_emp.emp_no = 1
     </select>
 
-    <insert id="empInsert" parameterType="com.dq.aquaranth.emp.dto.EmpDTO">
+    <insert id="insert" parameterType="com.dq.aquaranth.emp.dto.EmpDTO">
         INSERT INTO tbl_emp (
             emp_name, username, password, gender,
             emp_phone, emp_address, emp_profile, email,
@@ -41,7 +41,7 @@
         </selectKey>
     </insert>
 
-    <insert id="empOrgaInsert" parameterType="com.dq.aquaranth.emp.dto.EmpOrgaDTO">
+    <insert id="orgaInsert" parameterType="com.dq.aquaranth.emp.dto.EmpOrgaDTO">
         INSERT INTO tbl_orga (
             upper_orga_no, orga_type, reg_user
         )
@@ -59,8 +59,8 @@
         </selectKey>
     </insert>
 
-<!--    update password 잠시 빼놓음-->
-    <update id="empUpdate" parameterType="com.dq.aquaranth.emp.dto.EmpUpdateDTO">
+<!--    update password 빼놓음-->
+    <update id="update" parameterType="com.dq.aquaranth.emp.dto.EmpUpdateDTO">
         UPDATE tbl_emp SET
             emp_name = #{empName}, gender = #{gender},
             emp_phone = #{empPhone}, emp_address = #{empAddress}, emp_profile = #{empProfile},
@@ -69,7 +69,7 @@
     </update>
 
 <!--    delete대신 사원 미사용으로. 삭제 예정-->
-    <delete id="empDeleteById" parameterType="long">
+    <delete id="deleteById" parameterType="long">
         DELETE FROM tbl_emp WHERE emp_no = #{empNo}
     </delete>
 

@@ -30,23 +30,23 @@ public class EmpServiceImpl implements EmpService {
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public List<EmpDTO> empList() {
-        return mapper.empFindAll();
+    public List<EmpDTO> findAll() {
+        return mapper.findAll();
     }
 
     @Override
-    public EmpDTO empRead(Long empNo) {
-        return mapper.empFindById(empNo);
+    public EmpDTO findById(Long empNo) {
+        return mapper.findById(empNo);
     }
 
     @Override
-    public Long empModify(EmpUpdateDTO empUpdateDTO) {
-        return mapper.empUpdate(empUpdateDTO);
+    public Long update(EmpUpdateDTO empUpdateDTO) {
+        return mapper.update(empUpdateDTO);
     }
 
     @Override
-    public Long empRemove(Long empNo) {
-        return mapper.empDeleteById(empNo);
+    public Long delete(Long empNo) {
+        return mapper.deleteById(empNo);
     }
 
     @Override
@@ -59,14 +59,14 @@ public class EmpServiceImpl implements EmpService {
         }
 
         // 조직 테이블 insert
-        mapper.empOrgaInsert(orgaReqDTO);
+        mapper.orgaInsert(orgaReqDTO);
 
         // 조직 테이블의 last_insert_id 저장
         Long orgaNo = orgaReqDTO.getOrgaNo();
 
         // 사원 테이블 insert
         empReqDTO.setPassword(passwordEncoder.encode(empReqDTO.getPassword()));
-        mapper.empInsert(empReqDTO);
+        mapper.insert(empReqDTO);
 
         // 사원 테이블의 last_insert_id 저장
         Long empNo = empReqDTO.getEmpNo();
@@ -81,8 +81,8 @@ public class EmpServiceImpl implements EmpService {
 
 
     @Override
-    public List<EmpSelectOrga> empOrgaList(Long empNo) {
-        return mapper.empOrgaFindById(empNo);
+    public List<EmpSelectOrga> findAllOrga(Long empNo) {
+        return mapper.orgaFindById(empNo);
     }
 
 

@@ -27,17 +27,17 @@ public class EmpServiceTests {
 
     @Test
     void empListTest(){
-        log.info(service.empList());
+        log.info(service.findAll());
     }
 
     @Test
     void empReadTest(){
-        log.info(service.empRead(1L));
+        log.info(service.findById(1L));
     }
 
     @Test
     void empOrgaListTest() {
-        log.info(service.empOrgaList(1L));
+        log.info(service.findAllOrga(1L));
     }
 
 //    @Test
@@ -73,12 +73,12 @@ public class EmpServiceTests {
                 .empNo(16L)
                 .build();
 
-        log.info(service.empModify(empUpdateDTO));
+        log.info(service.update(empUpdateDTO));
     }
 
     @Test
     void empDeleteTest() {
-        log.info(service.empRemove(16L));
+        log.info(service.delete(16L));
     }
 
 //    @Test
