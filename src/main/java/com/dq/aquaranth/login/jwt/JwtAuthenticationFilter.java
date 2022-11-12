@@ -4,11 +4,13 @@ import com.dq.aquaranth.commons.utils.JWTUtil;
 import com.dq.aquaranth.commons.utils.SendResponseUtils;
 import com.dq.aquaranth.login.domain.CustomUser;
 import com.dq.aquaranth.login.dto.LoginReqDTO;
+import com.dq.aquaranth.login.dto.RedisDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -83,10 +85,15 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         ObjectMapper objectMapper = new ObjectMapper();
         String loginUserInfo = objectMapper
                 .registerModule(new JavaTimeModule())
-                .writeValueAsString(customUser);
+                .writeValueAsString(RedisDTO.builder()
+                        .company(customUser.getCompanyDTO())
+                        .dept(customUser.getDeptDTO2())
+                        .emp(customUser.getEmpDTO())
+                        .menuList(customUser.getMenuList())
+                        .build());
 
 //       Redis에 저장 - 만료 시간 설정을 통해 자동 삭제 처리
-        log.info("redis에 menu list를 저장합니다.");
+        log.info("redis에 유저 정보를 저장합니다. {} 초 후 만료됨.",REFRESH_TOKEN_EXPIRATION_TIME);
         redisTemplate.opsForValue().set(
                 authentication.getName(),
                 loginUserInfo,
@@ -101,6 +108,6 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException {
         log.warn(failed.getMessage());
-        SendResponseUtils.sendError(UNAUTHORIZED.value(), failed.getMessage(), response);
+        SendResponseUtils.sendError(499, failed.getMessage(), response);
     }
 }

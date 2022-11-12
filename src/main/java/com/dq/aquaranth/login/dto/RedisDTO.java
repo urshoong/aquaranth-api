@@ -2,22 +2,28 @@ package com.dq.aquaranth.login.dto;
 
 import com.dq.aquaranth.company.dto.CompanyDTO;
 import com.dq.aquaranth.dept.dto.DeptDTO2;
+import com.dq.aquaranth.emp.dto.EmpDTO;
 import com.dq.aquaranth.login.domain.CustomUser;
 import com.dq.aquaranth.menu.dto.response.MenuResponseDTO;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.JsonSerializer;
+import com.fasterxml.jackson.databind.SerializerProvider;
+import lombok.*;
 
+import java.io.IOException;
+import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.List;
 
-@Data
-@AllArgsConstructor
+@Getter
+@Setter
 @NoArgsConstructor
+@AllArgsConstructor
 @Builder
+@ToString
 public class RedisDTO {
     private CompanyDTO company;
     private DeptDTO2 dept;
-    private CustomUser userinfo;
+    private EmpDTO emp;
     private List<MenuResponseDTO> menuList;
 }

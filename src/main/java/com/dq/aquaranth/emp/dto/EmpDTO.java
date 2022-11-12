@@ -3,6 +3,7 @@ package com.dq.aquaranth.emp.dto;
 import lombok.*;
 
 import javax.validation.constraints.NotBlank;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 

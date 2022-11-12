@@ -5,36 +5,46 @@
 <mapper namespace="com.dq.aquaranth.emp.mapper.EmpMapper">
 
     <select id="empFindAll" resultType="com.dq.aquaranth.emp.dto.EmpDTO">
-        SELECT * FROM tbl_emp WHERE emp_no > 0
+        SELECT *
+        FROM tbl_emp
+        WHERE emp_no > 0
     </select>
 
     <select id="empFindById" resultType="com.dq.aquaranth.emp.dto.EmpDTO">
-        SELECT * FROM tbl_emp WHERE emp_no = #{empNo}
+        SELECT *
+        FROM tbl_emp
+        WHERE emp_no = #{empNo}
     </select>
 
     <select id="empOrgaFindById" resultType="com.dq.aquaranth.emp.dto.EmpSelectOrga">
-        SELECT tc.company_name, td.dept_name, tem.emp_rank, tem.emp_no,
-            tem.hired_date, tem.reg_date, tc.company_tel, tc.company_address,
-            tor.orga_no
+        SELECT tc.company_name,
+               td.dept_name,
+               tem.emp_rank,
+               tem.emp_no,
+               tem.hired_date,
+               tem.reg_date,
+               tc.company_tel,
+               tc.company_address,
+               tor.orga_no
         FROM tbl_emp
-            LEFT JOIN tbl_emp_mapping tem on tbl_emp.emp_no = tem.emp_no
-            LEFT JOIN tbl_orga tor on tor.orga_no = tem.orga_no
-            LEFT JOIN tbl_dept_mapping tdm on tor.upper_orga_no = tdm.orga_no
-            LEFT JOIN tbl_dept td on td.dept_no = tdm.dept_no
-            LEFT JOIN tbl_company tc on td.company_no = tc.company_no
+                 LEFT JOIN tbl_emp_mapping tem on tbl_emp.emp_no = tem.emp_no
+                 LEFT JOIN tbl_orga tor on tor.orga_no = tem.orga_no
+                 LEFT JOIN tbl_dept_mapping tdm on tor.upper_orga_no = tdm.orga_no
+                 LEFT JOIN tbl_dept td on td.dept_no = tdm.dept_no
+                 LEFT JOIN tbl_company tc on td.company_no = tc.company_no
         WHERE tbl_emp.emp_no = 1
     </select>
 
     <insert id="empInsert" parameterType="com.dq.aquaranth.emp.dto.EmpDTO">
         INSERT INTO tbl_emp (
-            emp_name, username, password, gender,
-            emp_phone, emp_address, emp_profile, email,
-            first_hired_date, reg_user
+        emp_name, username, password, gender,
+        emp_phone, emp_address, emp_profile, email,
+        first_hired_date, reg_user
         )
         VALUES (
-            #{empName}, #{username}, #{password}, #{gender},
-            #{empPhone}, #{empAddress}, #{empProfile}, #{email},
-            #{firstHiredDate}, #{regUser}
+        #{empName}, #{username}, #{password}, #{gender},
+        #{empPhone}, #{empAddress}, #{empProfile}, #{email},
+        #{firstHiredDate}, #{regUser}
         )
         <selectKey keyProperty="empNo" resultType="long" order="AFTER">
             SELECT LAST_INSERT_ID()
@@ -43,38 +53,46 @@
 
     <insert id="empOrgaInsert" parameterType="com.dq.aquaranth.emp.dto.EmpOrgaDTO">
         INSERT INTO tbl_orga (
-            upper_orga_no, orga_type, reg_user
+        upper_orga_no, orga_type, reg_user
         )
         VALUES (
-            (
-                SELECT tbl_dept_mapping.orga_no
-                FROM tbl_dept_mapping
-                JOIN tbl_dept td ON td.dept_no = tbl_dept_mapping.dept_no
-                WHERE td.dept_no = #{deptNo}
-            ),
-            'emp', #{regUser}
+        (
+        SELECT tbl_dept_mapping.orga_no
+        FROM tbl_dept_mapping
+        JOIN tbl_dept td ON td.dept_no = tbl_dept_mapping.dept_no
+        WHERE td.dept_no = #{deptNo}
+        ),
+        'emp', #{regUser}
         )
         <selectKey keyProperty="orgaNo" resultType="long" order="AFTER">
             SELECT LAST_INSERT_ID()
         </selectKey>
     </insert>
 
-<!--    update password 잠시 빼놓음-->
+    <!--    update password 잠시 빼놓음-->
     <update id="empUpdate" parameterType="com.dq.aquaranth.emp.dto.EmpUpdateDTO">
-        UPDATE tbl_emp SET
-            emp_name = #{empName}, gender = #{gender},
-            emp_phone = #{empPhone}, emp_address = #{empAddress}, emp_profile = #{empProfile},
-            email = #{email}, last_retired_date = #{lastRetiredDate}
+        UPDATE tbl_emp
+        SET emp_name          = #{empName},
+            gender            = #{gender},
+            emp_phone         = #{empPhone},
+            emp_address       = #{empAddress},
+            emp_profile       = #{empProfile},
+            email             = #{email},
+            last_retired_date = #{lastRetiredDate}
         WHERE emp_no = #{empNo}
     </update>
 
-<!--    delete대신 사원 미사용으로. 삭제 예정-->
+    <!--    delete대신 사원 미사용으로. 삭제 예정-->
     <delete id="empDeleteById" parameterType="long">
-        DELETE FROM tbl_emp WHERE emp_no = #{empNo}
+        DELETE
+        FROM tbl_emp
+        WHERE emp_no = #{empNo}
     </delete>
 
     <select id="findByUsername" resultType="com.dq.aquaranth.emp.dto.EmpDTO">
-        SELECT * FROM tbl_emp WHERE username = #{username}
+        SELECT *
+        FROM tbl_emp
+        WHERE username = #{username}
     </select>
 
 

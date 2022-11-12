@@ -9,6 +9,7 @@ import lombok.ToString;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 
+import java.util.Collection;
 import java.util.List;
 
 @Getter
@@ -26,4 +27,5 @@ public class CustomUser extends User {
         this.empDTO = empDTO;
         this.menuList = menuList;
     }
+
 }
