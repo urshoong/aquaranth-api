@@ -68,7 +68,7 @@
     </select>
 
 
-    <select id="findMenusByLoginUsername" resultType="string">
+    <select id="findMenusByLoginUsername" resultType="com.dq.aquaranth.menu.dto.response.MenuResponseDTO">
         select distinct m.menu_code
         from (WITH RECURSIVE findMainOrga AS
                                  (select tbl_orga.orga_no, tbl_orga.upper_orga_no, tbl_orga.orga_type

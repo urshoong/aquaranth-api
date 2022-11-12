@@ -52,7 +52,7 @@ public interface MenuMapper {
      * 모든 메뉴 목록을 가져옵니다.
      * @return
      */
-    List<String> findMenusByLoginUsername(String username);
+    List<MenuResponseDTO> findMenusByLoginUsername(String username);
 
 
 }

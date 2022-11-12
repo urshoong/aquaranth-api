@@ -2,10 +2,11 @@ package com.dq.aquaranth.login.service;
 
 import com.dq.aquaranth.emp.dto.EmpDTO;
 import com.dq.aquaranth.login.domain.CustomUser;
+import com.dq.aquaranth.login.dto.RedisDTO;
 
 public interface UserSessionService {
     CustomUser findUserInfoInDatabase(EmpDTO empDTO);
 
-    CustomUser findUserInfoInRedis(String username);
+    RedisDTO findUserInfoInRedis(String username);
 
 }
