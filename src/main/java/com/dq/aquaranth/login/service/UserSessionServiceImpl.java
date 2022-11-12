@@ -6,10 +6,7 @@ import com.dq.aquaranth.dept.dto.DeptDTO2;
 import com.dq.aquaranth.dept.mapper.DeptMapper2;
 import com.dq.aquaranth.emp.dto.EmpDTO;
 import com.dq.aquaranth.login.domain.CustomUser;
-<<<<<<< HEAD
-=======
 import com.dq.aquaranth.login.dto.RedisDTO;
->>>>>>> b9e52d2d9449404d74e094de8f94a13dfb7e9d97
 import com.dq.aquaranth.menu.dto.response.MenuResponseDTO;
 import com.dq.aquaranth.menu.mapper.MenuMapper;
 import com.fasterxml.jackson.core.JsonProcessingException;

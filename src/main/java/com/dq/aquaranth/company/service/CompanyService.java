@@ -10,7 +10,8 @@ public interface CompanyService {
     CompanyDTO findById(Long companyNo);
     Long insert(CompanyDTO companyDTO);
     Long update(CompanyModifyDTO companyModifyDTO);
-    Long deleteById(Long companyNo);
+    Long deleteById(CompanyDeleteDTO companyDeleteDTO);
     List<CompanyListDTO> search(Boolean companyUse, String companySearch);
+    List<OrgaTreeDTO> orgaTree();
 }
 

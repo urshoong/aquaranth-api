@@ -1,8 +1,6 @@
 package com.dq.aquaranth.company.controller;
 
-import com.dq.aquaranth.company.dto.CompanyDTO;
-import com.dq.aquaranth.company.dto.CompanyListDTO;
-import com.dq.aquaranth.company.dto.CompanyModifyDTO;
+import com.dq.aquaranth.company.dto.*;
 import com.dq.aquaranth.company.service.CompanyService;
 import com.dq.aquaranth.login.domain.CustomUser;
 import lombok.RequiredArgsConstructor;
@@ -59,8 +57,8 @@ public class CompanyController {
      * 회사 정보 삭제
      */
     @DeleteMapping("/remove/{companyNo}")
-    public Long removeCompany(@PathVariable Long companyNo) {
-        return companyService.deleteById(companyNo);
+    public Long removeCompany(@RequestBody CompanyDeleteDTO companyDeleteDTO) {
+        return companyService.deleteById(companyDeleteDTO);
     }
 
     /**
@@ -69,5 +67,13 @@ public class CompanyController {
     @GetMapping("/search")
     public List<CompanyListDTO> searchCompany(@RequestParam Boolean companyUse, String companySearch) {
         return companyService.search(companyUse, companySearch);
+    }
+
+    /**
+     * 조직도 트리 정보 출력
+     */
+    @GetMapping("/tree")
+    public List<OrgaTreeDTO> orgaTree() {
+        return companyService.orgaTree();
     }
 }
