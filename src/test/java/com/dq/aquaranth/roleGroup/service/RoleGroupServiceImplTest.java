@@ -24,7 +24,7 @@ class RoleGroupServiceImplTest {
         RoleGroup findDTO = roleGroupService.findById(deleteNo);
 
         // when & then
-        assertThrows(RuntimeException.class, () -> roleGroupService.delete(deleteNo));
+        assertThrows(RuntimeException.class, () -> roleGroupService.deleteById(deleteNo));
     }
 
     @Test
@@ -36,12 +36,13 @@ class RoleGroupServiceImplTest {
         log.info("삭제할 권한그룹 {}", findDTO);
 
         // when
-        roleGroupService.delete(deleteNo);
+        roleGroupService.deleteById(deleteNo);
 
         // then
         assertNull(roleGroupService.findById(findDTO.getRoleGroupNo()));
     }
 
+//    TODO
     @Test
     @DisplayName("권한그룹 삭제시에 메뉴권한테이블의 데이터도 함께 삭제되지 않으면 롤백처리 됩니다")
     void del_roleGroup_with_menuRole() {

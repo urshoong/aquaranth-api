@@ -14,5 +14,5 @@ public interface RoleGroupService {
 
     RoleGroup insert(RoleGroup insertDTO);
 
-    void delete(Long roleGroupNo);
+    void deleteById(Long roleGroupNo);
 }

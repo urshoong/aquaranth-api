@@ -49,7 +49,7 @@ public class RoleGroupServiceImpl implements RoleGroupService {
 //    TODO : 트랜잭션 처리
     @Transactional
     @Override
-    public void delete(Long roleGroupNo) {
+    public void deleteById(Long roleGroupNo) {
         log.info("{} 번째 권한그룹을 삭제합니다.", roleGroupNo);
 
         RoleGroup findDTO = roleGroupMapper.findById(roleGroupNo);
