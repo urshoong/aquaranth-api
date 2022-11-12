@@ -14,7 +14,7 @@ public interface MenuService {
 
     Optional<MenuResponseDTO> findByMenuCode(String menuCode);
 
-    Integer update(MenuUpdateDTO menuUpdateDTO);
+    Optional<MenuResponseDTO> update(MenuUpdateDTO menuUpdateDTO);
 
     List<MenuResponseDTO> findAllMenuInformation();
 

@@ -20,7 +20,7 @@ public interface MenuMapper {
 
     /**
      * URL 정보를 포함한 모든 메뉴를 조회합니다.
-     * @return
+     * @returnv
      */
     List<MenuResponseDTO> findAllMenuInformation();
 
