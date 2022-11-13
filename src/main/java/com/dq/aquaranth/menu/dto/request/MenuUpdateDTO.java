@@ -14,10 +14,14 @@ import javax.validation.constraints.NotBlank;
 @NoArgsConstructor
 public class MenuUpdateDTO {
     private Long menuNo;
+
     @NotBlank(message = "메뉴 이름은 빈 값이 될 수 없습니다.")
     private String menuName;
-    @NotBlank(message = "사용 여부는 반드시 체크되어야 합니다.")
-    private boolean menuUse;
-    private Long menuOrder;
 
+    @Builder.Default
+    @NotBlank(message = "사용 여부는 반드시 체크되어야 합니다.")
+    private boolean menuUse = false;
+
+    @Builder.Default
+    private Long menuOrder = 99L;
 }

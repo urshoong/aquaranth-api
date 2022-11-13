@@ -12,7 +12,6 @@
     <select id="findByMenuNo" resultType="com.dq.aquaranth.menu.dto.response.MenuResponseDTO">
         SELECT *
         FROM tbl_menu
-        WHERE menu_no = #{menuNo}
     </select>
 
     <select id="findByMenuCode" resultType="com.dq.aquaranth.menu.dto.response.MenuResponseDTO">
@@ -199,6 +198,22 @@
         from etc
         # FIXME : MENU_ORDER
     </select>
+<!--TODO : MyBaits OGNL을 이용한 동적 쿼리 작성 # 25-->
+<!--    <sql id="find_menu">-->
+<!--        <where>-->
+<!--            <if test="menuCode != null">-->
+<!--                AND menu_code = #{menuCode}-->
+<!--            </if>-->
+<!--            <if test="menuNo != null">-->
+<!--                AND menu_no = #{menuNo}-->
+<!--            </if>-->
+<!--        </where>-->
+<!--    </sql>-->
+<!--    <select id="findBy" resultType="com.dq.aquaranth.menu.dto.response.MenuResponseDTO">-->
+<!--        SELECT *-->
+<!--        FROM tbl_menu-->
+<!--        <include refid="find_menu" />-->
+<!--    </select>-->
 
 
 </mapper>
