@@ -67,11 +67,19 @@ public class CompanyServiceImpl implements CompanyService{
 
     @Override
     public List<OrgaTreeDTO> orgaTree() {
-<<<<<<< HEAD
-        log.info("조직토 트리 정보 출력");
-=======
-        log.info("조직토 트리");
->>>>>>> 84bb86c71e7a88886d241c2bd5851f4b223f3e59
+        log.info("조직도 트리 정보 출력");
         return companyMapper.orgaTree();
+    }
+
+    @Override
+    public List<OrgaEmpDTO> findAllEmp(OrgaEmpSearchDTO orgaEmpSearchDTO) {
+        log.info("해당 부서 및 회사에 소속된 모든 사원 정보 출력");
+        return companyMapper.findAllEmp(orgaEmpSearchDTO);
+    }
+
+    @Override
+    public OrgaEmpInformationDTO findEmpInformation(Long empNo) {
+        log.info("해당 사원의 정보 출력");
+        return companyMapper.findEmpInformation(empNo);
     }
 }

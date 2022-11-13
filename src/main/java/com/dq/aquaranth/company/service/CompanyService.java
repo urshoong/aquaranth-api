@@ -13,5 +13,7 @@ public interface CompanyService {
     Long deleteById(CompanyDeleteDTO companyDeleteDTO);
     List<CompanyListDTO> search(Boolean companyUse, String companySearch);
     List<OrgaTreeDTO> orgaTree();
+    List<OrgaEmpDTO> findAllEmp(OrgaEmpSearchDTO orgaEmpSearchDTO);
+    OrgaEmpInformationDTO findEmpInformation(Long empNo);
 }
 

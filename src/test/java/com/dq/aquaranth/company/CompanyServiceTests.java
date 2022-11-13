@@ -17,6 +17,8 @@ import static org.junit.jupiter.api.Assertions.*;
 @Log4j2
 public class CompanyServiceTests {
 
+    // TODO: 2022-11-13 test 모두 assert 사용해서 바꾸기(종현이오빠한테 물어보기)
+
     @Autowired(required = false)
     CompanyService companyService;
 
@@ -109,5 +111,25 @@ public class CompanyServiceTests {
             treeStr.append(tree.getTreeName());
             log.info(treeStr);
         });
+    }
+
+    @Test
+    @DisplayName("해당 부서 및 회사에 소속된 모든 사원 정보 출력")
+    void getAllEmpInformationTest() {
+        Long orgaNo = 7L;   //개발팀 조직 번호
+        OrgaEmpSearchDTO orgaEmpSearchDTO = OrgaEmpSearchDTO
+                .builder()
+                .orgaNo(orgaNo)
+                .build();
+        List<OrgaEmpDTO> orgaEmpDTO = companyService.findAllEmp(orgaEmpSearchDTO);
+        orgaEmpDTO.forEach(log::info);
+    }
+
+    @Test
+    @DisplayName("해당 사원의 정보 출력")
+    void getEmpInformationTest() {
+        Long empNo = 1L; //admin 사원 번호
+        OrgaEmpInformationDTO orgaEmpInformationDTO = companyService.findEmpInformation(empNo);
+        log.info(orgaEmpInformationDTO);
     }
 }
