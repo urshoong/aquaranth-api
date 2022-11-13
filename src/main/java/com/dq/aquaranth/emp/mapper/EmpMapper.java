@@ -57,4 +57,13 @@ public interface EmpMapper {
     Long deleteById(Long empNo);
 
     EmpDTO findByUsername(String username);
+
+    /**
+     *
+     */
+
+    /**
+     *
+     */
+    
 }

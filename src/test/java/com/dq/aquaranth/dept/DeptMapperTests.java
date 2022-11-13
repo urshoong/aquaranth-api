@@ -67,6 +67,9 @@ public class DeptMapperTests {
         DeptCriteria deptCriteria = DeptCriteria.builder().build();
     }
 
-
+    @Test
+    public void findByCompanyNoTest(){
+        log.info(deptMapper.findByCompanyNo(1L));
+    }
 
 }

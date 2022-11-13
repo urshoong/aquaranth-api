@@ -295,7 +295,7 @@ public class EmpServiceTests {
 
         // 조직
         EmpOrgaDTO empOrgaDTO = EmpOrgaDTO.builder()
-                .deptNo(11L)
+                .deptNo(10L)
                 .regUser(registrant) //등록자
                 .build();
 
@@ -303,9 +303,9 @@ public class EmpServiceTests {
 
         // 사원
         EmpDTO empDTO = EmpDTO.builder()
-                .empName("user") //이름
-                .username("user") //id
-                .password("user") //비번
+                .empName("진용진") //이름
+                .username("emp01") //id
+                .password("emp") //비번
                 .gender("남성")   //성별
                 .empPhone("01011111111") //휴대폰 번호
                 .empAddress("부산시") //주소

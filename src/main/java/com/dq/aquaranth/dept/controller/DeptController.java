@@ -1,7 +1,9 @@
 package com.dq.aquaranth.dept.controller;
 
+import com.dq.aquaranth.dept.dto.DepartmentDTO;
 import com.dq.aquaranth.dept.dto.DeptDTO;
 import com.dq.aquaranth.dept.service.DeptService;
+import com.dq.aquaranth.emp.dto.EmpDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.web.bind.annotation.*;
@@ -58,5 +60,10 @@ public class DeptController {
 //        return deptService.deptList();
 //    }
 
+    // 해당 회사의 부서 목록 출력
+    @GetMapping("/readName/{companyNo}")
+    public List<DepartmentDTO> getDeptName(@PathVariable("companyNo") Long companyNo) {
+        return deptService.findByCompanyNo(companyNo);
+    }
 
 }

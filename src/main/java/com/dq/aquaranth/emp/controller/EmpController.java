@@ -1,5 +1,5 @@
 package com.dq.aquaranth.emp.controller;
-// TODO Controller에 register, 조직 read 작성
+
 import com.dq.aquaranth.emp.dto.*;
 import com.dq.aquaranth.emp.service.EmpService;
 import lombok.RequiredArgsConstructor;
@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -62,10 +63,12 @@ public class EmpController {
     @PostMapping("/register")
     public EmpDTO registerEmp (@Valid @RequestBody  EmpInsertInformationDTO reqDTO) throws IllegalAccessException{
 
+        String registrant = "종현"; //TODO regUser들 로그인 id로 바꾸기
 
         //조직 DTO에 받은 값 넣기
         EmpOrgaDTO orgaDTO = EmpOrgaDTO.builder()
                 .deptNo(reqDTO.getDeptNo())
+                .regUser(registrant)
                 .build();
 
         //조직 테이블의 last_insert_id 저장
@@ -80,8 +83,8 @@ public class EmpController {
                 .empAddress(reqDTO.getEmpAddress())
                 .empProfile(reqDTO.getEmpProfile())
                 .email(reqDTO.getEmail())
-                .lastLoginIp(null)
-
+                .firstHiredDate(LocalDate.now())
+                .regUser(registrant)
                 .build();
 
 
@@ -93,6 +96,8 @@ public class EmpController {
                 .empNo(empId)
                 .orgaNo(orgaId)
                 .empRank(reqDTO.getEmpRank())
+                .empRole(reqDTO.getEmpRole())
+                .regUser(registrant)
                 .build();
 
         service.insert(orgaDTO, empDTO, empMappingDTO);
