@@ -4,6 +4,7 @@ import com.dq.aquaranth.login.domain.CustomUser;
 import com.dq.aquaranth.roleGroup.domain.RoleGroup;
 import com.dq.aquaranth.roleGroup.dto.RoleGroupInsertReqDTO;
 import com.dq.aquaranth.roleGroup.dto.RoleGroupUpdateDTO;
+import com.dq.aquaranth.roleGroup.dto.RoleGroupUpdateReqDTO;
 import com.dq.aquaranth.roleGroup.service.RoleGroupService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -46,8 +47,19 @@ public class RoleGroupApiController {
     }
 
     @PutMapping("")
-    public void modify(@RequestBody RoleGroupUpdateDTO reqDTO) {
-        roleGroupService.update(reqDTO);
+    public void modify(@RequestBody RoleGroupUpdateReqDTO reqDTO, Authentication authentication) {
+        CustomUser customUser = (CustomUser) authentication.getPrincipal();
+
+        RoleGroupUpdateDTO updateDTO = RoleGroupUpdateDTO.builder()
+                .roleGroupNo(reqDTO.getRoleGroupNo())
+                .roleGroupName(reqDTO.getRoleGroupName())
+                .roleGroupUse(reqDTO.isRoleGroupUse())
+                .companyNo(customUser.getCompanyDTO().getCompanyNo())
+                .modUser(customUser.getEmpDTO().getEmpName())
+                .modDate(LocalDateTime.now())
+                .build();
+
+        roleGroupService.update(updateDTO);
     }
 
     @DeleteMapping("/{roleGroupNo}")

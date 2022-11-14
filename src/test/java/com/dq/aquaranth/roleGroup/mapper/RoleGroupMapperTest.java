@@ -56,7 +56,7 @@ class RoleGroupMapperTest {
     @DisplayName("권한그룹번호로 권한그룹명 수정하기")
     void update() {
         // given
-        Long updateRoleGroupNo = 6L;
+        Long updateRoleGroupNo = 13L;
         String updateRoleGroupName = "update222 권한그룹명66666"; // 바꿀 권한그룹명
         RoleGroup beforeDTO = roleGroupMapper.findById(updateRoleGroupNo); // 수정전  권한그룹
         boolean updateRoleGroupUse = !beforeDTO.isRoleGroupUse(); // 기존 사용여부의 반대로
@@ -87,7 +87,7 @@ class RoleGroupMapperTest {
     @DisplayName("권한그룹번호로 권한그룹을 삭제합니다.")
     void deleteById() {
         // given
-        Long deleteRoleGroupNo = 8L;
+        Long deleteRoleGroupNo = 9L;
 
         // when
         roleGroupMapper.deleteById(deleteRoleGroupNo);
