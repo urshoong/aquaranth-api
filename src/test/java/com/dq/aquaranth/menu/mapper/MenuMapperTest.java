@@ -64,7 +64,8 @@ class MenuMapperTest {
                 .build();
         menuMapper.update(menuUpdateDTO);
         Optional<MenuResponseDTO> expectedMenuResponseDto = menuMapper.findByMenuNo(menuNo);
-        assertThat(Objects.requireNonNull(expectedMenuResponseDto.orElseGet(() -> null)).getMenuName()).isEqualTo(menuName);
+        assertThat(Objects.requireNonNull(expectedMenuResponseDto.orElseGet(() -> null))
+                .getMenuName()).isEqualTo(menuName);
     }
 
     @Test
@@ -97,6 +98,16 @@ class MenuMapperTest {
         List<MenuResponseDTO> menuResponseDTOList = menuMapper.findByMenuCodeUnderRecursive(menuCode);
         assertThat(menuResponseDTOList).extracting("menuCode").contains(ORGA0030.getCode());
     }
+
+// TODO : MyBaits OGNL을 이용한 동적 쿼리 작성 # 25
+//    @Test
+//    void findBy() {
+//        String menuCode = SYS.getCode();
+//        Long menuNo = 14L;
+//        Optional<MenuResponseDTO> menuResponseDTO = menuMapper.findBy(menuCode, menuNo);
+//        Optional<MenuResponseDTO> menuResponseDTO1 = menuMapper.findBy(null, menuNo);
+//        Optional<MenuResponseDTO> menuResponseDTO2 = menuMapper.findBy(menuCode, null);
+//    }
 
 //    @Test
 //    void findMenusByLoginUsername() {

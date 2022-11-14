@@ -8,6 +8,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Rollback;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
@@ -51,6 +53,7 @@ class DefaultMenuServiceTest {
     }
 
     @Test
+    @Transactional
     @DisplayName(value = "메뉴 상태 업데이트")
     void update() {
         Long menuNo = 12L;
@@ -61,8 +64,7 @@ class DefaultMenuServiceTest {
                 .menuUse(false)
                 .menuOrder(99L)
                 .build();
-        menuService.update(menuUpdateDTO);
-        Optional<MenuResponseDTO> expectedMenuResponseDto = menuService.findByMenuNo(menuNo);
+        Optional<MenuResponseDTO> expectedMenuResponseDto = menuService.update(menuUpdateDTO);
         assertThat(Objects.requireNonNull(expectedMenuResponseDto.orElseGet(() -> null)).getMenuName()).isEqualTo(menuName);
     }
 
