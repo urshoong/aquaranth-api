@@ -32,14 +32,9 @@ public interface CompanyMapper {
     Long update(CompanyModifyDTO companyModifyDTO);
 
     /**
-     * 조직에서 회사 정보 삭제
-     */
-    Long deleteOrga(Long orgaNo);
-
-    /**
      * 회사 정보 삭제
      */
-    Long deleteById(CompanyDeleteDTO companyDeleteDTO);
+    Long deleteById(Long companyNo);
 
     /**
      * 회사 코드, 회사명, 사용여부로 검색

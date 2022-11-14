@@ -85,12 +85,8 @@ public class CompanyServiceTests {
     @Test
     @DisplayName("회사 정보 삭제 Test 코드")
     void removeCompanyTest() {
-        CompanyDeleteDTO companyDeleteDTO = CompanyDeleteDTO
-                .builder()
-                .companyNo(10L)
-                .orgaNo(26L)
-                .build();
-        log.info(companyService.deleteById(companyDeleteDTO));
+        Long companyNo = 1L;
+        log.info(companyService.deleteById(companyNo));
     }
 
     @Test

@@ -50,14 +50,11 @@
     </update>
 
 
-    <!--조직에서 회사정보 삭제-->
-    <delete id="deleteOrga">
-        delete from tbl_orga where orga_no=#{orgaNo}
-    </delete>
-
-    <!--회사정보 삭제-->
+    <!--회사정보 삭제(사용 여부가 사용인 회사를 미사용으로 변경하는 것)-->
     <delete id="deleteById">
-        delete from tbl_company where company_no = #{companyNo}
+        update tbl_company
+        set company_use = false
+        where company_no = ${companyNo} and company_use = true;
     </delete>
 
 
@@ -134,6 +131,7 @@
         where orga_type = 'emp'
         ;
     </select>
+
 
     <!--해당 사원의 정보 출력-->
     <select id="findEmpInformation" resultType="com.dq.aquaranth.company.dto.OrgaEmpInformationDTO">

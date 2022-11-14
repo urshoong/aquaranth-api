@@ -57,8 +57,8 @@ public class CompanyController {
      * 회사 정보 삭제
      */
     @DeleteMapping("/remove/{companyNo}")
-    public Long removeCompany(@RequestBody CompanyDeleteDTO companyDeleteDTO) {
-        return companyService.deleteById(companyDeleteDTO);
+    public Long removeCompany(@PathVariable Long companyNo) {
+        return companyService.deleteById(companyNo);
     }
 
     /**

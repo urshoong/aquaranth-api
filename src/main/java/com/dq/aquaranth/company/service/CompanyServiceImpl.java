@@ -51,12 +51,9 @@ public class CompanyServiceImpl implements CompanyService{
     }
 
     @Override
-    @Transactional
-    public Long deleteById(CompanyDeleteDTO companyDeleteDTO) {
+    public Long deleteById(Long companyNo) {
         log.info("회사 정보 삭제");
-        companyMapper.deleteById(companyDeleteDTO);
-        log.info("조직에서 회사 정보 삭제");
-        return companyMapper.deleteOrga(companyDeleteDTO.getOrgaNo());
+        return companyMapper.deleteById(companyNo);
     }
 
     @Override
