@@ -26,6 +26,10 @@ public class UserRoleServiceImpl implements UserRoleService {
 
     @Override
     public List<UserRoleGroupBasedUserListDTO> findOrgaByRoleGroupNo(UserRoleReqGroupBasedUserListDTO userRoleReqGroupBasedUserListDTO) {
-        return userRoleMapper.findOrgaByRoleGroupNo(userRoleReqGroupBasedUserListDTO);
+        log.info("<<< findOrgaByRoleGroupNo >>>");
+        log.info(userRoleReqGroupBasedUserListDTO);
+        List<UserRoleGroupBasedUserListDTO> list = userRoleMapper.findOrgaByRoleGroupNo(userRoleReqGroupBasedUserListDTO);
+        log.info(list);
+        return list;
     }
 }
