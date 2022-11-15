@@ -3,6 +3,7 @@ package com.dq.aquaranth.menu.mapper;
 import com.dq.aquaranth.menu.dto.request.MenuUpdateDTO;
 import com.dq.aquaranth.menu.dto.response.MenuResponseDTO;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,7 +21,7 @@ public interface MenuMapper {
 
     /**
      * URL 정보를 포함한 모든 메뉴를 조회합니다.
-     * @return
+     * @returnv
      */
     List<MenuResponseDTO> findAllMenuInformation();
 
@@ -55,4 +56,7 @@ public interface MenuMapper {
     List<MenuResponseDTO> findMenusByLoginUsername(String username);
 
 
+//    TODO : MyBaits OGNL을 이용한 동적 쿼리 작성 # 25
+//    Optional<MenuResponseDTO> findBy(@Param("menuCode") String menuCode,
+//                                     @Param("menuNo") Long menuNo);
 }
