@@ -4,4 +4,23 @@
 
 <mapper namespace="com.dq.aquaranth.roleGroup.mapper.MenuRoleMapper">
 
+    <insert id="insert" parameterType="com.dq.aquaranth.roleGroup.domain.MenuRole">
+        insert into tbl_menu_role (role_group_no, menu_no, reg_user, reg_date, mod_user, mod_date)
+        VALUES (#{roleGroupNo}, #{menuNo}, #{regUser}, #{regDate}, #{modUser}, #{modDate})
+    </insert>
+    <delete id="deleteAllByRoleGroupNo" parameterType="long">
+        delete
+        from tbl_menu_role
+        where role_group_no = #{roleGroupNo}
+    </delete>
+
+    <delete id="deleteByRoleGroupNoAndModuleCode">
+
+    </delete>
+
+    <select id="findAllByRoleGroupNo" resultType="com.dq.aquaranth.roleGroup.domain.MenuRole" parameterType="long">
+        select *
+        from tbl_menu_role
+        where role_group_no = #{roleGroupNo}
+    </select>
 </mapper>
