@@ -30,4 +30,19 @@ public class UserRoleController {
     public List<UserRoleGroupBasedUserListDTO> findOrgaByRoleGroupNo(UserRoleReqGroupBasedUserListDTO userRoleReqGroupBasedUserListDTO){
         return userRoleService.findOrgaByRoleGroupNo(userRoleReqGroupBasedUserListDTO);
     }
+
+    @PostMapping("/insertOrgaRole")
+    public Integer insertOrgaRole(@RequestBody UserRoleReqInsertOrgaRoleDTO userRoleReqInsertOrgaRoleDTO){
+        log.info(userRoleReqInsertOrgaRoleDTO);
+        return userRoleService.insertUserRole(userRoleReqInsertOrgaRoleDTO);
+    }
+
+    @PostMapping("/removeOrgaRole")
+    public Integer removeOrgaRole(@RequestBody UserRoleReqRemoveOrgaRoleDTO userRoleReqRemoveOrgaRoleDTO){
+        log.info("<<< removeOrgaRole >>>");
+        log.info(userRoleReqRemoveOrgaRoleDTO);
+        Integer result = userRoleService.removeUserRole(userRoleReqRemoveOrgaRoleDTO);
+        log.info(result);
+        return result;
+    }
 }

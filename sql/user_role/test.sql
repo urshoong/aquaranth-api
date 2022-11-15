@@ -148,7 +148,7 @@ begin
              , m.orga_no
              , m.orga_name
              , m.upper_orga_no
-             , CONCAT(c.orga_path, '>', m.orga_name) AS orga_path
+             , IF(m.orga_type != 'emp', CONCAT(c.orga_path, '>', m.orga_name), c.orga_path) orga_path
              , m.orga_type
              , DEPTH+1
         FROM dmap m
@@ -196,7 +196,10 @@ select * from tbl_dept order by ord;
 select * from tbl_company;
 
 ## 조직 계층정보 테스트 쿼리
-select FN_GET_HIERARCHY_ORGA(21);
+select FN_GET_HIERARCHY_ORGA(37);
+
+select FN_GET_HIERARCHY_ORGA(orga_no)
+from tbl_orga;
 
 ##############################################################################################
 
@@ -218,6 +221,21 @@ from tbl_role_group;
 
 ## 조직(orga)테이블에서 조직번호(orga_no), 조직코드(회사/부서/사원의 no), 조직명(회사/부서/사원의 name), 상위조직번호(upper_orga_no), 조직타입(company, dept, emp)
 select o.orga_no
+     , case when o.orga_type = 'company' then (select c.company_no from tbl_company c where c.orga_no = o.orga_no and c.company_no = ${companyNo})
+            when o.orga_type = 'dept' then (select d.dept_no from tbl_dept d join tbl_dept_mapping dM on d.dept_no = dM.dept_no where dM.orga_no = o.orga_no and d.dept_no = ${deptNo})
+            when o.orga_type = 'emp' then (select e.emp_no from tbl_emp e join tbl_emp_mapping eM on e.emp_no = eM.emp_no where eM.orga_no = o.orga_no and e.username = ${username})
+            else 0 end orga_code
+     , case when o.orga_type = 'company' then (select c.company_name from tbl_company c where c.orga_no = o.orga_no and c.company_no = ${companyNo})
+            when o.orga_type = 'dept' then (select d.dept_name from tbl_dept d join tbl_dept_mapping dM on d.dept_no = dM.dept_no where dM.orga_no = o.orga_no and d.dept_no = ${deptNo})
+            when o.orga_type = 'emp' then (select e.emp_name from tbl_emp e join tbl_emp_mapping eM on e.emp_no = eM.emp_no where eM.orga_no = o.orga_no and e.username = ${username})
+            else 0 end orga_name
+     , o.upper_orga_no
+     , o.orga_type
+from tbl_orga o
+where orga_type = 'emp'
+;
+
+select o.orga_no
      , case when o.orga_type = 'company' then (select c.company_no from tbl_company c where c.orga_no = o.orga_no)
             when o.orga_type = 'dept' then (select d.dept_no from tbl_dept d join tbl_dept_mapping dM on d.dept_no = dM.dept_no where dM.orga_no = o.orga_no)
             when o.orga_type = 'emp' then (select e.emp_no from tbl_emp e join tbl_emp_mapping eM on e.emp_no = eM.emp_no where eM.orga_no = o.orga_no)
@@ -229,6 +247,7 @@ select o.orga_no
      , o.upper_orga_no
      , o.orga_type
 from tbl_orga o
+where orga_type = 'emp'
 ;
 
 select * from tbl_dept d join tbl_dept_mapping dM on d.dept_no = dM.dept_no where dM.orga_no = ${orga_no};
@@ -292,14 +311,15 @@ from findMainOrga f
 
 ###########################################################################################
 
-##> 선택한 권한그룹과 검색어(부서/[직급]/이름/ID)를 기준으로 권한이 부여된 사용자를 조회한다
-##    >> 회사 코드와 권한그룹코드를 넘겨줄 수 있다
-##    >> 조건으로는 해당 권한그룹이 부여된 조직(orga) 정보를 출력한다.
-##    >> 조직정보(회사/부서 까지의 계층정보), 직급, 사원명(ID)출력
 
 
 
 ###########################################################################################
+
+
+select * from tbl_role_group;
+select * from tbl_orga_role;
+# insert into tbl_orga_role (role_group_no, orga_no, reg_user) values(1, 1, '준성');
 
 ###########################################################################################
 

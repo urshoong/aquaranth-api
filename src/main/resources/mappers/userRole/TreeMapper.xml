@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dq.aquaranth.userRole.mapper.TreeMapper">
+    <select id="getFromParent" resultType="com.dq.aquaranth.userRole.dto.TreeDTO">
+        select *
+        from (select 1 dept_no, null upper_dept_no, company_name dept_name, company_name dept_desc, false del_flag, true main_flag, #{gno} gno, 0 ord, 0 depth, now() reg_date, now() mod_date, 2 last_dno
+              from tbl_company
+              where company_no = #{upperDeptNo}
+              union
+              select dept_no+1                                                                                  as dept_no
+                   , IF(upper_dept_no is null, #{upperDeptNo}, upper_dept_no + 1)                               as upper_dept_no
+                   , dept_name, dept_desc, del_flag, main_flag, gno, ord, depth, reg_date, mod_date, last_dno+1 as last_dno
+              from tbl_dept
+              where gno = #{gno}
+             ) tbl_dept
+        where (upper_dept_no = #{upperDeptNo} OR upper_dept_no is null )and depth = #{depth}
+    </select>
+</mapper>

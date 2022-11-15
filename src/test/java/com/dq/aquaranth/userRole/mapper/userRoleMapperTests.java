@@ -6,6 +6,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @SpringBootTest
@@ -23,7 +25,7 @@ public class userRoleMapperTests {
     @Test
     void findRoleGroupBasedListTests(){
         UserRoleReqRoleGroupBasedListDTO dto = UserRoleReqRoleGroupBasedListDTO.builder()
-                .companyName("DOUZONE")
+                .companyNo(1L)
 //                .roleGroupSearch("기본")
                 .build();
         List<UserRoleRoleGroupBasedListDTO> list = mapper.findRoleGroupByCompanyName(dto);
@@ -43,4 +45,15 @@ public class userRoleMapperTests {
         list.forEach(log::info);
     }
 
+    @Test
+    void insertUserRoleTests(){
+        UserRoleReqInsertOrgaRoleDTO input = UserRoleReqInsertOrgaRoleDTO.builder()
+                .companyNo(1L)
+                .roleGroupNo(4L)
+                .orgaNoList(Arrays.asList(19, 20, 21))
+                .build();
+        log.info(input);
+        Integer result = mapper.insertUserRole(input);
+        log.info("result :: " + result);
+    }
 }

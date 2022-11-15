@@ -32,4 +32,14 @@ public class UserRoleServiceImpl implements UserRoleService {
         log.info(list);
         return list;
     }
+
+    @Override
+    public Integer insertUserRole(UserRoleReqInsertOrgaRoleDTO userRoleReqInsertOrgaRoleDTO) {
+        return userRoleMapper.insertUserRole(userRoleReqInsertOrgaRoleDTO);
+    }
+
+    @Override
+    public Integer removeUserRole(UserRoleReqRemoveOrgaRoleDTO userRoleReqRemoveOrgaRoleDTO) {
+        return userRoleMapper.removeUserRole(userRoleReqRemoveOrgaRoleDTO);
+    }
 }

@@ -5,11 +5,13 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserRoleReqRoleGroupBasedListDTO {
-    Long companyNo;
-    String roleGroupSearch;
+public class UserRoleReqRemoveOrgaRoleDTO {
+    Long companyNo, roleGroupNo;
+    List<Long> removeOrgaRoleList;
 }
