@@ -27,17 +27,17 @@ public class EmpServiceTests {
 
     @Test
     void empListTest(){
-        log.info(service.empList());
+        log.info(service.findAll());
     }
 
     @Test
     void empReadTest(){
-        log.info(service.empRead(1L));
+        log.info(service.findById(1L));
     }
 
     @Test
     void empOrgaListTest() {
-        log.info(service.empOrgaList(1L));
+        log.info(service.findAllOrga(1L));
     }
 
 //    @Test
@@ -73,12 +73,12 @@ public class EmpServiceTests {
                 .empNo(16L)
                 .build();
 
-        log.info(service.empModify(empUpdateDTO));
+        log.info(service.update(empUpdateDTO));
     }
 
     @Test
     void empDeleteTest() {
-        log.info(service.empRemove(16L));
+        log.info(service.delete(16L));
     }
 
 //    @Test
@@ -294,18 +294,18 @@ public class EmpServiceTests {
         String registrant = "종현";
 
         // 조직
-        EmpOrgaDTO empOrgaDTO = EmpOrgaDTO.builder()
-                .deptNo(11L)
+        EmpOrgaDTO orgaDTO = EmpOrgaDTO.builder()
+                .deptNo(10L)
                 .regUser(registrant) //등록자
                 .build();
 
-        Long orgaId = empOrgaDTO.getOrgaNo();
+        Long orgaId = orgaDTO.getOrgaNo();
 
         // 사원
         EmpDTO empDTO = EmpDTO.builder()
-                .empName("user") //이름
-                .username("user") //id
-                .password("user") //비번
+                .empName("진용진") //이름
+                .username("emp01") //id
+                .password("emp") //비번
                 .gender("남성")   //성별
                 .empPhone("01011111111") //휴대폰 번호
                 .empAddress("부산시") //주소
@@ -326,7 +326,30 @@ public class EmpServiceTests {
                 .regUser(registrant)
                 .build();
 
-            service.insert(empOrgaDTO, empDTO, empMappingDTO);
+            service.insert(orgaDTO, empDTO, empMappingDTO);
+    }
+
+    @Test
+    void registerEmpOrga() {
+        String registrant = "종현";
+        Long empNo = 14L;
+        // 조직
+        EmpOrgaDTO orgaDTO = EmpOrgaDTO.builder()
+                .deptNo(6L)
+                .regUser(registrant) //등록자
+                .build();
+
+        Long orgaId = orgaDTO.getOrgaNo();
+
+        EmpMappingDTO empMappingDTO = EmpMappingDTO.builder()
+                .orgaNo(orgaId)
+                .empNo(empNo)
+                .empRole("ROLE_USER") //사용자권한
+                .empRank("사원") //직급
+                .regUser(registrant)
+                .build();
+
+        service.empOrgaInsert(orgaDTO, empMappingDTO, empNo);
     }
 
 }

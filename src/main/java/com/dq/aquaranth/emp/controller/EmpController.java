@@ -1,13 +1,15 @@
 package com.dq.aquaranth.emp.controller;
-// TODO Controller에 register, 조직 read 작성
+
 import com.dq.aquaranth.emp.dto.*;
 import com.dq.aquaranth.emp.service.EmpService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -19,17 +21,17 @@ public class EmpController {
 
     @GetMapping("/information")
     public List<EmpDTO> getEmpList() {
-        return service.empList();
+        return service.findAll();
     }
 
     @GetMapping("/read/{empNo}")
     public EmpDTO getEmp(@PathVariable("empNo") Long empNo) {
-        return service.empRead(empNo);
+        return service.findById(empNo);
     }
 
     @GetMapping("/readOrga/{empNo}")
     public List<EmpSelectOrga> empOrgaList(@PathVariable("empNo") Long empNo) {
-        return service.empOrgaList(empNo);
+        return service.findAllOrga(empNo);
     }
 
 
@@ -62,10 +64,12 @@ public class EmpController {
     @PostMapping("/register")
     public EmpDTO registerEmp (@Valid @RequestBody  EmpInsertInformationDTO reqDTO) throws IllegalAccessException{
 
+        String registrant = "종현"; //TODO regUser들 로그인 id로 바꾸기
 
         //조직 DTO에 받은 값 넣기
         EmpOrgaDTO orgaDTO = EmpOrgaDTO.builder()
                 .deptNo(reqDTO.getDeptNo())
+                .regUser(registrant)
                 .build();
 
         //조직 테이블의 last_insert_id 저장
@@ -80,19 +84,21 @@ public class EmpController {
                 .empAddress(reqDTO.getEmpAddress())
                 .empProfile(reqDTO.getEmpProfile())
                 .email(reqDTO.getEmail())
-                .lastLoginIp(null)
-
+                .firstHiredDate(LocalDate.now())
+                .regUser(registrant)
                 .build();
 
 
         //사원 테이블의 last_insert_id 저장
-        Long empId = empDTO.getEmpNo();
+        Long empNo = empDTO.getEmpNo();
 
         //사원 매핑 테이블
         EmpMappingDTO empMappingDTO = EmpMappingDTO.builder()
-                .empNo(empId)
+                .empNo(empNo)
                 .orgaNo(orgaId)
                 .empRank(reqDTO.getEmpRank())
+                .empRole(reqDTO.getEmpRole())
+                .regUser(registrant)
                 .build();
 
         service.insert(orgaDTO, empDTO, empMappingDTO);
@@ -100,13 +106,48 @@ public class EmpController {
         return empDTO;
     }
 
+    @PostMapping("/registerOrga")
+    public Long registerEmpOrga (@RequestBody EmpOrgaInsertDTO reqDTO){
+        String registrant = "종현"; //TODO regUser들 로그인 id로 바꾸기
+        Long empNo = reqDTO.getEmpNo();
+
+        //조직 DTO에 받은 값 넣기
+        EmpOrgaDTO orgaDTO = EmpOrgaDTO.builder()
+                .deptNo(reqDTO.getDeptNo())
+                .regUser(registrant)
+                .build();
+
+        //조직 테이블의 last_insert_id 저장
+        Long orgaNo = orgaDTO.getOrgaNo();
+
+        //사원 매핑 테이블
+        EmpMappingDTO empMappingDTO = EmpMappingDTO.builder()
+                .empNo(empNo)
+                .orgaNo(orgaNo)
+                .empRank(reqDTO.getEmpRank())
+                .empRole(reqDTO.getEmpRole())
+                .regUser(registrant)
+                .build();
+
+        service.empOrgaInsert(orgaDTO, empMappingDTO, empNo);
+
+        return null;
+    }
+
     @PutMapping(value = "/modify/{empNo}")
     public Long modifyEmp(@Valid @RequestBody EmpUpdateDTO empUpdateDTO) {
-        return service.empModify(empUpdateDTO);
+        return service.update(empUpdateDTO);
     }
+
+    @PutMapping(value = "/modifyOrga/{orgaNo}")
+    public Long modifyOrga(@RequestBody EmpOrgaUpdateDTO empOrgaUpdateDTO) {
+        return service.orgaUpdate(empOrgaUpdateDTO);
+    }
+
 
     @DeleteMapping(value = "/remove/{empNo}")
     public Long removeEmp(@PathVariable("empNo") Long empNo) {
-        return service.empRemove(empNo);
+        return service.delete(empNo);
     }
+
 }

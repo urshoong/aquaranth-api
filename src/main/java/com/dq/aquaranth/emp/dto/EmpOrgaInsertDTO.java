@@ -11,8 +11,8 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class EmpOrgaUpdateDTO {
-    private Long orgaNo, deptNo, upperOrgaNo;
-    private String empRank, empRole, modUser;
-    private LocalDate modDate, retiredDate;
+public class EmpOrgaInsertDTO {
+    private Long orgaNo, empNo, upperOrgaNo, deptNo;
+    private String empRole, empRank, orgaType, regUser;
+    private LocalDate regDate;
 }
