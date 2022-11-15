@@ -38,7 +38,6 @@ dependencies {
 	implementation 'io.springfox:springfox-boot-starter:3.0.0'
 	implementation 'io.springfox:springfox-swagger-ui:3.0.0'
 
-	// https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt
 	implementation 'io.jsonwebtoken:jjwt:0.9.1'
 
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
@@ -48,6 +47,12 @@ dependencies {
 
 	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
 	testImplementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
+
+	implementation 'io.minio:minio:8.4.5'
+
+	implementation 'commons-io:commons-io:2.11.0'
+	implementation group: 'commons-fileupload', name: 'commons-fileupload', version: '1.4'
+
 }
 
 tasks.named('test') {

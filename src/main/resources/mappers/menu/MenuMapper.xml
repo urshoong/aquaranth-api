@@ -38,7 +38,8 @@
         with recursive etc as (select menu_no
                                     , upper_menu_no
                                     , menu_name
-                                    , menu_icon
+                                    , uuid
+                                    , file_name
                                     , menu_code
                                     , menu_required
                                     , menu_admin
@@ -57,7 +58,8 @@
                                select m.menu_no
                                     , m.upper_menu_no
                                     , m.menu_name
-                                    , m.menu_icon
+                                    , m.uuid
+                                    , m.file_name
                                     , m.menu_code
                                     , m.menu_required
                                     , m.menu_admin
@@ -117,7 +119,8 @@
         with recursive etc as (select menu_no
                                     , upper_menu_no
                                     , menu_name
-                                    , menu_icon
+                                    , uuid
+                                    , file_name
                                     , menu_code
                                     , menu_required
                                     , menu_admin
@@ -136,7 +139,8 @@
                                select m.menu_no
                                     , m.upper_menu_no
                                     , m.menu_name
-                                    , m.menu_icon
+                                    , m.uuid
+                                    , m.file_name
                                     , m.menu_code
                                     , m.menu_required
                                     , m.menu_admin
@@ -160,7 +164,8 @@
         with recursive etc as (select menu_no
                                     , upper_menu_no
                                     , menu_name
-                                    , menu_icon
+                                    , uuid
+                                    , file_name
                                     , menu_code
                                     , menu_required
                                     , menu_admin
@@ -179,7 +184,8 @@
                                select m.menu_no
                                     , m.upper_menu_no
                                     , m.menu_name
-                                    , m.menu_icon
+                                    , m.uuid
+                                    , m.file_name
                                     , m.menu_code
                                     , m.menu_required
                                     , m.menu_admin
