@@ -31,8 +31,7 @@ public class MenuApiController {
     }
 
     //    TODO : MyBaits OGNL을 이용한 동적 쿼리 작성 # 25
-    @Operation(summary = "메뉴코드 단건 메뉴 조회", description = "메뉴코드를 이용하여 단건 메뉴를 조회합니다.",
-            responses = @ApiResponse(responseCode = "200", content = @Content(mediaType = "application/json")))
+    @Operation(summary = "메뉴코드 단건 메뉴 조회", description = "메뉴코드를 이용하여 단건 메뉴를 조회합니다.", responses = @ApiResponse(responseCode = "200", content = @Content(mediaType = "application/json")))
     @GetMapping("/findcode")
     public Optional<MenuResponseDTO> findByMenuCode(@RequestParam(value = "menuCode") String menuCode) {
         return Optional.ofNullable(menuService.findByMenuCode(menuCode)
@@ -70,8 +69,7 @@ public class MenuApiController {
         return menuService.findMenusByLoginUsername(username);
     }
 
-    @Operation(summary = "메뉴 상태 업데이트", description = "메뉴 상태를 업데이트 합니다. 반환되는 정보는 업데이트된 메뉴의 정보입니다.",
-            responses = @ApiResponse(responseCode = "200", content = @Content(mediaType = "application/json")))
+    @Operation(summary = "메뉴 상태 업데이트", description = "메뉴 상태를 업데이트 합니다. 반환되는 정보는 업데이트된 메뉴의 정보입니다.", responses = @ApiResponse(responseCode = "200", content = @Content(mediaType = "application/json")))
     @PutMapping("/update")
     public Optional<MenuResponseDTO> update(MenuUpdateDTO menuUpdateDTO) {
         return menuService.update(menuUpdateDTO);
