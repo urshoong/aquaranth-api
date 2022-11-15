@@ -31,7 +31,7 @@ class MenuRoleMapperTest {
     @Rollback
     void insert() {
         // given
-        List<Long> menuNoList = List.of(3L, 4L);
+        List<Long> menuNoList = List.of(1L, 2L, 3L, 4L, 5L, 6L, 7L, 8L, 9L, 10L, 11L, 12L, 13L);
         Long roleGroupNo = 12L;
         String regUser = "테스트종현";
 
@@ -62,5 +62,19 @@ class MenuRoleMapperTest {
 
         // then
         assertEquals(0, menuRoleMapper.findAllByRoleGroupNo(deleteRoleGroupNo).size());
+    }
+
+    @Test
+    @DisplayName("gnb메뉴를 포함한 하위메뉴들만 삭제합니다.")
+    void deleteByRoleGroupNoAndModuleCode() {
+        // given
+        Long roleGroupNo = 12L;
+        String moduleCode = "SYS";
+
+        // when
+        menuRoleMapper.deleteByRoleGroupNoAndModuleCode(roleGroupNo, moduleCode);
+
+        // then
+        assertNotNull(menuRoleMapper.findAllByRoleGroupNo(roleGroupNo));
     }
 }
