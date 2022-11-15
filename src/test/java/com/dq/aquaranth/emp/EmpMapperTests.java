@@ -82,11 +82,24 @@ public class EmpMapperTests {
                 .empProfile("profileUpdate")
                 .email("userUpdate01@naver.com")
                 .lastRetiredDate(LocalDate.now())
-                .regUser("종현")
                 .empNo(22L)
                 .build();
 
         log.info(empMapper.update(empUpdateDTO));
+    }
+
+    @Test
+    void orgaUpdateTest() {
+        EmpOrgaUpdateDTO empOrgaUpdateDTO =
+                EmpOrgaUpdateDTO.builder()
+                        .empRank("인턴")
+                        .empRole("ROLE_USER")
+                        .deptNo(1L)
+                        .modUser("mapperTest")
+                        .orgaNo(40L)
+                        .build();
+
+        empMapper.orgaUpdate(empOrgaUpdateDTO);
     }
 
 

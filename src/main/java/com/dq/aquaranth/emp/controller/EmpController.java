@@ -4,6 +4,7 @@ import com.dq.aquaranth.emp.dto.*;
 import com.dq.aquaranth.emp.service.EmpService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -89,11 +90,11 @@ public class EmpController {
 
 
         //사원 테이블의 last_insert_id 저장
-        Long empId = empDTO.getEmpNo();
+        Long empNo = empDTO.getEmpNo();
 
         //사원 매핑 테이블
         EmpMappingDTO empMappingDTO = EmpMappingDTO.builder()
-                .empNo(empId)
+                .empNo(empNo)
                 .orgaNo(orgaId)
                 .empRank(reqDTO.getEmpRank())
                 .empRole(reqDTO.getEmpRole())
@@ -105,13 +106,48 @@ public class EmpController {
         return empDTO;
     }
 
+    @PostMapping("/registerOrga")
+    public Long registerEmpOrga (@RequestBody EmpOrgaInsertDTO reqDTO){
+        String registrant = "종현"; //TODO regUser들 로그인 id로 바꾸기
+        Long empNo = reqDTO.getEmpNo();
+
+        //조직 DTO에 받은 값 넣기
+        EmpOrgaDTO orgaDTO = EmpOrgaDTO.builder()
+                .deptNo(reqDTO.getDeptNo())
+                .regUser(registrant)
+                .build();
+
+        //조직 테이블의 last_insert_id 저장
+        Long orgaNo = orgaDTO.getOrgaNo();
+
+        //사원 매핑 테이블
+        EmpMappingDTO empMappingDTO = EmpMappingDTO.builder()
+                .empNo(empNo)
+                .orgaNo(orgaNo)
+                .empRank(reqDTO.getEmpRank())
+                .empRole(reqDTO.getEmpRole())
+                .regUser(registrant)
+                .build();
+
+        service.empOrgaInsert(orgaDTO, empMappingDTO, empNo);
+
+        return null;
+    }
+
     @PutMapping(value = "/modify/{empNo}")
     public Long modifyEmp(@Valid @RequestBody EmpUpdateDTO empUpdateDTO) {
         return service.update(empUpdateDTO);
     }
 
+    @PutMapping(value = "/modifyOrga/{orgaNo}")
+    public Long modifyOrga(@RequestBody EmpOrgaUpdateDTO empOrgaUpdateDTO) {
+        return service.orgaUpdate(empOrgaUpdateDTO);
+    }
+
+
     @DeleteMapping(value = "/remove/{empNo}")
     public Long removeEmp(@PathVariable("empNo") Long empNo) {
         return service.delete(empNo);
     }
+
 }

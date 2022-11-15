@@ -40,8 +40,14 @@ public class EmpServiceImpl implements EmpService {
     }
 
     @Override
-    public Long update(EmpUpdateDTO empUpdateDTO) {
+    public Long update(EmpUpdateDTO empUpdateDTO)
+    {
         return mapper.update(empUpdateDTO);
+    }
+
+    @Override
+    public Long orgaUpdate(EmpOrgaUpdateDTO empOrgaUpdateDTO) {
+        return mapper.orgaUpdate(empOrgaUpdateDTO);
     }
 
     @Override
@@ -79,11 +85,30 @@ public class EmpServiceImpl implements EmpService {
         return empReqDTO;
     }
 
+    @Override
+    @Transactional
+    public EmpOrgaInsertDTO empOrgaInsert(EmpOrgaDTO orgaReqDTO, EmpMappingDTO mapperReqDTO, Long empNo) {
+        // 조직 테이블 insert
+        mapper.orgaInsert(orgaReqDTO);
+
+        // 조직 테이블의 last_insert_id 저장
+        Long orgaNo = orgaReqDTO.getOrgaNo();
+
+        // 사원매핑 테이블 insert
+        mapperReqDTO.setOrgaNo(orgaNo);
+        mapperReqDTO.setEmpNo(empNo);
+        mappingMapper.empMappingInsert(mapperReqDTO);
+
+        return null;
+    }
+
 
     @Override
     public List<EmpSelectOrga> findAllOrga(Long empNo) {
         return mapper.orgaFindById(empNo);
     }
+
+
 
 
 }

@@ -50,6 +50,12 @@ public interface EmpMapper {
     Long update(EmpUpdateDTO empUpdateDTO);
 
     /**
+     * 조직 번호로 조직 정보를 수정합니다.
+     * @param empOrgaUpdateDTO : 수정할 사원의 조직 객체
+     */
+    Long orgaUpdate(EmpOrgaUpdateDTO empOrgaUpdateDTO);
+
+    /**
      * 사원 번호로 사원 정보를 삭제합니다.
      *
      * @param empNo : 삭제할 사원 번호
@@ -62,8 +68,9 @@ public interface EmpMapper {
      *
      */
 
+
     /**
      *
      */
-    
+
 }
