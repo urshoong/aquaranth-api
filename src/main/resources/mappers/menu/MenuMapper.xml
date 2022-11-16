@@ -12,7 +12,6 @@
     <select id="findByMenuNo" resultType="com.dq.aquaranth.menu.dto.response.MenuResponseDTO">
         SELECT *
         FROM tbl_menu
-        WHERE menu_no = #{menuNo}
     </select>
 
     <select id="findByMenuCode" resultType="com.dq.aquaranth.menu.dto.response.MenuResponseDTO">
@@ -24,8 +23,7 @@
     <delete id="delete">
         DELETE
         FROM tbl_menu
-        WHERE menu_code = #{menuCode
-        }
+        WHERE menu_code = #{menuCode}
     </delete>
 
     <update id="update">
@@ -40,7 +38,8 @@
         with recursive etc as (select menu_no
                                     , upper_menu_no
                                     , menu_name
-                                    , menu_icon
+                                    , uuid
+                                    , file_name
                                     , menu_code
                                     , menu_required
                                     , menu_admin
@@ -59,7 +58,8 @@
                                select m.menu_no
                                     , m.upper_menu_no
                                     , m.menu_name
-                                    , m.menu_icon
+                                    , m.uuid
+                                    , m.file_name
                                     , m.menu_code
                                     , m.menu_required
                                     , m.menu_admin
@@ -89,7 +89,9 @@
     <select id="findMenusByLoginUsername" resultType="com.dq.aquaranth.menu.dto.response.MenuResponseDTO">
         select distinct m.*
         from (WITH RECURSIVE etc AS
-                                 (select tbl_orga.orga_no, tbl_orga.upper_orga_no, tbl_orga.orga_type
+                                 (select tbl_orga.orga_no,
+                                         tbl_orga.upper_orga_no,
+                                         tbl_orga.orga_type
                                   from tbl_orga
                                            inner join tbl_emp_mapping eM on tbl_orga.orga_no = eM.orga_no
                                            inner join tbl_emp e on eM.emp_no = e.emp_no
@@ -97,7 +99,10 @@
                                   where username = #{username}
 #                                     and d.dept_main = true
                                   UNION ALL
-                                  select o.orga_no, o.upper_orga_no, o.orga_type
+                                  select
+                                      o.orga_no,
+                                      o.upper_orga_no,
+                                      o.orga_type
                                   from etc f
                                            inner join tbl_orga o on f.upper_orga_no = o.orga_no)
               select f.orga_no, f.orga_type
@@ -114,7 +119,8 @@
         with recursive etc as (select menu_no
                                     , upper_menu_no
                                     , menu_name
-                                    , menu_icon
+                                    , uuid
+                                    , file_name
                                     , menu_code
                                     , menu_required
                                     , menu_admin
@@ -133,7 +139,8 @@
                                select m.menu_no
                                     , m.upper_menu_no
                                     , m.menu_name
-                                    , m.menu_icon
+                                    , m.uuid
+                                    , m.file_name
                                     , m.menu_code
                                     , m.menu_required
                                     , m.menu_admin
@@ -157,7 +164,8 @@
         with recursive etc as (select menu_no
                                     , upper_menu_no
                                     , menu_name
-                                    , menu_icon
+                                    , uuid
+                                    , file_name
                                     , menu_code
                                     , menu_required
                                     , menu_admin
@@ -176,7 +184,8 @@
                                select m.menu_no
                                     , m.upper_menu_no
                                     , m.menu_name
-                                    , m.menu_icon
+                                    , m.uuid
+                                    , m.file_name
                                     , m.menu_code
                                     , m.menu_required
                                     , m.menu_admin
@@ -195,6 +204,22 @@
         from etc
         # FIXME : MENU_ORDER
     </select>
+<!--TODO : MyBaits OGNL을 이용한 동적 쿼리 작성 # 25-->
+<!--    <sql id="find_menu">-->
+<!--        <where>-->
+<!--            <if test="menuCode != null">-->
+<!--                AND menu_code = #{menuCode}-->
+<!--            </if>-->
+<!--            <if test="menuNo != null">-->
+<!--                AND menu_no = #{menuNo}-->
+<!--            </if>-->
+<!--        </where>-->
+<!--    </sql>-->
+<!--    <select id="findBy" resultType="com.dq.aquaranth.menu.dto.response.MenuResponseDTO">-->
+<!--        SELECT *-->
+<!--        FROM tbl_menu-->
+<!--        <include refid="find_menu" />-->
+<!--    </select>-->
 
 
 </mapper>
