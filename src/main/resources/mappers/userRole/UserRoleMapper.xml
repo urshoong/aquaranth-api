@@ -5,7 +5,7 @@
 <mapper namespace="com.dq.aquaranth.userRole.mapper.UserRoleMapper">
 
     <select id="findCompany" resultType="com.dq.aquaranth.userRole.dto.UserRoleCompanyDTO">
-        select company_no, company_name
+        select company_no, company_name, orga_no
         from tbl_company
         where company_no = #{companyNo}
     </select>
@@ -22,7 +22,7 @@
     </select>
 
     <select id="findOrgaByRoleGroupNo" resultType="com.dq.aquaranth.userRole.dto.UserRoleGroupBasedUserListDTO">
-        SELECT FN_GET_HIERARCHY_ORGA(case when rg.orga_type = 'emp' then rg.upper_orga_no else rg.orga_no end) orga_info
+        SELECT FN_GET_HIERARCHY_ORGA(rg.orga_no) orga_info
              , tem.emp_rank
              , te.emp_name
              , te.username
@@ -50,11 +50,11 @@
                  LEFT JOIN tbl_emp te ON te.emp_no = tem.emp_no
         <if test="userListSearch != null and userListSearch != ''">
         WHERE (
-                   rg.company_name LIKE CONCAT('%', '${userListSearch}', '%')
-                OR td.dept_name LIKE CONCAT('%', '${userListSearch}', '%')
-                OR tem.emp_rank LIKE CONCAT('%', '${userListSearch}', '%')
-                OR te.emp_name  LIKE CONCAT('%', '${userListSearch}', '%')
-                OR te.username  LIKE CONCAT('%', '${userListSearch}', '%')
+                   rg.company_name LIKE CONCAT('%', '#{userListSearch}', '%')
+                OR td.dept_name LIKE CONCAT('%', '#{userListSearch}', '%')
+                OR tem.emp_rank LIKE CONCAT('%', '#{userListSearch}', '%')
+                OR te.emp_name  LIKE CONCAT('%', '#{userListSearch}', '%')
+                OR te.username  LIKE CONCAT('%', '#{userListSearch}', '%')
               )
         </if>
     </select>
@@ -89,4 +89,37 @@
             </if>
             and role_group_no = #{roleGroupNo}
     </delete>
+
+    <select id="findUserListByOrgaNo" resultType="com.dq.aquaranth.userRole.dto.UserRoleUserListBasedDTO">
+        select orga_no, orga_info, company_name, dept_name, emp_rank, username, emp_name, roles
+        from
+            (
+                with recursive r_emp as (
+                    select *
+                    from tbl_orga
+                    where orga_no = #{orgaNo}
+                    union all
+                    select tor.*
+                    from r_emp e
+                             join tbl_orga tor on tor.upper_orga_no = e.orga_no
+                )
+                select re.orga_no
+                     , FN_GET_HIERARCHY_ORGA(re.orga_no) orga_info
+                     , (select company_name from tbl_company tc join tbl_dept t on tc.company_no = t.company_no join tbl_dept_mapping m on t.dept_no = m.dept_no where m.orga_no = re.upper_orga_no) company_name
+                     , (select dept_name from tbl_dept td join tbl_dept_mapping tdm on tdm.dept_no = td.dept_no where tdm.orga_no = re.upper_orga_no) dept_name
+                     , tem.emp_rank
+                     , te.username
+                     , te.emp_name
+                     , FN_GET_ROLE_CNT(re.orga_no, #{searchRole}) roles
+                from r_emp re
+                         join tbl_emp_mapping tem on tem.orga_no = re.orga_no
+                         join tbl_emp te on tem.emp_no = te.emp_no
+                where re.orga_type = 'emp'
+                  and (
+                        te.username like concat('%', #{searchEmp}, '%') or
+                        te.emp_name like concat('%', #{searchEmp}, '%')
+                      )
+            ) emps
+        where emps.roles > 0
+    </select>
 </mapper>

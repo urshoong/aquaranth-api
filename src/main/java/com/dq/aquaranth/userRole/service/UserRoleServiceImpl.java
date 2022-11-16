@@ -42,4 +42,9 @@ public class UserRoleServiceImpl implements UserRoleService {
     public Integer removeUserRole(UserRoleReqRemoveOrgaRoleDTO userRoleReqRemoveOrgaRoleDTO) {
         return userRoleMapper.removeUserRole(userRoleReqRemoveOrgaRoleDTO);
     }
+
+    @Override
+    public List<UserRoleUserListBasedDTO> findUserListByOrgaNo(UserRoleReqUserListBasedDTO userRoleReqUserListBasedDTO) {
+        return userRoleMapper.findUserListByOrgaNo(userRoleReqUserListBasedDTO);
+    }
 }

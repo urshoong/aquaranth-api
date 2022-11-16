@@ -177,6 +177,53 @@ begin
 end;
 
 ##############################################################################################
+################################### FN_GET_ROLE_CNT 함수 ######################################
+##############################################################################################
+DELIMITER //
+create or replace
+    function FN_GET_ROLE_CNT(t_orga_no bigint, t_search_role varchar(200)) returns bigint
+begin
+    declare rtn_val bigint;
+#     if t_search_role = null then set t_search_role = ''; END if;
+
+    select sum(role_cnt) role_sum into rtn_val
+    from
+    (
+         with recursive cte as (
+             select *
+             from tbl_orga
+             where orga_no = t_orga_no
+             union all
+             select o.*
+             from cte c
+                      join tbl_orga o on o.orga_no = c.upper_orga_no
+         )
+         select cte.*
+              , (
+             select count(*) role_cnt
+             from tbl_orga_role tor
+                      left join tbl_role_group trg on tor.role_group_no = trg.role_group_no and trg.role_group_use = true
+             where tor.orga_no = cte.orga_no
+               and trg.role_group_name like concat('%', t_search_role, '%')
+         ) role_cnt
+         from cte
+     ) r
+    ;
+
+    return rtn_val;
+end//
+
+
+select o.orga_no
+     , FN_GET_ROLE_CNT(tor.orga_no, ${search_role})
+     , ifnull(FN_GET_ROLE_CNT(tor.orga_no, ${search_role}), 0) roles
+from tbl_orga o
+left join tbl_orga_role tor on tor.orga_no = o.orga_no
+left join tbl_role_group trg on tor.role_group_no = trg.role_group_no and trg.role_group_use = true
+where o.orga_no in (1, 6, 12, 16, 34)
+;
+
+##############################################################################################
 
 ## testdb에 등록된 function 확인하는 쿼리
 show function status where db = 'aquaranth1';

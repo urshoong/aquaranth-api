@@ -39,10 +39,15 @@ public class UserRoleController {
 
     @PostMapping("/removeOrgaRole")
     public Integer removeOrgaRole(@RequestBody UserRoleReqRemoveOrgaRoleDTO userRoleReqRemoveOrgaRoleDTO){
-        log.info("<<< removeOrgaRole >>>");
-        log.info(userRoleReqRemoveOrgaRoleDTO);
-        Integer result = userRoleService.removeUserRole(userRoleReqRemoveOrgaRoleDTO);
-        log.info(result);
-        return result;
+        return userRoleService.removeUserRole(userRoleReqRemoveOrgaRoleDTO);
+    }
+
+    @GetMapping("/findUserListByOrgaNo")
+    public List<UserRoleUserListBasedDTO> findUserListByOrgaNo(UserRoleReqUserListBasedDTO userRoleReqUserListBasedDTO){
+        log.info("<<< findUserListByOrgaNo >>>");
+        log.info(userRoleReqUserListBasedDTO);
+        List<UserRoleUserListBasedDTO> list = userRoleService.findUserListByOrgaNo(userRoleReqUserListBasedDTO);
+        list.forEach(log::info);
+        return list;
     }
 }

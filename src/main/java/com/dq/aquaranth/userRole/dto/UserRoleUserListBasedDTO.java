@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserRoleCompanyDTO {
-    Long companyNo, orgaNo;
-    String companyName;
+public class UserRoleUserListBasedDTO {
+    Long orgaNo, roles;
+    String orgaInfo, companyName, deptName, empRank, username, empName;
 }

@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -55,5 +54,16 @@ public class userRoleMapperTests {
         log.info(input);
         Integer result = mapper.insertUserRole(input);
         log.info("result :: " + result);
+    }
+
+    @Test
+    void findUserListByCompanyNoTests(){
+        UserRoleReqUserListBasedDTO input = UserRoleReqUserListBasedDTO.builder()
+                .orgaNo(1L)
+//                .searchEmp("Test")
+//                .searchRole("개발")
+                .build();
+        List<UserRoleUserListBasedDTO> list = mapper.findUserListByOrgaNo(input);
+        list.forEach(log::info);
     }
 }
