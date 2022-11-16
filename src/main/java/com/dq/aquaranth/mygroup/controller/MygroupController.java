@@ -1,6 +1,7 @@
 package com.dq.aquaranth.mygroup.controller;
 
 import com.dq.aquaranth.mygroup.dto.MygroupModifyDTO;
+import com.dq.aquaranth.mygroup.dto.MygroupRemoveDTO;
 import com.dq.aquaranth.mygroup.service.MygroupService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -19,22 +20,22 @@ public class MygroupController {
      */
     @PostMapping("/register")
     public Long registerMygroup(String username) {
-        return mygroupService.insert(username);
+        return mygroupService.insertMygroup(username);
     }
 
     /**
      * 로그인한 사원의 마이그룹 수정
      */
-    @PutMapping("/modify")
-    public Long modifyMygroup(MygroupModifyDTO mygroupModifyDTO) {
-        return mygroupService.update(mygroupModifyDTO);
+    @PutMapping("/modify/{mygroupNo}")
+    public Long modifyMygroup(@RequestBody MygroupModifyDTO mygroupModifyDTO) {
+        return mygroupService.updateMygroup(mygroupModifyDTO);
     }
 
     /**
      * 로그인한 사원의 마이그룹 삭제
      */
     @DeleteMapping("/remove")
-    public Long removeMygroup(String username) {
-        return mygroupService.delete(username);
+    public Long removeMygroup(@RequestBody MygroupRemoveDTO mygroupRemoveDTO) {
+        return mygroupService.deleteMygroup(mygroupRemoveDTO);
     }
 }

@@ -5,7 +5,7 @@
 <mapper namespace="com.dq.aquaranth.mygroup.mapper.MygroupMapper">
 
     <!--로그인한 사원의 마이그룹 생성-->
-    <insert id="insert">
+    <insert id="insertMygroup">
         insert into tbl_mygroup (emp_no, reg_user)
         values ((select emp_no
                  from tbl_emp
@@ -18,7 +18,7 @@
 
 
     <!--로그인한 사원의 마이그룹 수정-->
-    <update id="update">
+    <update id="updateMygroup">
         update tbl_mygroup
         set mygroup_name = #{mygroupName}
           , mod_user = (select emp_name
@@ -33,12 +33,61 @@
 
 
     <!--로그인한 사원의 마이그룹 삭제-->
-    <delete id="delete">
+    <delete id="deleteMygroup">
         delete
         from tbl_mygroup
         where emp_no = (select emp_no
                         from tbl_emp
-                        where username = #{username})
+                        where username = #{username}) and mygroup_no = #{mygroupNo}
         ;
     </delete>
+
+
+
+    <!--해당 마이그룹의 즐겨찾기에 사원 추가-->
+    <insert id="insertFavorite">
+        insert into tbl_favorite (mygroup_no, favorite_emp_no, reg_user)
+        values ((select mygroup_no
+                 from tbl_mygroup
+                          join tbl_emp te on te.emp_no = tbl_mygroup.emp_no
+                 where username = #{username}), (select emp_no
+                                                 from tbl_emp
+                                                 where emp_no = #{empNo})
+               , (select emp_name
+                  from tbl_emp
+                  where username = #{username}))
+        ;
+    </insert>
+
+
+    <!--해당 마이그룹 안 즐겨찾기의 모든 사원 삭제-->
+    <delete id="deleteFavorite">
+        delete f
+        from tbl_favorite as f
+                 left join tbl_mygroup tm on f.mygroup_no = tm.mygroup_no
+        where f.mygroup_no = #{mygroupNo}
+    </delete>
+
+
+    <!--즐겨찾기에 등록된 사원 중 해당 사원 정보 출력-->
+    <select id="findAllEmp" resultType="com.dq.aquaranth.mygroup.dto.FavoriteEmpListDTO">
+        select te.emp_name, tem.emp_rank, te.username, te.emp_phone,
+        from tbl_favorite
+                 join tbl_mygroup tm on tm.mygroup_no = tbl_favorite.mygroup_no
+                 join tbl_emp te on tbl_favorite.favorite_emp_no = te.emp_no
+                 join tbl_emp_mapping tem on te.emp_no = tem.emp_no
+        where tbl_favorite.mygroup_no = #{mygroupNo}
+        ;
+    </select>
+
+    <!--즐겨찾기에 등록된 사원 중 해당 사원 정보 출력-->
+    <select id="findByEmpNo" resultType="com.dq.aquaranth.mygroup.dto.FavoriteEmpInformationDTO">
+        select te.emp_name, tem.emp_rank, te.username, te.emp_phone, te.email
+        from tbl_favorite
+                 join tbl_mygroup tm on tbl_favorite.mygroup_no = tm.mygroup_no
+                 join tbl_emp te on te.emp_no = tbl_favorite.favorite_emp_no
+                 join tbl_emp_mapping tem on te.emp_no = tem.emp_no
+        where tm.mygroup_no = ${mygroupNo} and te.emp_no = ${empNo}
+        ;
+    </select>
 </mapper>

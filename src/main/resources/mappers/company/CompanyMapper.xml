@@ -124,7 +124,7 @@
             from findEmp f1
                      join tbl_orga o2 on o2.upper_orga_no = f1.orga_no
         )
-        select e2.emp_name, e1.emp_rank, e2.username, e2.emp_phone
+        select e2.emp_name, e1.emp_rank, e2.username, e2.emp_phone, e1.emp_no, f2.orga_no, FN_GET_HIERARCHY_ORGA(f2.orga_no) as orga_info
         from findEmp f2
                  join tbl_emp_mapping e1 on e1.orga_no = f2.orga_no
                  join tbl_emp e2 on e1.emp_no = e2.emp_no
