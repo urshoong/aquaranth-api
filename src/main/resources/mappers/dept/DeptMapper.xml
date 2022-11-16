@@ -5,48 +5,85 @@
 
 <mapper namespace="com.dq.aquaranth.dept.mapper.DeptMapper">
 
-    <insert id="insert">
-        <selectKey keyProperty="deptNo" order="AFTER" resultType="long">
-            SELECT LAST_INSERT_ID()
-        </selectKey>
 
-        insert into tbl_dept ( upperDeptNo, dname, mainflag,deptSort, ddesc)
-        values (#{upperDeptNo}, #{dname}, #{mainflag}, #{deptSort} , #{ddesc})
-    </insert>
-
-    <insert id="orgaInsert">
-
-    </insert>
-
-    <insert id="mappingInsert">
-
-    </insert>
-
-
+<!--    1개 조회-->
     <select id="select" resultType="com.dq.aquaranth.dept.dto.DeptDTO">
         select * from tbl_dept where deptNo = #{deptNo}
     </select>
 
-    <update id="update">
-        update tbl_dept
-        set
-        upperDeptNo = #{upperDeptNo},
-        dname = #{dname},
-        delflag = #{delflag},
-        mainflag = #{mainflag},
-        deptSort = #{deptSort},
-        ddesc = #{ddesc},
-        updatedate = now()
-        where deptNo = #{deptNo}
+
+<!--    등록-->
+
+<!--    임의의 부서를 직접 추가-->
+    <insert id="insert">
+        <selectKey keyProperty="deptNo" order="AFTER" resultType="long">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into  tbl_dept (dname,delflag,mainflag,deptSort,ddesc, upperDeptNo, gno, depth)
+        values (#{dname}, #{delflag}, #{mainflag},#{deptSort}, #{ddesc}, #{upperDeptNo}, #{gno}, #{depth})
+    </insert>
+
+<!--    만든 함수를 이용해서 (상위부서 번호와 그룹번호를 사용)  ord값 조회-->
+    <select id="getNextOrd" resultType="int">
+        select FN_GET_DEPT_ORD(#{parentDeptNo},#{gno})
+    </select>
+
+<!--    동일한 gno를 가지는 부서중에 조회한 ord값 보다 크거나 같은 모든 ord를 1씩 추가-->
+    <update id="arrangeOrd">
+        update tbl_dept set ord = ord + 1 where gno = #{gno} and ord >=  #{ord}
+    </update>
+
+<!--    직접 추가한 부서에 위에서 조회한 ord값을 업데이트-->
+    <update id="fixOrd">
+        update tbl_dept set ord = #{ord} where deptNo = #{deptNo}
+    </update>
+
+<!--    추가한 부서의 deptNo를 상위 부서의 lastDno에 업데이트 -->
+    <update id="updateLastDno">
+        update tbl_dept set lastDno = #{deptNo} where deptNo = #{parentDeptNo}
     </update>
 
 
+
+<!--    삭제-->
     <delete id="delete">
         delete from tbl_dept where deptNo = #{deptNo}
     </delete>
 
-    <select id="list" resultType="com.dq.aquaranth.dept.dto.DeptDTO">
+
+<!--    수정-->
+    <update id="update">
+            update tbl_dept
+            set
+            upperDeptNo = #{upperDeptNo},
+            dname = #{dname},
+            delflag = #{delflag},
+            mainflag = #{mainflag},
+            deptSort = #{deptSort},
+            ddesc = #{ddesc},
+            updatedate = now()
+            where deptNo = #{deptNo}
+    </update>
+
+
+<!--    전체 리스트 조회-->
+    <select id="getList" resultType="com.dq.aquaranth.dept.dto.DeptDTO">
         select * from tbl_dept order by deptNo asc limit #{skip}, #{size}
+    </select>
+
+
+<!--    회사별 리스트 조회-->
+    <select id="getGnoList" resultType="com.dq.aquaranth.dept.dto.DeptDTO">
+        select * from tbl_dept where gno = #{gno} order by ord asc
+    </select>
+
+
+
+
+    <select id="getFromParent" resultType="com.dq.aquaranth.dept.dto.DeptDTO">
+        select *
+        from tbl_dept
+        where (upperDeptNo = #{upperDeptNo} OR upperDeptNo is null )and depth = #{depth}
     </select>
 
 </mapper>

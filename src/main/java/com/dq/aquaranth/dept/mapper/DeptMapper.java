@@ -1,21 +1,30 @@
 package com.dq.aquaranth.dept.mapper;
 
-import com.dq.aquaranth.dept.dto.DeptCriteria;
 import com.dq.aquaranth.dept.dto.DeptDTO;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
 public interface DeptMapper {
+    public DeptDTO select(Long deptNo);
 
-    int insert(DeptDTO deptDTO);
+    public int insert(DeptDTO deptDTO2);
 
-    DeptDTO select(Long DeptNo);
+    public int delete(Long deptNo);
 
-    int update(DeptDTO deptDTO);
+    public int update(DeptDTO deptDTO2);
 
-    int delete(Long deptNo);
+    public List<DeptDTO> getList(@Param("skip") int skip, @Param("size") int size);
 
-    List<DeptDTO> list(DeptCriteria deptCriteria);
+    public List<DeptDTO> getGnoList(int gno);
 
-    List<DeptDTO> deptList();
+    int getNextOrd(@Param("gno") Integer gno, @Param("parentDeptNo") Long parentDeptNo);
+
+    void arrangeOrd(@Param("gno") Integer gno, @Param("ord") int ord);
+
+    void fixOrd (@Param("deptNo") Long deptNo, @Param("ord") int ord);
+
+    void updateLastDno(@Param("parentDeptNo") Long parentDeptNo, @Param("deptNo") Long deptNo);
+
+    List<DeptDTO> getFromParent(@Param("upperDeptNo") Long upperDeptNo, @Param("depth") int depth);
 }
