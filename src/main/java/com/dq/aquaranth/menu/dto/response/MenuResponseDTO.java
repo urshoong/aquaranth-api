@@ -16,7 +16,6 @@ public class MenuResponseDTO {
     private Long menuNo;
     private Long upperMenuNo;
     private String menuName;
-    private String menuIcon;
     private boolean menuUse;
     private String menuCode;
     private boolean menuRequired;
@@ -30,4 +29,6 @@ public class MenuResponseDTO {
     private Long depth;
     private String noPath;
     private String url;
+    private String uuid;
+    private String fileName;
 }

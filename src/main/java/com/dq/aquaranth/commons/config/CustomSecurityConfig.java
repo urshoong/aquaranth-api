@@ -66,6 +66,7 @@ public class CustomSecurityConfig {
                 .and()
                 .formLogin().disable()
 
+
                 // 권한 설정
                 .authorizeHttpRequests()
 //                .antMatchers("/api/menu").hasRole("ROLE_ADMIN")
