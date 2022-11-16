@@ -1,6 +1,7 @@
-package com.dq.aquaranth.roleGroup.service;
+package com.dq.aquaranth.roleGroup.service.impl;
 
 import com.dq.aquaranth.roleGroup.domain.RoleGroup;
+import com.dq.aquaranth.roleGroup.service.RoleGroupService;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

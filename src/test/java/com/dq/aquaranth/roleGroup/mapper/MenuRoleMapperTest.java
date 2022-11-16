@@ -55,7 +55,7 @@ class MenuRoleMapperTest {
     @DisplayName("권한그룹번호로 모든 메뉴권한을 삭제합니다.")
     void deleteById() {
         // given
-        Long deleteRoleGroupNo = 12L;
+        Long deleteRoleGroupNo = 19L;
 
         // when
         menuRoleMapper.deleteAllByRoleGroupNo(deleteRoleGroupNo);

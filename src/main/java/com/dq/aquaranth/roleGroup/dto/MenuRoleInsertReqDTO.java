@@ -8,5 +8,5 @@ import java.util.List;
 public class MenuRoleInsertReqDTO {
     private Long roleGroupNo;
     private String moduleCode;
-    List<Long> menuNoList;
+    List<MenuRoleLnbDTO> dtoList;
 }
