@@ -1,8 +1,9 @@
-package com.dq.aquaranth.roleGroup.service;
+package com.dq.aquaranth.roleGroup.service.impl;
 
 import com.dq.aquaranth.roleGroup.domain.RoleGroup;
 import com.dq.aquaranth.roleGroup.dto.RoleGroupUpdateDTO;
 import com.dq.aquaranth.roleGroup.mapper.RoleGroupMapper;
+import com.dq.aquaranth.roleGroup.service.RoleGroupService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
@@ -30,7 +31,7 @@ public class RoleGroupServiceImpl implements RoleGroupService {
 
     @Override
     public void update(RoleGroupUpdateDTO updateDTO) {
-        log.info("{} 번째 권한그룹을 수정합니다.", updateDTO);
+        log.info("{} 번째 권한그룹을 수정합니다.", updateDTO.getRoleGroupNo());
         roleGroupMapper.update(updateDTO);
     }
 
@@ -49,7 +50,7 @@ public class RoleGroupServiceImpl implements RoleGroupService {
 //    TODO : 트랜잭션 처리
     @Transactional
     @Override
-    public void delete(Long roleGroupNo) {
+    public void deleteById(Long roleGroupNo) {
         log.info("{} 번째 권한그룹을 삭제합니다.", roleGroupNo);
 
         RoleGroup findDTO = roleGroupMapper.findById(roleGroupNo);
