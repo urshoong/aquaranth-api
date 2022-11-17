@@ -46,18 +46,4 @@ public interface CompanyMapper {
      */
     CompanyDTO findByUsername(String username);
 
-    /**
-     * 조직도 트리 정보 출력
-     */
-    List<OrgaTreeDTO> orgaTree();
-
-    /**
-     * 해당 부서와 회사에 소속된 모든 사원 정보 출력
-     */
-    List<OrgaEmpDTO> findAllEmp(OrgaEmpSearchDTO orgaEmpSearchDTO);
-
-    /**
-     * 해당 사원의 정보 출력
-     */
-    OrgaEmpInformationDTO findEmpInformation(Long empNo);
 }
