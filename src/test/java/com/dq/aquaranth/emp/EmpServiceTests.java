@@ -1,37 +1,31 @@
 package com.dq.aquaranth.emp;
 
-import com.dq.aquaranth.emp.dto.*;
+import com.dq.aquaranth.emp.dto.EmpDTO;
+import com.dq.aquaranth.emp.dto.EmpMappingDTO;
+import com.dq.aquaranth.emp.dto.EmpOrgaDTO;
+import com.dq.aquaranth.emp.dto.EmpUpdateDTO;
 import com.dq.aquaranth.emp.service.EmpService;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.time.LocalDate;
-import java.util.Collection;
-import java.util.Locale;
-
-import static java.time.LocalDateTime.now;
 
 @SpringBootTest
 @Log4j2
-public class EmpServiceTests {
+class EmpServiceTests {
 
     @Autowired(required = false)
     EmpService service;
 
     @Test
-    void empListTest(){
+    void empListTest() {
         log.info(service.empList());
     }
 
     @Test
-    void empReadTest(){
+    void empReadTest() {
         log.info(service.empRead(1L));
     }
 
@@ -60,7 +54,7 @@ public class EmpServiceTests {
 //    }
 
     @Test
-    void empModifyTest(){
+    void empModifyTest() {
         EmpUpdateDTO empUpdateDTO = EmpUpdateDTO.builder()
                 .empName("양당근")
                 .password("modTest")
@@ -290,7 +284,7 @@ public class EmpServiceTests {
 //    }
 
     @Test
-    void empInsertTest() throws IllegalAccessException{
+    void empInsertTest() throws IllegalAccessException {
         String registrant = "종현";
 
         // 조직
@@ -326,7 +320,7 @@ public class EmpServiceTests {
                 .regUser(registrant)
                 .build();
 
-            service.insert(empOrgaDTO, empDTO, empMappingDTO);
+        service.insert(empOrgaDTO, empDTO, empMappingDTO);
     }
 
 }

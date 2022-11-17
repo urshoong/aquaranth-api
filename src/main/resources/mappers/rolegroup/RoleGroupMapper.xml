@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dq.aquaranth.rolegroup.mapper.RoleGroupMapper">
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="roleGroupNo" parameterType="com.dq.aquaranth.rolegroup.domain.RoleGroup">
+        insert into tbl_role_group (role_group_name, role_group_use, company_no, reg_user)
+        VALUES (#{roleGroupName}, #{roleGroupUse}, #{companyNo}, #{regUser})
+    </insert>
+
+    <update id="update" parameterType="com.dq.aquaranth.rolegroup.dto.RoleGroupUpdateDTO">
+        update tbl_role_group
+        set role_group_name = #{roleGroupName},
+            role_group_use  = #{roleGroupUse},
+            company_no      = #{companyNo},
+            mod_user        = #{modUser},
+            mod_date        = now()
+        where role_group_no = #{roleGroupNo}
+    </update>
+
+    <delete id="deleteById" parameterType="long">
+        delete
+        from tbl_role_group
+        where role_group_no = #{roleGroupNo}
+    </delete>
+
+    <select id="findAll" resultType="com.dq.aquaranth.rolegroup.domain.RoleGroup">
+        select *
+        from tbl_role_group
+    </select>
+    <select id="findById" resultType="com.dq.aquaranth.rolegroup.domain.RoleGroup" parameterType="long">
+        select *
+        from tbl_role_group
+        where role_group_no = #{roleGroupNo}
+    </select>
+</mapper>

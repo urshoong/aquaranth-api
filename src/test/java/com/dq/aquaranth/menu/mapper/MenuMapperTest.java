@@ -56,16 +56,10 @@ class MenuMapperTest {
     void update() {
         Long menuNo = 12L;
         String menuName = "구글 드라이브";
-        MenuUpdateDTO menuUpdateDTO = MenuUpdateDTO.builder()
-                .menuNo(menuNo)
-                .menuName(menuName)
-                .menuUse(false)
-                .menuOrder(99L)
-                .build();
+        MenuUpdateDTO menuUpdateDTO = MenuUpdateDTO.builder().menuNo(menuNo).menuName(menuName).menuUse(false).menuOrder(99L).build();
         menuMapper.update(menuUpdateDTO);
         Optional<MenuResponseDTO> expectedMenuResponseDto = menuMapper.findByMenuNo(menuNo);
-        assertThat(Objects.requireNonNull(expectedMenuResponseDto.orElseGet(() -> null))
-                .getMenuName()).isEqualTo(menuName);
+        assertThat(Objects.requireNonNull(expectedMenuResponseDto.orElseGet(() -> null)).getMenuName()).isEqualTo(menuName);
     }
 
     @Test

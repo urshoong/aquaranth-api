@@ -1,6 +1,9 @@
 package com.dq.aquaranth.emp;
 
-import com.dq.aquaranth.emp.dto.*;
+import com.dq.aquaranth.emp.dto.EmpDTO;
+import com.dq.aquaranth.emp.dto.EmpMappingDTO;
+import com.dq.aquaranth.emp.dto.EmpOrgaDTO;
+import com.dq.aquaranth.emp.dto.EmpUpdateDTO;
 import com.dq.aquaranth.emp.mapper.EmpMapper;
 import com.dq.aquaranth.emp.mapper.EmpMappingMapper;
 import lombok.extern.log4j.Log4j2;
@@ -10,23 +13,21 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDate;
 
-import static java.time.LocalDateTime.now;
-
 @SpringBootTest
 @Log4j2
-public class EmpMapperTests {
+class EmpMapperTests {
 
     @Autowired(required = false)
     EmpMapper empMapper;
     EmpMappingMapper empMappingMapper;
 
     @Test
-    void empFindAllTest(){
+    void empFindAllTest() {
         log.info(empMapper.empFindAll());
     }
 
     @Test
-    void empFindByIdTest(){
+    void empFindByIdTest() {
         log.info(empMapper.empFindById(1L));
     }
 
@@ -36,7 +37,7 @@ public class EmpMapperTests {
     }
 
     @Test
-    void empInsertTest(){
+    void empInsertTest() {
         EmpDTO empDTO = EmpDTO.builder()
                 .empName("김바보")
                 .username("user08")
@@ -51,7 +52,7 @@ public class EmpMapperTests {
     }
 
     @Test
-    void empOrgaInsertTest(){
+    void empOrgaInsertTest() {
         EmpOrgaDTO empOrgaInsertDTO = EmpOrgaDTO
                 .builder()
                 .deptNo(5L)
@@ -61,7 +62,7 @@ public class EmpMapperTests {
     }
 
     @Test
-    void empMappingInsertTest(){
+    void empMappingInsertTest() {
         EmpMappingDTO empMappingDTO = EmpMappingDTO
                 .builder()
                 .orgaNo(24L)
@@ -73,7 +74,7 @@ public class EmpMapperTests {
     }
 
     @Test
-    void empUpdateTest(){
+    void empUpdateTest() {
         EmpUpdateDTO empUpdateDTO = EmpUpdateDTO.builder()
                 .empName("정수정")
                 .gender("여성")

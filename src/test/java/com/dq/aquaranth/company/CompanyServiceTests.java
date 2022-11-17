@@ -1,6 +1,8 @@
 package com.dq.aquaranth.company;
 
-import com.dq.aquaranth.company.dto.*;
+import com.dq.aquaranth.company.dto.CompanyDTO;
+import com.dq.aquaranth.company.dto.CompanyListDTO;
+import com.dq.aquaranth.company.dto.CompanyModifyDTO;
 import com.dq.aquaranth.company.service.CompanyService;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.DisplayName;
@@ -11,11 +13,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.time.LocalDate;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
 @Log4j2
-public class CompanyServiceTests {
+class CompanyServiceTests {
 
     @Autowired(required = false)
     CompanyService companyService;

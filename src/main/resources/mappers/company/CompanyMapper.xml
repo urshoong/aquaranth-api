@@ -6,12 +6,15 @@
 
     <!--회사코드, 회사명, 대표자명, 사용여부 리스트 출력-->
     <select id="findAll" resultType="com.dq.aquaranth.company.dto.CompanyListDTO">
-        select * from tbl_company;
+        select *
+        from tbl_company;
     </select>
 
     <!--회사 기본정보 출력-->
     <select id="findById" resultType="com.dq.aquaranth.company.dto.CompanyDTO">
-        select * from tbl_company where company_no = #{companyNo};
+        select *
+        from tbl_company
+        where company_no = #{companyNo};
     </select>
 
 
@@ -25,13 +28,13 @@
     <!--회사 기본정보 등록-->
     <insert id="insert">
         insert into tbl_company (
-            company_no, company_name, company_address, company_tel,
-            owner_name, founding_date, business_number, company_use,
-            orga_no, reg_user
+        company_no, company_name, company_address, company_tel,
+        owner_name, founding_date, business_number, company_use,
+        orga_no, reg_user
         ) values (
-            #{companyNo}, #{companyName}, #{companyAddress}, #{companyTel},
-            #{ownerName}, #{foundingDate}, #{businessNumber}, #{companyUse},
-            #{orgaNo}, #{regUser}
+        #{companyNo}, #{companyName}, #{companyAddress}, #{companyTel},
+        #{ownerName}, #{foundingDate}, #{businessNumber}, #{companyUse},
+        #{orgaNo}, #{regUser}
         )
         <selectKey keyProperty="companyNo" resultType="long" order="AFTER">
             select LAST_INSERT_ID()
@@ -41,22 +44,30 @@
     <!--회사 기본정보 수정-->
     <update id="update">
         update tbl_company
-            set company_name=#{companyName}, company_address=#{companyAddress}, company_tel=#{companyTel},
-                owner_name=#{ownerName}, company_use=#{companyUse}, mod_user=#{modUser}, mod_date = now()
+        set company_name=#{companyName},
+            company_address=#{companyAddress},
+            company_tel=#{companyTel},
+            owner_name=#{ownerName},
+            company_use=#{companyUse},
+            mod_user=#{modUser},
+            mod_date = now()
         where company_no = #{companyNo}
     </update>
 
     <!--회사 정보 삭제-->
     <delete id="deleteById">
-        delete from tbl_company where company_no = #{companyNo}
+        delete
+        from tbl_company
+        where company_no = #{companyNo}
     </delete>
 
     <!--회사코드, 회사명, 사용여부로 검색-->
     <select id="search" resultType="com.dq.aquaranth.company.dto.CompanyListDTO">
-        select * from tbl_company
-            where company_use=#{companyUse}
-                and (company_no like concat('%', #{companySearch}, '%')
-                or company_name like concat('%', #{companySearch}, '%'));
+        select *
+        from tbl_company
+        where company_use = #{companyUse}
+          and (company_no like concat('%', #{companySearch}, '%')
+            or company_name like concat('%', #{companySearch}, '%'));
     </select>
     <select id="findByUsername" resultType="com.dq.aquaranth.company.dto.CompanyDTO">
         select c.*
