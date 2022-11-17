@@ -1,6 +1,9 @@
 package com.dq.aquaranth.company.service;
 
-import com.dq.aquaranth.company.dto.*;
+import com.dq.aquaranth.company.dto.CompanyDTO;
+import com.dq.aquaranth.company.dto.CompanyListDTO;
+import com.dq.aquaranth.company.dto.CompanyModifyDTO;
+import com.dq.aquaranth.company.dto.CompanyOrgaDTO;
 import com.dq.aquaranth.company.mapper.CompanyMapper;
 import com.dq.aquaranth.dept.service.DeptService2;
 import com.dq.aquaranth.emp.service.EmpService;
@@ -16,7 +19,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Log4j2
-public class CompanyServiceImpl implements CompanyService{
+public class CompanyServiceImpl implements CompanyService {
 
     private final CompanyMapper companyMapper;
     private final DeptService2 deptService;

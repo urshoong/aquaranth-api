@@ -1,4 +1,4 @@
-package com.dq.aquaranth.userRole.dto;
+package com.dq.aquaranth.userrole.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

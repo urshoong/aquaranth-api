@@ -8,7 +8,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
 @Log4j2
@@ -43,7 +44,7 @@ class RoleGroupServiceImplTest {
         assertNull(roleGroupService.findById(findDTO.getRoleGroupNo()));
     }
 
-//    TODO
+    //    TODO
     @Test
     @DisplayName("권한그룹 삭제시에 메뉴권한테이블의 데이터도 함께 삭제되지 않으면 롤백처리 됩니다")
     void del_roleGroup_with_menuRole() {

@@ -20,7 +20,7 @@ public class UserRoleServiceImpl implements UserRoleService {
         return userRoleMapper.findCompany(orgaNo);
     }
 
-    public List<UserRoleRoleGroupBasedListDTO> findRoleGroupByCompanyName(UserRoleReqRoleGroupBasedListDTO userRoleReqRoleGroupBasedListDTO){
+    public List<UserRoleRoleGroupBasedListDTO> findRoleGroupByCompanyName(UserRoleReqRoleGroupBasedListDTO userRoleReqRoleGroupBasedListDTO) {
         return userRoleMapper.findRoleGroupByCompanyName(userRoleReqRoleGroupBasedListDTO);
     }
 
