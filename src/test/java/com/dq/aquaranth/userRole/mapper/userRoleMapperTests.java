@@ -24,7 +24,7 @@ public class userRoleMapperTests {
     @Test
     void findRoleGroupBasedListTests(){
         UserRoleReqRoleGroupBasedListDTO dto = UserRoleReqRoleGroupBasedListDTO.builder()
-                .companyNo(1L)
+                .orgaNo(1L)
 //                .roleGroupSearch("기본")
                 .build();
         List<UserRoleRoleGroupBasedListDTO> list = mapper.findRoleGroupByCompanyName(dto);
@@ -64,6 +64,12 @@ public class userRoleMapperTests {
 //                .searchRole("개발")
                 .build();
         List<UserRoleUserListBasedDTO> list = mapper.findUserListByOrgaNo(input);
+        list.forEach(log::info);
+    }
+
+    @Test
+    void findByRoleGroupByUserTests(){
+        List<UserRoleUserBasedRoleGroupDTO> list = mapper.findByRoleGroupByUser(21L);
         list.forEach(log::info);
     }
 }

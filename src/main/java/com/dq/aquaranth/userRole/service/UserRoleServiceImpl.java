@@ -16,8 +16,8 @@ public class UserRoleServiceImpl implements UserRoleService {
     private final UserRoleMapper userRoleMapper;
 
     @Override
-    public List<UserRoleCompanyDTO> findCompany(Long companyNo) {
-        return userRoleMapper.findCompany(companyNo);
+    public List<UserRoleCompanyDTO> findCompany(Long orgaNo) {
+        return userRoleMapper.findCompany(orgaNo);
     }
 
     public List<UserRoleRoleGroupBasedListDTO> findRoleGroupByCompanyName(UserRoleReqRoleGroupBasedListDTO userRoleReqRoleGroupBasedListDTO){
@@ -46,5 +46,10 @@ public class UserRoleServiceImpl implements UserRoleService {
     @Override
     public List<UserRoleUserListBasedDTO> findUserListByOrgaNo(UserRoleReqUserListBasedDTO userRoleReqUserListBasedDTO) {
         return userRoleMapper.findUserListByOrgaNo(userRoleReqUserListBasedDTO);
+    }
+
+    @Override
+    public List<UserRoleUserBasedRoleGroupDTO> findByRoleGroupByUser(Long orgaNo) {
+        return userRoleMapper.findByRoleGroupByUser(orgaNo);
     }
 }

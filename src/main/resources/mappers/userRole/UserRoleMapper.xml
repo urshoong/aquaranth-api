@@ -7,15 +7,15 @@
     <select id="findCompany" resultType="com.dq.aquaranth.userRole.dto.UserRoleCompanyDTO">
         select company_no, company_name, orga_no
         from tbl_company
-        where company_no = #{companyNo}
+        where orga_no = #{orgaNo}
     </select>
 
     <select id="findRoleGroupByCompanyName" resultType="com.dq.aquaranth.userRole.dto.UserRoleRoleGroupBasedListDTO">
         select trg.role_group_no, trg.role_group_name, trg.company_no, tc.company_name
-        from tbl_role_group trg
-        left join tbl_company tc on trg.company_no = tc.company_no
+        from tbl_company tc
+        left join tbl_role_group trg on trg.company_no = tc.company_no
         where trg.role_group_use = true
-        and trg.company_no = #{companyNo}
+        and tc.orga_no = #{orgaNo}
         <if test="roleGroupSearch != null">
             and trg.role_group_name like concat('%', #{roleGroupSearch}, '%')
         </if>
@@ -121,5 +121,24 @@
                       )
             ) emps
         where emps.roles > 0
+    </select>
+
+    <select id="findByRoleGroupByUser" resultType="com.dq.aquaranth.userRole.dto.UserRoleUserBasedRoleGroupDTO">
+        with recursive cte as (
+            select *
+            from tbl_orga
+            where orga_no = #{orgaNo}
+            union all
+            select o.*
+            from cte c
+            join tbl_orga o on o.orga_no = c.upper_orga_no
+        )
+        select cte.orga_no, tor.orga_role_no, trg.role_group_no, trg.role_group_name
+             , ${orgaNo} cur_orga_no, tc.company_no, tc.company_name, tc.orga_no com_orga_no
+        from cte
+        join tbl_orga o on o.orga_no = cte.orga_no
+        join tbl_orga_role tor on tor.orga_no = o.orga_no
+        join tbl_role_group trg on trg.role_group_no = tor.role_group_no and trg.role_group_use = true
+        left join tbl_company tc on o.orga_no = tc.orga_no
     </select>
 </mapper>

@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface UserRoleService {
 
-    List<UserRoleCompanyDTO> findCompany(Long companyNo);
+    List<UserRoleCompanyDTO> findCompany(Long orgaNo);
 
     List<UserRoleRoleGroupBasedListDTO> findRoleGroupByCompanyName(UserRoleReqRoleGroupBasedListDTO userRoleReqRoleGroupBasedListDTO);
 
@@ -17,4 +17,6 @@ public interface UserRoleService {
     Integer removeUserRole(UserRoleReqRemoveOrgaRoleDTO userRoleReqRemoveOrgaRoleDTO);
 
     List<UserRoleUserListBasedDTO> findUserListByOrgaNo(UserRoleReqUserListBasedDTO userRoleReqUserListBasedDTO);
+
+    List<UserRoleUserBasedRoleGroupDTO> findByRoleGroupByUser(Long orgaNo);
 }

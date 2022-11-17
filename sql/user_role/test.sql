@@ -363,12 +363,27 @@ from findMainOrga f
 
 ###########################################################################################
 
+select trg.role_group_no, trg.role_group_name, trg.company_no, tc.company_name
+from tbl_company tc
+left join tbl_role_group trg on trg.company_no = tc.company_no
+where trg.role_group_use = true
+  and tc.orga_no = ${orgaNo}
+  and trg.role_group_name like concat('%', ${roleGroupSearch}, '%')
+;
+
+select trg.role_group_no, trg.role_group_name, trg.company_no, tc.company_name
+from tbl_company tc
+left join tbl_role_group trg on trg.company_no = tc.company_no
+where trg.role_group_use = true and tc.orga_no = 21
+;
+
+
 
 select * from tbl_role_group;
 select * from tbl_orga_role;
 # insert into tbl_orga_role (role_group_no, orga_no, reg_user) values(1, 1, '준성');
 
-###########################################################################################
+##########################################################################################
 
 ###########################################################################################
 
