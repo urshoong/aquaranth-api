@@ -17,38 +17,38 @@ public class UserRoleController {
     private final UserRoleService userRoleService;
 
     @GetMapping("/companyList/{companyNo}")
-    public List<UserRoleCompanyDTO> findCompany(@PathVariable Long companyNo){
+    public List<UserRoleCompanyDTO> findCompany(@PathVariable Long companyNo) {
         return userRoleService.findCompany(companyNo);
     }
 
     @GetMapping("/roleGroupList")
-    public List<UserRoleRoleGroupBasedListDTO> findRoleGroupByCompanyName(UserRoleReqRoleGroupBasedListDTO userRoleReqRoleGroupBasedListDTO){
+    public List<UserRoleRoleGroupBasedListDTO> findRoleGroupByCompanyName(UserRoleReqRoleGroupBasedListDTO userRoleReqRoleGroupBasedListDTO) {
         return userRoleService.findRoleGroupByCompanyName(userRoleReqRoleGroupBasedListDTO);
     }
 
     @GetMapping("/roleGroupUserList")
-    public List<UserRoleGroupBasedUserListDTO> findOrgaByRoleGroupNo(UserRoleReqGroupBasedUserListDTO userRoleReqGroupBasedUserListDTO){
+    public List<UserRoleGroupBasedUserListDTO> findOrgaByRoleGroupNo(UserRoleReqGroupBasedUserListDTO userRoleReqGroupBasedUserListDTO) {
         return userRoleService.findOrgaByRoleGroupNo(userRoleReqGroupBasedUserListDTO);
     }
 
     @PostMapping("/insertOrgaRole")
-    public Integer insertOrgaRole(@RequestBody UserRoleReqInsertOrgaRoleDTO userRoleReqInsertOrgaRoleDTO){
+    public Integer insertOrgaRole(@RequestBody UserRoleReqInsertOrgaRoleDTO userRoleReqInsertOrgaRoleDTO) {
         log.info(userRoleReqInsertOrgaRoleDTO);
         return userRoleService.insertUserRole(userRoleReqInsertOrgaRoleDTO);
     }
 
     @PostMapping("/removeOrgaRole")
-    public Integer removeOrgaRole(@RequestBody UserRoleReqRemoveOrgaRoleDTO userRoleReqRemoveOrgaRoleDTO){
+    public Integer removeOrgaRole(@RequestBody UserRoleReqRemoveOrgaRoleDTO userRoleReqRemoveOrgaRoleDTO) {
         return userRoleService.removeUserRole(userRoleReqRemoveOrgaRoleDTO);
     }
 
     @GetMapping("/findUserListByOrgaNo")
-    public List<UserRoleUserListBasedDTO> findUserListByOrgaNo(UserRoleReqUserListBasedDTO userRoleReqUserListBasedDTO){
+    public List<UserRoleUserListBasedDTO> findUserListByOrgaNo(UserRoleReqUserListBasedDTO userRoleReqUserListBasedDTO) {
         return userRoleService.findUserListByOrgaNo(userRoleReqUserListBasedDTO);
     }
 
-    @GetMapping("/findByRoleGroupByUser/${orderNo}")
-    public List<UserRoleUserBasedRoleGroupDTO> findByRoleGroupByUser (@PathVariable Long orgaNo){
+    @GetMapping("/findByRoleGroupByUser/{orgaNo}")
+    public List<UserRoleUserBasedRoleGroupDTO> findByRoleGroupByUser(@PathVariable Long orgaNo) {
         return userRoleService.findByRoleGroupByUser(orgaNo);
     }
 }

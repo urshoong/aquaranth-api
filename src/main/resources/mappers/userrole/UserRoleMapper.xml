@@ -2,15 +2,15 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.dq.aquaranth.userRole.mapper.UserRoleMapper">
+<mapper namespace="com.dq.aquaranth.userrole.mapper.UserRoleMapper">
 
-    <select id="findCompany" resultType="com.dq.aquaranth.userRole.dto.UserRoleCompanyDTO">
+    <select id="findCompany" resultType="com.dq.aquaranth.userrole.dto.UserRoleCompanyDTO">
         select company_no, company_name, orga_no
         from tbl_company
         where orga_no = #{orgaNo}
     </select>
 
-    <select id="findRoleGroupByCompanyName" resultType="com.dq.aquaranth.userRole.dto.UserRoleRoleGroupBasedListDTO">
+    <select id="findRoleGroupByCompanyName" resultType="com.dq.aquaranth.userrole.dto.UserRoleRoleGroupBasedListDTO">
         select trg.role_group_no, trg.role_group_name, trg.company_no, tc.company_name
         from tbl_company tc
         left join tbl_role_group trg on trg.company_no = tc.company_no
@@ -21,7 +21,7 @@
         </if>
     </select>
 
-    <select id="findOrgaByRoleGroupNo" resultType="com.dq.aquaranth.userRole.dto.UserRoleGroupBasedUserListDTO">
+    <select id="findOrgaByRoleGroupNo" resultType="com.dq.aquaranth.userrole.dto.UserRoleGroupBasedUserListDTO">
         SELECT FN_GET_HIERARCHY_ORGA(rg.orga_no) orga_info
              , tem.emp_rank
              , te.emp_name
@@ -90,7 +90,7 @@
             and role_group_no = #{roleGroupNo}
     </delete>
 
-    <select id="findUserListByOrgaNo" resultType="com.dq.aquaranth.userRole.dto.UserRoleUserListBasedDTO">
+    <select id="findUserListByOrgaNo" resultType="com.dq.aquaranth.userrole.dto.UserRoleUserListBasedDTO">
         select orga_no, orga_info, company_name, dept_name, emp_rank, username, emp_name, roles
         from
             (
@@ -123,7 +123,7 @@
         where emps.roles > 0
     </select>
 
-    <select id="findByRoleGroupByUser" resultType="com.dq.aquaranth.userRole.dto.UserRoleUserBasedRoleGroupDTO">
+    <select id="findByRoleGroupByUser" resultType="com.dq.aquaranth.userrole.dto.UserRoleUserBasedRoleGroupDTO">
         with recursive cte as (
             select *
             from tbl_orga
