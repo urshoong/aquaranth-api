@@ -2,11 +2,15 @@ package com.dq.aquaranth.company.service;
 
 import com.dq.aquaranth.company.dto.*;
 import com.dq.aquaranth.company.mapper.CompanyMapper;
+import com.dq.aquaranth.dept.service.DeptService2;
+import com.dq.aquaranth.emp.service.EmpService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -15,6 +19,8 @@ import java.util.List;
 public class CompanyServiceImpl implements CompanyService{
 
     private final CompanyMapper companyMapper;
+    private final DeptService2 deptService;
+    private final EmpService empService;
 
     @Override
     public List<CompanyListDTO> findAll() {
@@ -39,8 +45,11 @@ public class CompanyServiceImpl implements CompanyService{
                 .build();
         companyMapper.insertOrga(companyOrgaDTO);
         log.info(companyOrgaDTO.getOrgaNo());
+
         log.info("회사 기본 정보 추가");
         companyDTO.setOrgaNo(companyOrgaDTO.getOrgaNo());
+
+
         return companyMapper.insert(companyDTO);
     }
 
@@ -60,23 +69,5 @@ public class CompanyServiceImpl implements CompanyService{
     public List<CompanyListDTO> search(Boolean companyUse, String companySearch) {
         log.info("회사코드, 회사명, 사용여부로 검색");
         return companyMapper.search(companyUse, companySearch);
-    }
-
-    @Override
-    public List<OrgaTreeDTO> orgaTree() {
-        log.info("조직도 트리 정보 출력");
-        return companyMapper.orgaTree();
-    }
-
-    @Override
-    public List<OrgaEmpDTO> findAllEmp(OrgaEmpSearchDTO orgaEmpSearchDTO) {
-        log.info("해당 부서 및 회사에 소속된 모든 사원 정보 출력");
-        return companyMapper.findAllEmp(orgaEmpSearchDTO);
-    }
-
-    @Override
-    public OrgaEmpInformationDTO findEmpInformation(Long empNo) {
-        log.info("해당 사원의 정보 출력");
-        return companyMapper.findEmpInformation(empNo);
     }
 }
