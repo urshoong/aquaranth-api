@@ -49,4 +49,8 @@
         select * from tbl_dept order by deptNo asc limit #{skip}, #{size}
     </select>
 
+    <select id="findByCompanyNo" resultType="com.dq.aquaranth.dept.dto.DepartmentDTO">
+        SELECT * FROM tbl_dept WHERE company_no = #{companyNo};
+    </select>
+
 </mapper>

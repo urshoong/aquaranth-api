@@ -9,18 +9,19 @@ import java.io.IOException;
 import java.util.List;
 
 public interface EmpService {
-    List<EmpDTO> empList();
+    List<EmpDTO> findAll();
 
-    EmpDTO empRead(Long empNo);
+    EmpDTO findById(Long empNo);
 
-    Long empModify(EmpUpdateDTO empUpdateDTO);
+    Long update(EmpUpdateDTO empUpdateDTO);
 
-    Long empRemove(Long empNo);
+    Long orgaUpdate(EmpOrgaUpdateDTO empOrgaUpdateDTO);
+
 
     EmpDTO insert(EmpOrgaDTO orgaReqDTO, EmpDTO reqDTO, EmpMappingDTO mapperReqDTO) throws IllegalAccessException;
 
-    List<EmpSelectOrga> empOrgaList(Long empNo);
+    // 사원의 조직 정보 추가
+    Long empOrgaInsert(EmpOrgaDTO orgaReqDTO, EmpMappingDTO mapperReqDTO, Long empNo);
 
-
-
+    List<EmpSelectOrga> findAllOrga(Long empNo);
 }

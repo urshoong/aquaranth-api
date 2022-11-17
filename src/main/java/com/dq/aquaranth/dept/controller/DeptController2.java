@@ -63,14 +63,4 @@ public class DeptController2 {
     public List<DeptDTO2> list( DeptCriteria deptCriteria) {
         return deptService2.list(deptCriteria.getSkip(), deptCriteria.getSize());
     }
-
-
-
-
-
-
-
-
-
-
 }

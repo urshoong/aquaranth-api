@@ -17,7 +17,7 @@ public class EmpInsertInformationDTO {
     private Long empNo;
     @NotBlank
     private String empName, username, password;
-    private String gender, empPhone, empAddress, empProfile, email;
+    private String gender, empPhone, empAddress, email;
     private LocalDateTime lastLoginTime;
     private String lastLoginIp;
     private LocalDate firstHiredate, lastRetiredate;
