@@ -16,8 +16,8 @@ public class UserRoleServiceImpl implements UserRoleService {
     private final UserRoleMapper userRoleMapper;
 
     @Override
-    public List<UserRoleCompanyDTO> findCompany(Long companyNo) {
-        return userRoleMapper.findCompany(companyNo);
+    public List<UserRoleCompanyDTO> findCompany(Long orgaNo) {
+        return userRoleMapper.findCompany(orgaNo);
     }
 
     public List<UserRoleRoleGroupBasedListDTO> findRoleGroupByCompanyName(UserRoleReqRoleGroupBasedListDTO userRoleReqRoleGroupBasedListDTO){
@@ -26,6 +26,30 @@ public class UserRoleServiceImpl implements UserRoleService {
 
     @Override
     public List<UserRoleGroupBasedUserListDTO> findOrgaByRoleGroupNo(UserRoleReqGroupBasedUserListDTO userRoleReqGroupBasedUserListDTO) {
-        return userRoleMapper.findOrgaByRoleGroupNo(userRoleReqGroupBasedUserListDTO);
+        log.info("<<< findOrgaByRoleGroupNo >>>");
+        log.info(userRoleReqGroupBasedUserListDTO);
+        List<UserRoleGroupBasedUserListDTO> list = userRoleMapper.findOrgaByRoleGroupNo(userRoleReqGroupBasedUserListDTO);
+        log.info(list);
+        return list;
+    }
+
+    @Override
+    public Integer insertUserRole(UserRoleReqInsertOrgaRoleDTO userRoleReqInsertOrgaRoleDTO) {
+        return userRoleMapper.insertUserRole(userRoleReqInsertOrgaRoleDTO);
+    }
+
+    @Override
+    public Integer removeUserRole(UserRoleReqRemoveOrgaRoleDTO userRoleReqRemoveOrgaRoleDTO) {
+        return userRoleMapper.removeUserRole(userRoleReqRemoveOrgaRoleDTO);
+    }
+
+    @Override
+    public List<UserRoleUserListBasedDTO> findUserListByOrgaNo(UserRoleReqUserListBasedDTO userRoleReqUserListBasedDTO) {
+        return userRoleMapper.findUserListByOrgaNo(userRoleReqUserListBasedDTO);
+    }
+
+    @Override
+    public List<UserRoleUserBasedRoleGroupDTO> findByRoleGroupByUser(Long orgaNo) {
+        return userRoleMapper.findByRoleGroupByUser(orgaNo);
     }
 }
