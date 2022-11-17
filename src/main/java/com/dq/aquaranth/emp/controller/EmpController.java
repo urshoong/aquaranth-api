@@ -4,7 +4,6 @@ import com.dq.aquaranth.emp.dto.*;
 import com.dq.aquaranth.emp.service.EmpService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -17,26 +16,26 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/api/emp")
 public class EmpController {
-    private final EmpService service;
+    private final EmpService empService;
 
     @GetMapping("/information")
     public List<EmpDTO> getEmpList() {
-        return service.findAll();
+        return empService.findAll();
     }
 
     @GetMapping("/read/{empNo}")
     public EmpDTO getEmp(@PathVariable("empNo") Long empNo) {
-        return service.findById(empNo);
+        return empService.findById(empNo);
     }
 
     @GetMapping("/readOrga/{empNo}")
     public List<EmpSelectOrga> empOrgaList(@PathVariable("empNo") Long empNo) {
-        return service.findAllOrga(empNo);
+        return empService.findAllOrga(empNo);
     }
 
 
     ////////////////////////////////////////////
-    public static String getRemoteIp(HttpServletRequest request) {
+    public String getRemoteIp(HttpServletRequest request) {
 
         String ip = request.getHeader("X-Forwarded-For");
 
@@ -57,12 +56,17 @@ public class EmpController {
         }
 
         return ip;
+
+        //사용 : String ip  = getRemoteIp(request);
+
         //사용할 곳에서 , HttpServletRequest request 쓰고 getRemoteIp(request)
         //0:0:0:0:0:0:0:1 로, 이는 IPv6 형식의 값. 추후 로그아웃 때 사용하기로 한다.
     }
     ////////////////////////////////////////////
     @PostMapping("/register")
     public EmpDTO registerEmp (@Valid @RequestBody  EmpInsertInformationDTO reqDTO) throws IllegalAccessException{
+
+        log.info(reqDTO);
 
         String registrant = "종현"; //TODO regUser들 로그인 id로 바꾸기
 
@@ -82,7 +86,6 @@ public class EmpController {
                 .gender(reqDTO.getGender())
                 .empPhone(reqDTO.getEmpPhone())
                 .empAddress(reqDTO.getEmpAddress())
-                .empProfile(reqDTO.getEmpProfile())
                 .email(reqDTO.getEmail())
                 .firstHiredDate(LocalDate.now())
                 .regUser(registrant)
@@ -101,7 +104,7 @@ public class EmpController {
                 .regUser(registrant)
                 .build();
 
-        service.insert(orgaDTO, empDTO, empMappingDTO);
+        empService.insert(orgaDTO, empDTO, empMappingDTO);
 
         return empDTO;
     }
@@ -129,25 +132,36 @@ public class EmpController {
                 .regUser(registrant)
                 .build();
 
-        service.empOrgaInsert(orgaDTO, empMappingDTO, empNo);
+        return empService.empOrgaInsert(orgaDTO, empMappingDTO, empNo);
 
-        return null;
     }
 
     @PutMapping(value = "/modify/{empNo}")
-    public Long modifyEmp(@Valid @RequestBody EmpUpdateDTO empUpdateDTO) {
-        return service.update(empUpdateDTO);
+    public Long modifyEmp(@Valid @RequestBody EmpUpdateDTO empUpdateDTO, HttpServletRequest request) {
+        String ip  = getRemoteIp(request);
+        log.info("IPIPPPPPPPPP----------------"+ip);
+        empUpdateDTO.setLastLoginIp(ip);
+        return empService.update(empUpdateDTO);
     }
 
-    @PutMapping(value = "/modifyOrga/{orgaNo}")
-    public Long modifyOrga(@RequestBody EmpOrgaUpdateDTO empOrgaUpdateDTO) {
-        return service.orgaUpdate(empOrgaUpdateDTO);
+    @PutMapping(value = "/modifyOrga")
+    public Long modifyOrga(@RequestBody ListDTO listDTO) {
+
+        log.info("-----------------------악!");
+
+        log.info(listDTO);
+        Long result = 0L;
+
+//        String registrant = "종현";
+////      list.setModUser(registrant);
+
+        for (int i = 0; i < listDTO.getList().size(); i++) {
+            result += empService.orgaUpdate(listDTO.getList().get(i));
+        }
+//
+        log.info("리절트: "+result);
+        return result;
     }
 
-
-    @DeleteMapping(value = "/remove/{empNo}")
-    public Long removeEmp(@PathVariable("empNo") Long empNo) {
-        return service.delete(empNo);
-    }
 
 }

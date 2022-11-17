@@ -30,12 +30,12 @@
     <insert id="insert" parameterType="com.dq.aquaranth.emp.dto.EmpDTO">
         INSERT INTO tbl_emp (
             emp_name, username, password, gender,
-            emp_phone, emp_address, emp_profile, email,
+            emp_phone, emp_address, email,
             first_hired_date, reg_user
         )
         VALUES (
             #{empName}, #{username}, #{password}, #{gender},
-            #{empPhone}, #{empAddress}, #{empProfile}, #{email},
+            #{empPhone}, #{empAddress}, #{email},
             #{firstHiredDate}, #{regUser}
         )
         <selectKey keyProperty="empNo" resultType="long" order="AFTER">
@@ -64,11 +64,12 @@
 <!--    update password 빼놓음-->
     <update id="update" parameterType="com.dq.aquaranth.emp.dto.EmpUpdateDTO">
         UPDATE tbl_emp SET
-           emp_name = #{empName}, gender = #{gender} , email=#{email},
-           emp_phone = #{empPhone}, emp_address = #{empAddress}, mod_date=now(),
+           emp_name = #{empName}, gender = #{gender} , email = #{email},
+           emp_phone = #{empPhone}, emp_address = #{empAddress}, mod_date = now(),
            mod_user = #{modUser}, last_retired_date = #{lastRetiredDate},
+           last_login_ip = #{lastLoginIp},
            emp_use = if(last_retired_date IS NOT NULL, false, true)
-        WHERE emp_no = #{empNo};
+        WHERE emp_no = #{empNo}
     </update>
 
     <update id="orgaUpdate" parameterType="com.dq.aquaranth.emp.dto.EmpOrgaUpdateDTO">
@@ -85,10 +86,6 @@
         where e.orga_no = #{orgaNo};
     </update>
 
-<!--    delete대신 사원 미사용으로. 삭제 예정-->
-    <delete id="deleteById" parameterType="long">
-        DELETE FROM tbl_emp WHERE emp_no = #{empNo}
-    </delete>
 
     <select id="findByUsername" resultType="com.dq.aquaranth.emp.dto.EmpDTO">
         SELECT *

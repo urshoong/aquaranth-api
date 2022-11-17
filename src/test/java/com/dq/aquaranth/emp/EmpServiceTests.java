@@ -1,5 +1,6 @@
 package com.dq.aquaranth.emp;
 
+import com.dq.aquaranth.emp.controller.EmpController;
 import com.dq.aquaranth.emp.dto.*;
 import com.dq.aquaranth.emp.service.EmpService;
 import lombok.extern.log4j.Log4j2;
@@ -9,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -351,5 +353,13 @@ public class EmpServiceTests {
 
         service.empOrgaInsert(orgaDTO, empMappingDTO, empNo);
     }
+
+    @Autowired(required = false)
+    EmpController controller;
+    @Test
+    void ipTest() {
+       // controller.getRemoteIp( );
+    }
+
 
 }

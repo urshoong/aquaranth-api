@@ -55,22 +55,8 @@ public interface EmpMapper {
      */
     Long orgaUpdate(EmpOrgaUpdateDTO empOrgaUpdateDTO);
 
-    /**
-     * 사원 번호로 사원 정보를 삭제합니다.
-     *
-     * @param empNo : 삭제할 사원 번호
-     */
-    Long deleteById(Long empNo);
 
     EmpDTO findByUsername(String username);
 
-    /**
-     *
-     */
-
-
-    /**
-     *
-     */
 
 }

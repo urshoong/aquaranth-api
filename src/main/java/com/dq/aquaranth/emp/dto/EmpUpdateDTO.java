@@ -22,7 +22,7 @@ public class EmpUpdateDTO {
     private Long empNo;
     @NotBlank
     private String empName, password;
-    private String gender, empPhone, empAddress, empProfile, email, modUser;
+    private String gender, empPhone, empAddress, empProfile, email, modUser, lastLoginIp;
     private boolean empUse;
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate lastRetiredDate;

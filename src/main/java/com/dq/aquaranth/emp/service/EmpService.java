@@ -17,15 +17,11 @@ public interface EmpService {
 
     Long orgaUpdate(EmpOrgaUpdateDTO empOrgaUpdateDTO);
 
-    Long delete(Long empNo);
 
     EmpDTO insert(EmpOrgaDTO orgaReqDTO, EmpDTO reqDTO, EmpMappingDTO mapperReqDTO) throws IllegalAccessException;
 
     // 사원의 조직 정보 추가
-    EmpOrgaInsertDTO empOrgaInsert(EmpOrgaDTO orgaReqDTO, EmpMappingDTO mapperReqDTO, Long empNo);
+    Long empOrgaInsert(EmpOrgaDTO orgaReqDTO, EmpMappingDTO mapperReqDTO, Long empNo);
 
     List<EmpSelectOrga> findAllOrga(Long empNo);
-
-
-
 }
