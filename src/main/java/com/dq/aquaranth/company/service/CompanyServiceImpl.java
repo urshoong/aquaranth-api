@@ -24,7 +24,7 @@ public class CompanyServiceImpl implements CompanyService{
 
     @Override
     public CompanyDTO findById(Long companyNo) {
-        log.info("회사 기본정보 출력");
+        log.info("회사 기본 정보 출력");
         return companyMapper.findById(companyNo);
     }
 
@@ -39,14 +39,14 @@ public class CompanyServiceImpl implements CompanyService{
                 .build();
         companyMapper.insertOrga(companyOrgaDTO);
         log.info(companyOrgaDTO.getOrgaNo());
-        log.info("회사 기본정보 추가");
+        log.info("회사 기본 정보 추가");
         companyDTO.setOrgaNo(companyOrgaDTO.getOrgaNo());
         return companyMapper.insert(companyDTO);
     }
 
     @Override
     public Long update(CompanyModifyDTO companyModifyDTO) {
-        log.info("회사 기본정보 수정");
+        log.info("회사 기본 정보 수정");
         return companyMapper.update(companyModifyDTO);
     }
 
@@ -60,5 +60,23 @@ public class CompanyServiceImpl implements CompanyService{
     public List<CompanyListDTO> search(Boolean companyUse, String companySearch) {
         log.info("회사코드, 회사명, 사용여부로 검색");
         return companyMapper.search(companyUse, companySearch);
+    }
+
+    @Override
+    public List<OrgaTreeDTO> orgaTree() {
+        log.info("조직도 트리 정보 출력");
+        return companyMapper.orgaTree();
+    }
+
+    @Override
+    public List<OrgaEmpDTO> findAllEmp(OrgaEmpSearchDTO orgaEmpSearchDTO) {
+        log.info("해당 부서 및 회사에 소속된 모든 사원 정보 출력");
+        return companyMapper.findAllEmp(orgaEmpSearchDTO);
+    }
+
+    @Override
+    public OrgaEmpInformationDTO findEmpInformation(Long empNo) {
+        log.info("해당 사원의 정보 출력");
+        return companyMapper.findEmpInformation(empNo);
     }
 }

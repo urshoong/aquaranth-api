@@ -1,8 +1,6 @@
 package com.dq.aquaranth.company.controller;
 
-import com.dq.aquaranth.company.dto.CompanyDTO;
-import com.dq.aquaranth.company.dto.CompanyListDTO;
-import com.dq.aquaranth.company.dto.CompanyModifyDTO;
+import com.dq.aquaranth.company.dto.*;
 import com.dq.aquaranth.company.service.CompanyService;
 import com.dq.aquaranth.login.domain.CustomUser;
 import lombok.RequiredArgsConstructor;
@@ -70,4 +68,31 @@ public class CompanyController {
     public List<CompanyListDTO> searchCompany(@RequestParam Boolean companyUse, String companySearch) {
         return companyService.search(companyUse, companySearch);
     }
+
+    // TODO: 2022-11-13 조직도 트리와 사원 정보 출력은 다른 디렉토리로 빼기
+    /**
+     * 조직도 트리 정보 출력
+     */
+    @GetMapping("/tree")
+    public List<OrgaTreeDTO> orgaTree() {
+        return companyService.orgaTree();
+    }
+
+    // TODO: 2022-11-13 경로명 카멜케이스로 작성할지 모두 소문자로 통일할지 질문
+    /**
+     * 해당 부서 및 회사에 소속된 모든 사원 정보 출력
+     */
+    @GetMapping("/empList")
+    public List<OrgaEmpDTO> getAllEmpInformation(@RequestBody OrgaEmpSearchDTO orgaEmpSearchDTO) {
+        return companyService.findAllEmp(orgaEmpSearchDTO);
+    };
+
+    /**
+     * 해당 사원의 정보 출력
+     */
+    @GetMapping("/empInformaiton/{empNo}")
+    public OrgaEmpInformationDTO getEmpInformation(@PathVariable Long empNo) {
+        return companyService.findEmpInformation(empNo);
+    }
+
 }
