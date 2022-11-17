@@ -82,6 +82,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         Map<String, String> tokens = jwtUtil.generateToken(customUser.getUsername());
 
         log.info("성공한 유저 인증객체 CustomUser-> {}", customUser);
+
         ObjectMapper objectMapper = new ObjectMapper();
         String loginUserInfo = objectMapper
                 .registerModule(new JavaTimeModule())

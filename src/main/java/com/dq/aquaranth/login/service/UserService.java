@@ -9,6 +9,7 @@ import com.dq.aquaranth.emp.dto.EmpDTO;
 import com.dq.aquaranth.emp.mapper.EmpMapper;
 import com.dq.aquaranth.login.domain.CustomUser;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -23,7 +24,7 @@ import static com.dq.aquaranth.login.jwt.JwtProperties.*;
 @Service
 @RequiredArgsConstructor
 @Transactional
-@Slf4j
+@Log4j2
 public class UserService implements UserDetailsService {
     private final EmpMapper empMapper;
     private final JWTUtil jwtUtil;
