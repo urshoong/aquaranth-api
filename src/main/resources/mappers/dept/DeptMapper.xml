@@ -110,4 +110,8 @@
         select last_insert_id()
     </select>
 
+    <select id="findByCompanyNo" resultType="com.dq.aquaranth.dept.dto.DepartmentDTO">
+        SELECT * FROM tbl_dept WHERE company_no = #{companyNo};
+    </select>
+
 </mapper>

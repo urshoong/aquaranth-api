@@ -1,38 +1,98 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE mapper
-        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.dq.aquaranth.emp.mapper.EmpMapper">
 
-    <select id="empFindAll" resultType="com.dq.aquaranth.emp.dto.EmpDTO">
-        SELECT * FROM emp WHERE emp_no > 0
+    <select id="findAll" resultType="com.dq.aquaranth.emp.dto.EmpDTO">
+        SELECT * FROM tbl_emp WHERE emp_no > 0
     </select>
 
-    <select id="empFindById" resultType="com.dq.aquaranth.emp.dto.EmpDTO">
-        SELECT * FROM emp WHERE emp_no = #{empNo}
+    <select id="findById" resultType="com.dq.aquaranth.emp.dto.EmpDTO">
+        SELECT *
+        FROM tbl_emp
+        WHERE emp_no = #{empNo}
     </select>
 
-    <insert id="empInsert" parameterType="com.dq.aquaranth.emp.dto.EmpDTO">
-        INSERT INTO emp (emp_name, username, password, gender, emp_phone, emp_address, emp_profile, email
-        ,last_login_time, last_login_ip , last_retiredate)
-        VALUES (#{empName}, #{username}, #{password}, #{gender}, #{empPhone}, #{empAddress}, #{empProfile}, #{email}
-        ,#{lastLoginTime}, #{lastLoginIp} , #{lastRetiredate})
+    <select id="orgaFindById" resultType="com.dq.aquaranth.emp.dto.EmpSelectOrga">
+        SELECT tc.company_name, td.dept_name, tem.emp_rank, tem.emp_no,
+            tem.hired_date, tem.reg_date, tc.company_tel, tc.company_address,
+               tdm.dept_main, tem.emp_role, tor.orga_no, tc.company_no
+        FROM tbl_emp
+            LEFT JOIN tbl_emp_mapping tem on tbl_emp.emp_no = tem.emp_no
+            LEFT JOIN tbl_orga tor on tor.orga_no = tem.orga_no
+            LEFT JOIN tbl_dept_mapping tdm on tor.upper_orga_no = tdm.orga_no
+            LEFT JOIN tbl_dept td on td.dept_no = tdm.dept_no
+            LEFT JOIN tbl_company tc on td.company_no = tc.company_no
+        WHERE tbl_emp.emp_no = #{empNo}
+    </select>
+
+    <insert id="insert" parameterType="com.dq.aquaranth.emp.dto.EmpDTO">
+        INSERT INTO tbl_emp (
+            emp_name, username, password, gender,
+            emp_phone, emp_address, email,
+            first_hired_date, reg_user
+        )
+        VALUES (
+            #{empName}, #{username}, #{password}, #{gender},
+            #{empPhone}, #{empAddress}, #{email},
+            #{firstHiredDate}, #{regUser}
+        )
+        <selectKey keyProperty="empNo" resultType="long" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
     </insert>
 
-    <update id="empUpdate" parameterType="com.dq.aquaranth.emp.dto.EmpUpdateDTO">
-        UPDATE emp SET emp_name = #{empName}, password = #{password}, gender = #{gender}
-        ,emp_phone = #{empPhone}, emp_address = #{empAddress}, emp_profile = #{empProfile}
-        ,email = #{email}, last_retiredate = #{lastRetiredate}
+    <insert id="orgaInsert" parameterType="com.dq.aquaranth.emp.dto.EmpOrgaDTO">
+        INSERT INTO tbl_orga (
+            upper_orga_no, orga_type, reg_user
+        )
+        VALUES (
+            (
+                SELECT tbl_dept_mapping.orga_no
+                FROM tbl_dept_mapping
+                JOIN tbl_dept td ON td.dept_no = tbl_dept_mapping.dept_no
+                WHERE td.dept_no = #{deptNo}
+            ),
+            'emp', #{regUser}
+        )
+        <selectKey keyProperty="orgaNo" resultType="long" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+    </insert>
+
+<!--    update password 빼놓음-->
+    <update id="update" parameterType="com.dq.aquaranth.emp.dto.EmpUpdateDTO">
+        UPDATE tbl_emp SET
+           emp_name = #{empName}, gender = #{gender} , email = #{email},
+           emp_phone = #{empPhone}, emp_address = #{empAddress}, mod_date = now(),
+           mod_user = #{modUser}, last_retired_date = #{lastRetiredDate},
+           last_login_ip = #{lastLoginIp},
+           emp_use = if(last_retired_date IS NOT NULL, false, true)
         WHERE emp_no = #{empNo}
     </update>
 
-    <delete id="empDeleteById" parameterType="long">
-        DELETE FROM emp WHERE emp_no = #{empNo};
-    </delete>
+    <update id="orgaUpdate" parameterType="com.dq.aquaranth.emp.dto.EmpOrgaUpdateDTO">
+        UPDATE tbl_emp_mapping e
+            join tbl_orga t on t.orga_no = e.orga_no
+            SET
+            e.emp_rank = #{empRank}, e.emp_role = #{empRole},
+            t.upper_orga_no = (SELECT tbl_dept_mapping.orga_no
+                                FROM tbl_dept_mapping
+                                JOIN tbl_dept td ON td.dept_no = tbl_dept_mapping.dept_no
+                                WHERE td.dept_no = #{deptNo}),
+            e.mod_date = now(), e.mod_user = #{modUser},
+            t.mod_date = now(), t.mod_user = #{modUser}
+        where e.orga_no = #{orgaNo};
+    </update>
 
-    <select id="empCountAll" resultType="long">
-        SELECT COUNT(emp_name) FROM emp WHERE emp_no > 0;
+
+    <select id="findByUsername" resultType="com.dq.aquaranth.emp.dto.EmpDTO">
+        SELECT *
+        FROM tbl_emp
+        WHERE username = #{username}
     </select>
+
+
 
 </mapper>

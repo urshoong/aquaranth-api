@@ -1,8 +1,8 @@
 package com.dq.aquaranth.emp;
 
-import com.dq.aquaranth.emp.dto.EmpDTO;
-import com.dq.aquaranth.emp.dto.EmpUpdateDTO;
+import com.dq.aquaranth.emp.dto.*;
 import com.dq.aquaranth.emp.mapper.EmpMapper;
+import com.dq.aquaranth.emp.mapper.EmpMappingMapper;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,15 +18,21 @@ public class EmpMapperTests {
 
     @Autowired(required = false)
     EmpMapper empMapper;
+    EmpMappingMapper empMappingMapper;
 
     @Test
     void empFindAllTest(){
-        log.info(empMapper.empFindAll());
+        log.info(empMapper.findAll());
     }
 
     @Test
     void empFindByIdTest(){
-        log.info(empMapper.empFindById(1L));
+        log.info(empMapper.findById(1L));
+    }
+
+    @Test
+    void empOrgaFindByIdTest() {
+        log.info(empMapper.orgaFindById(1L));
     }
 
     @Test
@@ -40,37 +46,66 @@ public class EmpMapperTests {
                 .empAddress("경주시 경주월드")
                 .empProfile("profileYul")
                 .email("user08@naver.com")
-                .lastLoginTime(now())
-                .lastLoginIp("192.168.500.8")
-                .lastRetiredate(null)
                 .build();
-        log.info(empMapper.empInsert(empDTO));
+        log.info(empMapper.insert(empDTO));
+    }
+
+    @Test
+    void empOrgaInsertTest(){
+        EmpOrgaDTO empOrgaInsertDTO = EmpOrgaDTO
+                .builder()
+                .deptNo(5L)
+                .build();
+
+        empMapper.orgaInsert(empOrgaInsertDTO);
+    }
+
+    @Test
+    void empMappingInsertTest(){
+        EmpMappingDTO empMappingDTO = EmpMappingDTO
+                .builder()
+                .orgaNo(24L)
+                .empNo(1L)
+                .empRank("사원")
+                .build();
+
+        empMappingMapper.empMappingInsert(empMappingDTO);
     }
 
     @Test
     void empUpdateTest(){
         EmpUpdateDTO empUpdateDTO = EmpUpdateDTO.builder()
                 .empName("정수정")
-                .password("gi")
                 .gender("여성")
                 .empPhone("01011111111")
                 .empAddress("수정시 수정구")
                 .empProfile("profileUpdate")
                 .email("userUpdate01@naver.com")
-                .lastRetiredate(LocalDate.now())
+                .lastRetiredDate(LocalDate.now())
                 .empNo(22L)
                 .build();
 
-        log.info(empMapper.empUpdate(empUpdateDTO));
+        log.info(empMapper.update(empUpdateDTO));
     }
+
+    @Test
+    void orgaUpdateTest() {
+        EmpOrgaUpdateDTO empOrgaUpdateDTO =
+                EmpOrgaUpdateDTO.builder()
+                        .empRank("인턴")
+                        .empRole("ROLE_USER")
+                        .deptNo(1L)
+                        .modUser("mapperTest")
+                        .orgaNo(40L)
+                        .build();
+
+        empMapper.orgaUpdate(empOrgaUpdateDTO);
+    }
+
 
     @Test
     void empDeleteByIdTest() {
-        log.info(empMapper.empDeleteById(11L));
+        log.info(empMapper.deleteById(11L));
     }
 
-    @Test
-    void empCountAll(){
-        log.info(empMapper.empCountAll());
-    }
 }

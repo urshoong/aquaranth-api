@@ -1,20 +1,29 @@
 package com.dq.aquaranth.company.service;
 
-import com.dq.aquaranth.company.dto.*;
+import com.dq.aquaranth.company.dto.CompanyDTO;
+import com.dq.aquaranth.company.dto.CompanyListDTO;
+import com.dq.aquaranth.company.dto.CompanyModifyDTO;
+import com.dq.aquaranth.company.dto.CompanyOrgaDTO;
 import com.dq.aquaranth.company.mapper.CompanyMapper;
+import com.dq.aquaranth.dept.service.DeptService2;
+import com.dq.aquaranth.emp.service.EmpService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 @Log4j2
-public class CompanyServiceImpl implements CompanyService{
+public class CompanyServiceImpl implements CompanyService {
 
     private final CompanyMapper companyMapper;
+    private final DeptService2 deptService;
+    private final EmpService empService;
 
     @Override
     public List<CompanyListDTO> findAll() {
@@ -24,7 +33,7 @@ public class CompanyServiceImpl implements CompanyService{
 
     @Override
     public CompanyDTO findById(Long companyNo) {
-        log.info("회사 기본정보 출력");
+        log.info("회사 기본 정보 출력");
         return companyMapper.findById(companyNo);
     }
 
@@ -35,17 +44,21 @@ public class CompanyServiceImpl implements CompanyService{
         CompanyOrgaDTO companyOrgaDTO = CompanyOrgaDTO
                 .builder()
                 .orgaType("company")
+                .regUser("admin")
                 .build();
         companyMapper.insertOrga(companyOrgaDTO);
         log.info(companyOrgaDTO.getOrgaNo());
-        log.info("회사 기본정보 추가");
+
+        log.info("회사 기본 정보 추가");
         companyDTO.setOrgaNo(companyOrgaDTO.getOrgaNo());
+
+
         return companyMapper.insert(companyDTO);
     }
 
     @Override
     public Long update(CompanyModifyDTO companyModifyDTO) {
-        log.info("회사 기본정보 수정");
+        log.info("회사 기본 정보 수정");
         return companyMapper.update(companyModifyDTO);
     }
 

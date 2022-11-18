@@ -1,4 +1,5 @@
 package com.dq.aquaranth.company.mapper;
+
 import com.dq.aquaranth.company.dto.*;
 
 import java.util.List;
@@ -11,17 +12,22 @@ public interface CompanyMapper {
     List<CompanyListDTO> findAll();
 
     /**
-     * 회사 기본정보 출력
+     * 회사 기본 정보 출력
      */
     CompanyDTO findById(Long companyNo);
 
     /**
-     * 회사 기본정보 추가
+     * 조직에 회사 정보 추가
+     */
+    Long insertOrga(CompanyOrgaDTO companyOrgaDTO);
+
+    /**
+     * 회사 기본 정보 추가
      */
     Long insert(CompanyDTO companyDTO);
 
     /**
-     * 회사 기본정보 수정
+     * 회사 기본 정보 수정
      */
     Long update(CompanyModifyDTO companyModifyDTO);
 
@@ -29,10 +35,15 @@ public interface CompanyMapper {
      * 회사 정보 삭제
      */
     Long deleteById(Long companyNo);
+
     /**
      * 회사 코드, 회사명, 사용여부로 검색
      */
     List<CompanyListDTO> search(Boolean companyUse, String companySearch);
 
-    Long insertOrga(CompanyOrgaDTO companyOrgaDTO);
+    /**
+     * 사용자 아이디에 맞는 회사 정보 출력
+     */
+    CompanyDTO findByUsername(String username);
+
 }

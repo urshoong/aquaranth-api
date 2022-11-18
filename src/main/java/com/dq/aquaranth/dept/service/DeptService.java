@@ -1,5 +1,6 @@
 package com.dq.aquaranth.dept.service;
 
+import com.dq.aquaranth.dept.dto.DepartmentDTO;
 import com.dq.aquaranth.dept.dto.DeptDTO;
 import com.dq.aquaranth.dept.dto.DeptTreeDTO;
 import com.dq.aquaranth.dept.mapper.DeptMapper;
@@ -153,11 +154,15 @@ public class DeptService {
         return deptMapper.getFromParent(upperDeptNo, depth);
     }
 
-
     public List<DeptTreeDTO> getTree(Long company){
 
         return deptMapper.getTree(company);
     }
 
 
+    // 회사 번호로 부서 목록 조회
+    public List<DepartmentDTO> findByCompanyNo(Long companyNo)
+    {
+        return deptMapper.findByCompanyNo(companyNo);
+    }
 }

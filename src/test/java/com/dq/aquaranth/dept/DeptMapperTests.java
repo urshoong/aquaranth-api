@@ -240,6 +240,8 @@ public class DeptMapperTests {
 
 
 
-
+    public void findByCompanyNoTest(){
+        log.info(deptMapper.findByCompanyNo(1L));
+    }
 
 }

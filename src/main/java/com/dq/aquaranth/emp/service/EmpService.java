@@ -1,18 +1,27 @@
 package com.dq.aquaranth.emp.service;
 
-import com.dq.aquaranth.emp.dto.EmpDTO;
-import com.dq.aquaranth.emp.dto.EmpUpdateDTO;
+import com.dq.aquaranth.emp.dto.*;
+import com.dq.aquaranth.emp.mapper.EmpMappingMapper;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.List;
 
 public interface EmpService {
-    List<EmpDTO> empList();
+    List<EmpDTO> findAll();
 
-    EmpDTO empRead(Long empNo);
+    EmpDTO findById(Long empNo);
 
-    Long empRegister(EmpDTO empInsertDTO);
+    Long update(EmpUpdateDTO empUpdateDTO);
 
-    Long empModify(EmpUpdateDTO empUpdateDTO);
+    Long orgaUpdate(EmpOrgaUpdateDTO empOrgaUpdateDTO);
 
-    Long empRemove(Long empNo);
+
+    EmpDTO insert(EmpOrgaDTO orgaReqDTO, EmpDTO reqDTO, EmpMappingDTO mapperReqDTO) throws IllegalAccessException;
+
+    // 사원의 조직 정보 추가
+    Long empOrgaInsert(EmpOrgaDTO orgaReqDTO, EmpMappingDTO mapperReqDTO, Long empNo);
+
+    List<EmpSelectOrga> findAllOrga(Long empNo);
 }

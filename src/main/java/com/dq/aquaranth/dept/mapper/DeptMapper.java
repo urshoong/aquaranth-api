@@ -1,5 +1,8 @@
 package com.dq.aquaranth.dept.mapper;
 
+
+import com.dq.aquaranth.dept.dto.DepartmentDTO;
+import com.dq.aquaranth.dept.dto.DeptCriteria;
 import com.dq.aquaranth.dept.dto.DeptDTO;
 import com.dq.aquaranth.dept.dto.DeptTreeDTO;
 import org.apache.ibatis.annotations.Param;
@@ -39,4 +42,13 @@ public interface DeptMapper {
 
     void insertOrgaMapping(@Param("deptNo") Long deptNo, @Param("orgaNo") Long orgaNo, @Param("regUser") String regUser );
 
+
+    List<DeptDTO> deptList();
+
+    /**
+     * 선택한 회사의 부서 목록을 조회합니다.
+     *
+     * @param companyNo : 선택된 회사 번호
+     */
+    List<DepartmentDTO> findByCompanyNo(Long companyNo);
 }
