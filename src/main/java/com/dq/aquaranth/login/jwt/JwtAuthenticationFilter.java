@@ -88,7 +88,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                 .registerModule(new JavaTimeModule())
                 .writeValueAsString(RedisDTO.builder()
                         .company(customUser.getCompanyDTO())
-                        .dept(customUser.getDeptDTO2())
+                        .dept(customUser.getDeptDTO())
                         .emp(customUser.getEmpDTO())
                         .menuList(customUser.getMenuList())
                         .build());

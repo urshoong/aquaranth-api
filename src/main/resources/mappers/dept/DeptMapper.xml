@@ -114,4 +114,8 @@
         SELECT * FROM tbl_dept WHERE company_no = #{companyNo};
     </select>
 
+    <select id="findByUsername" resultType="com.dq.aquaranth.dept.dto.DeptDTO">
+
+    </select>
+
 </mapper>

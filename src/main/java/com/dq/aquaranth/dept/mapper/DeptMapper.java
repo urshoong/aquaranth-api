@@ -43,7 +43,7 @@ public interface DeptMapper {
     void insertOrgaMapping(@Param("deptNo") Long deptNo, @Param("orgaNo") Long orgaNo, @Param("regUser") String regUser );
 
 
-    List<DeptDTO> deptList();
+//    List<DeptDTO> deptList();
 
     /**
      * 선택한 회사의 부서 목록을 조회합니다.
@@ -51,4 +51,6 @@ public interface DeptMapper {
      * @param companyNo : 선택된 회사 번호
      */
     List<DepartmentDTO> findByCompanyNo(Long companyNo);
+
+    DeptDTO findByUsername(String username);
 }
