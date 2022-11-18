@@ -64,6 +64,6 @@ public class RoleGroupApiController {
 
     @DeleteMapping("/{roleGroupNo}")
     public void remove(@PathVariable Long roleGroupNo) {
-        roleGroupService.deleteById(roleGroupNo);
+        roleGroupService.hideById(roleGroupNo);
     }
 }

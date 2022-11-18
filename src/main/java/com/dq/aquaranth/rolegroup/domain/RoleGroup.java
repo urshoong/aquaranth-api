@@ -13,7 +13,6 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RoleGroup {
-    @Id
     private Long roleGroupNo;
     private String roleGroupName;
     private boolean roleGroupUse;

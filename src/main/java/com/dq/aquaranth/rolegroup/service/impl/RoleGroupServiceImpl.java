@@ -63,4 +63,19 @@ public class RoleGroupServiceImpl implements RoleGroupService {
         roleGroupMapper.deleteById(roleGroupNo);
         log.info("권한그룹을 삭제가 완료되었습니다.");
     }
+
+    @Override
+    public void hideById(Long roleGroupNo) {
+        log.info("{} 번째 권한그룹을 숨김처리 합니다.", roleGroupNo);
+
+        RoleGroup findDTO = roleGroupMapper.findById(roleGroupNo);
+
+        if (Objects.isNull(findDTO)) {
+            log.error("숨김처리 하려는 권한그룹은 존재하지 않습니다");
+            throw new RuntimeException("숨김처리 하려는 권한그룹은 존재하지 않습니다");
+        }
+
+        roleGroupMapper.hideById(roleGroupNo);
+        log.info("{}번 권한그룹이 숨김처리 되었습니다.", findDTO.getRoleGroupNo());
+    }
 }
