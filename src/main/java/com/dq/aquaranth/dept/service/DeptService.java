@@ -1,6 +1,7 @@
 package com.dq.aquaranth.dept.service;
 
 import com.dq.aquaranth.dept.dto.DeptDTO;
+import com.dq.aquaranth.dept.dto.DeptTreeDTO;
 import com.dq.aquaranth.dept.mapper.DeptMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -32,36 +33,76 @@ public class DeptService {
     @Transactional
     public Map<Object, Object> register(DeptDTO deptDTO2) {
 
+        Long orga = null;
+
+        if(deptDTO2.getUpperDeptNo() == null){
+            deptMapper.insertOrga(Long.valueOf(deptDTO2.getCompanyNo()), deptDTO2.getRegUser());
+        }else {
+            deptMapper.insertOrga(Long.valueOf(deptDTO2.getUpperDeptNo()), deptDTO2.getRegUser());
+        }
+
+        orga = deptMapper.getLast();
+
+        log.info("----------------------------------");
+        log.info("orga: " + orga);
+        log.info("----------------------------------");
 
         deptMapper.insert(deptDTO2);
 
+        log.info("================================================");
+        log.info(deptDTO2);
+
         Long newDeptNo = deptDTO2.getDeptNo();
+        //1. 직접 부서 추가하고 추가한 데이터의 deptNo를 초기화
 
-        int gno = deptDTO2.getGno();
+        log.info("newDeptNo " + newDeptNo);
 
-        Long parent = deptDTO2.getUpperDeptNo();
+        log.info("--------------------------------------------------------1");
 
-        int ord = deptMapper.getNextOrd(gno, parent);
+        log.info("orga_dept_mapping");
 
+        deptMapper.insertOrgaMapping(newDeptNo, orga, deptDTO2.getRegUser());
 
-        Long deptNo = newDeptNo;
-        Long lastDno = deptNo;        // deptDTO2.getDeptNo();
-        Long parentDeptNo = parent;   // deptDTO2.getUpperDeptNo();
+        int company = deptDTO2.getCompanyNo(); // 그룹번호를 가져와서  gno에 초기화
+        Long parent = deptDTO2.getUpperDeptNo(); // 상위부서번호를 가져와서 parent에 초기화
 
-        deptMapper.arrangeOrd(gno, ord);
+        int ord = deptMapper.getNextOrd(company, parent);
+        //2. gno와 parent 이용해서 나온 ord값 -> ord에 초기화
 
-        deptMapper.fixOrd(deptNo, ord);
+        log.info("ORD " + ord);
+
+        log.info("--------------------------------------------------------2");
+
+        deptMapper.arrangeOrd(company, ord);
+        //3. gno가 같은 부서 중에 위에 나온 ord값보다 크거나 같은 ord 모두 +1씩 추가
+
+        log.info("--------------------------------------------------------3");
+
+        Long deptNo = newDeptNo; // 새로운 deptNo -> deptNo에 초기화
+
+        deptMapper.fixOrd(deptNo,ord);
+        //4. 직접 추가한 부서에 2번에서 추출한 ord값 업데이트
+
+        log.info("--------------------------------------------------------4");
+
+        Long lastDno = deptNo;  // 추가한 부서의 deptNo를 lastDno에 초기화
+        Long parentDeptNo = parent; // 추가한 부서의 상위부서번호를 parentDeptNo에 초기화
 
         deptMapper.updateLastDno(parentDeptNo, lastDno);
+        //5. deptNo가 상위부서번호와 일치하는 곳의 lastDno에 추가한 deptNo번호 업데이트
+
+        log.info("--------------------------------------------------------5");
+
 
         return Map.of(
                 "newDeptNo", newDeptNo,
-                "newGno", gno,
+                "newGno", company,
                 "newParent", parent,
                 "ord", ord,
                 "lastDno", lastDno,
                 "parentDeptNo", parentDeptNo
         );
+//        return null;
     }
 
 //    public Map<Object, Object> register(DeptDTO2 deptDTO2) {
@@ -113,6 +154,10 @@ public class DeptService {
     }
 
 
+    public List<DeptTreeDTO> getTree(Long company){
+
+        return deptMapper.getTree(company);
+    }
 
 
 }

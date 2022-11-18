@@ -7,6 +7,8 @@ import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Rollback;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -28,10 +30,10 @@ public class DeptMapperTests {
         DeptDTO deptDTO2 = DeptDTO
                 .builder()
                 .upperDeptNo(2L)
-                .dname("개발 5팀")
-                .ddesc("개발 5팀")
-                .mainflag(false)
-                .delflag(true)
+                .deptName("개발 5팀")
+                .deptDesc("개발 5팀")
+                .mainFlag(false)
+                .delFlag(true)
                 .build();
 
         int result = deptMapper.insert(deptDTO2);
@@ -52,11 +54,11 @@ public class DeptMapperTests {
                 .builder()
                 .deptNo(23L)
                 .upperDeptNo(2L)
-                .dname("철강 1팀 업데이트")
-                .delflag(false)
-                .mainflag(false)
+                .deptName("철강 1팀 업데이트")
+                .delFlag(false)
+                .mainFlag(false)
                 .deptSort(1)
-                .ddesc("철강 1팀 업데이트")
+                .deptDesc("철강 1팀 업데이트")
                 .build();
 
         int result = deptMapper.update(deptDTO2);
@@ -74,16 +76,34 @@ public class DeptMapperTests {
     }
 
     @Test
+    //@Transactional(rollbackFor = RuntimeException.class)
     public void testInsert2() {
 
         DeptDTO deptDTO2 = DeptDTO.builder()
-                .dname("관리2팀")
-                .ddesc("관리2팀")
+                .deptName("개발1-1팀")
+                .deptDesc("개발1-1팀")
                 .deptSort(1)
-                .upperDeptNo(2L)
-                .gno(1)
-                .depth(2)
+                .regUser("admin")
+                .upperDeptNo(6L)
+                .companyNo(1)
+                .depth(3)
                 .build();
+
+        Long orga = null;
+
+        if(deptDTO2.getUpperDeptNo() == null){
+            deptMapper.insertOrga(Long.valueOf(deptDTO2.getCompanyNo()), deptDTO2.getRegUser());
+        }else {
+            deptMapper.insertOrga(Long.valueOf(deptDTO2.getUpperDeptNo()), deptDTO2.getRegUser());
+        }
+
+        orga = deptMapper.getLast();
+
+        log.info("----------------------------------");
+        log.info("----------------------------------");
+        log.info("orga: " + orga);
+        log.info("----------------------------------");
+        log.info("----------------------------------");
 
         deptMapper.insert(deptDTO2);
 
@@ -94,12 +114,15 @@ public class DeptMapperTests {
 
         log.info("newDeptNo " + newDeptNo);
 
+        deptMapper.insertOrgaMapping(newDeptNo, orga, deptDTO2.getRegUser());
+
+
     }
 
     @Test
     public void testSub1() {
 
-        int ord = deptMapper.getNextOrd(1, 2L);
+        int ord = deptMapper.getNextOrd(1, 6L);
 
         log.info("ORD " + ord); //2
 
@@ -109,9 +132,9 @@ public class DeptMapperTests {
     public void testSub2() {
 
         int ord = 3;
-        int gno = 1;
+        int companyNo = 1;
 
-        deptMapper.arrangeOrd(gno, ord);
+        deptMapper.arrangeOrd(companyNo, ord);
 
 
     }
@@ -120,7 +143,7 @@ public class DeptMapperTests {
     public void testSub3() {
 
         int ord = 3;
-        Long deptNo = 5L;
+        Long deptNo = 22L;
 
         deptMapper.fixOrd(deptNo,ord);
 
@@ -131,8 +154,8 @@ public class DeptMapperTests {
 
         //#{lastDno} where deptNo = #{parentDeptNo}
 
-        Long lastDno = 5L;
-        Long parentDeptNo = 2L;
+        Long lastDno = 22L;
+        Long parentDeptNo = 6L;
 
         deptMapper.updateLastDno(parentDeptNo, lastDno);
 
@@ -142,13 +165,30 @@ public class DeptMapperTests {
     public void testInsertAll() {
 
         DeptDTO deptDTO2 = DeptDTO.builder()
-                .dname("개발1팀")
-                .ddesc("개발1팀")
+                .deptName("개발2-1팀")
+                .deptDesc("개발2-1팀")
+                .upperDeptNo(7L)
+                .companyNo(1)
+                .depth(3)
+                .regUser("admin")
+                .mainFlag(true)
+                .delFlag(true)
                 .deptSort(1)
-                .upperDeptNo(2L)
-                .gno(1)
-                .depth(2)
                 .build();
+
+        Long orga = null;
+
+        if(deptDTO2.getUpperDeptNo() == null){
+            deptMapper.insertOrga(Long.valueOf(deptDTO2.getCompanyNo()), deptDTO2.getRegUser());
+        }else {
+            deptMapper.insertOrga(Long.valueOf(deptDTO2.getUpperDeptNo()), deptDTO2.getRegUser());
+        }
+
+        orga = deptMapper.getLast();
+
+        log.info("----------------------------------");
+        log.info("orga: " + orga);
+        log.info("----------------------------------");
 
         deptMapper.insert(deptDTO2);
 
@@ -162,17 +202,21 @@ public class DeptMapperTests {
 
         log.info("--------------------------------------------------------1");
 
-        int gno = deptDTO2.getGno(); // 그룹번호를 가져와서  gno에 초기화
+        log.info("orga_dept_mapping");
+
+        deptMapper.insertOrgaMapping(newDeptNo, orga, deptDTO2.getRegUser());
+
+        int company = deptDTO2.getCompanyNo(); // 그룹번호를 가져와서  gno에 초기화
         Long parent = deptDTO2.getUpperDeptNo(); // 상위부서번호를 가져와서 parent에 초기화
 
-        int ord = deptMapper.getNextOrd(deptDTO2.getGno(), deptDTO2.getUpperDeptNo());
+        int ord = deptMapper.getNextOrd(company, parent);
         //2. gno와 parent 이용해서 나온 ord값 -> ord에 초기화
 
         log.info("ORD " + ord);
 
         log.info("--------------------------------------------------------2");
 
-        deptMapper.arrangeOrd(gno, ord);
+        deptMapper.arrangeOrd(company, ord);
         //3. gno가 같은 부서 중에 위에 나온 ord값보다 크거나 같은 ord 모두 +1씩 추가
 
         log.info("--------------------------------------------------------3");
@@ -193,6 +237,8 @@ public class DeptMapperTests {
         log.info("--------------------------------------------------------5");
 
     }
+
+
 
 
 

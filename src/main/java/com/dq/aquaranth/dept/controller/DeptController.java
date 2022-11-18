@@ -2,6 +2,7 @@ package com.dq.aquaranth.dept.controller;
 
 import com.dq.aquaranth.dept.dto.DeptCriteria;
 import com.dq.aquaranth.dept.dto.DeptDTO;
+import com.dq.aquaranth.dept.dto.DeptTreeDTO;
 import com.dq.aquaranth.dept.service.DeptService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -19,10 +20,10 @@ public class DeptController {
     private final DeptService deptService;
 
     //조회
-    @GetMapping("/{deptNo}")
-    public DeptDTO getOne(@PathVariable("deptNo") Long deptNo){
+    @GetMapping("/{dept_no}")
+    public DeptDTO getOne(@PathVariable("dept_no") Long dept_no){
 
-        DeptDTO result = deptService.getOne(deptNo);
+        DeptDTO result = deptService.getOne(dept_no);
 
         return result;
 
@@ -51,16 +52,16 @@ public class DeptController {
 //    }
 
     //삭제
-    @DeleteMapping("/{deptNo}")
-    public Map<Object, Object> remove(@PathVariable("deptNo") Long deptNo) {
-        Long result =  deptService.remove(deptNo);
+    @DeleteMapping("/{dept_no}")
+    public Map<Object, Object> remove(@PathVariable("dept_no") Long dept_no) {
+        Long result =  deptService.remove(dept_no);
 
         return Map.of("result", "success");
     }
 
     //수정
-    @PutMapping("/{deptNo}")
-    public DeptDTO modify(@PathVariable("deptNo") Long deptNo , @RequestBody DeptDTO deptDTO) {
+    @PutMapping("/{dept_no}")
+    public DeptDTO modify(@PathVariable("dept_no") Long dept_no , @RequestBody DeptDTO deptDTO) {
         DeptDTO modifyDTO = deptService.modify(deptDTO);
 
         log.info("modifyDTO : " + modifyDTO);
@@ -79,11 +80,18 @@ public class DeptController {
 
         return deptService.listDept(gno);
     }
-    //에로사항 : /api/dept2/{gno} 는 /api/dept2/{deptNo}와 곂쳐서 에러 뜸 => 앞에 list붙여서 출력함
+    //에로사항 : /api/dept2/{gno} 는 /api/dept2/{dept_no}와 곂쳐서 에러 뜸 => 앞에 list붙여서 출력함
 
-    @GetMapping("/list/{uppperDeptNo}/{depth}")
-    public List<DeptDTO> listDept2 (@PathVariable("uppperDeptNo") Long uppperDeptNo, @PathVariable("depth") int depth) {
+    @GetMapping("/list/{upper_dept_no}/{depth}")
+    public List<DeptDTO> listDept2 (@PathVariable("upper_dept_no") Long upper_dept_no, @PathVariable("depth") int depth) {
 
-        return deptService.listDepth(uppperDeptNo, depth);
+        return deptService.listDepth(upper_dept_no, depth);
     }
+
+    @GetMapping("/tree/{companyCode}")
+    public List<DeptTreeDTO> listTree(@PathVariable("companyCode") Long companyCode ){
+
+        return deptService.getTree(companyCode);
+    }
+
 }

@@ -8,7 +8,7 @@
 
 <!--    1개 조회-->
     <select id="select" resultType="com.dq.aquaranth.dept.dto.DeptDTO">
-        select * from tbl_dept where deptNo = #{deptNo}
+        select * from tbl_dept where dept_no = #{dept_no}
     </select>
 
 
@@ -19,35 +19,35 @@
         <selectKey keyProperty="deptNo" order="AFTER" resultType="long">
             SELECT LAST_INSERT_ID()
         </selectKey>
-        insert into  tbl_dept (dname,delflag,mainflag,deptSort,ddesc, upperDeptNo, gno, depth)
-        values (#{dname}, #{delflag}, #{mainflag},#{deptSort}, #{ddesc}, #{upperDeptNo}, #{gno}, #{depth})
+        insert into  tbl_dept (upper_dept_no, company_no, dept_name, del_flag, main_flag, dept_desc,   depth, reg_user)
+        values (#{upperDeptNo}, #{companyNo}, #{deptName}, #{delFlag}, #{mainFlag}, #{deptDesc},  #{depth}, #{regUser})
     </insert>
 
 <!--    만든 함수를 이용해서 (상위부서 번호와 그룹번호를 사용)  ord값 조회-->
     <select id="getNextOrd" resultType="int">
-        select FN_GET_DEPT_ORD(#{parentDeptNo},#{gno})
+        select FN_GET_DEPT_ORD(#{parentDeptNo},#{company})
     </select>
 
-<!--    동일한 gno를 가지는 부서중에 조회한 ord값 보다 크거나 같은 모든 ord를 1씩 추가-->
+<!--    동일한 company를 가지는 부서중에 조회한 ord값 보다 크거나 같은 모든 ord를 1씩 추가-->
     <update id="arrangeOrd">
-        update tbl_dept set ord = ord + 1 where gno = #{gno} and ord >=  #{ord}
+        update tbl_dept set ord = ord + 1 where company_no = #{company} and ord >=  #{ord}
     </update>
 
 <!--    직접 추가한 부서에 위에서 조회한 ord값을 업데이트-->
     <update id="fixOrd">
-        update tbl_dept set ord = #{ord} where deptNo = #{deptNo}
+        update tbl_dept set ord = #{ord} where dept_no = #{deptNo}
     </update>
 
-<!--    추가한 부서의 deptNo를 상위 부서의 lastDno에 업데이트 -->
+<!--    추가한 부서의 dept_no를 상위 부서의 last_dno에 업데이트 -->
     <update id="updateLastDno">
-        update tbl_dept set lastDno = #{deptNo} where deptNo = #{parentDeptNo}
+        update tbl_dept set last_dno = #{deptNo} where dept_no = #{parentDeptNo}
     </update>
 
 
 
 <!--    삭제-->
     <delete id="delete">
-        delete from tbl_dept where deptNo = #{deptNo}
+        delete from tbl_dept where dept_no = #{dept_no}
     </delete>
 
 
@@ -55,20 +55,20 @@
     <update id="update">
             update tbl_dept
             set
-            upperDeptNo = #{upperDeptNo},
-            dname = #{dname},
-            delflag = #{delflag},
-            mainflag = #{mainflag},
+            upper_dept_no = #{upper_dept_no},
+            dept_name = #{dept_name},
+            del_flag = #{del_flag},
+            main_flag = #{main_flag},
             deptSort = #{deptSort},
-            ddesc = #{ddesc},
-            updatedate = now()
-            where deptNo = #{deptNo}
+            dept_desc = #{dept_desc},
+            mod_date = now()
+            where dept_no = #{dept_no}
     </update>
 
 
 <!--    전체 리스트 조회-->
     <select id="getList" resultType="com.dq.aquaranth.dept.dto.DeptDTO">
-        select * from tbl_dept order by deptNo asc limit #{skip}, #{size}
+        select * from tbl_dept order by dept_no asc limit #{skip}, #{size}
     </select>
 
 
@@ -83,7 +83,31 @@
     <select id="getFromParent" resultType="com.dq.aquaranth.dept.dto.DeptDTO">
         select *
         from tbl_dept
-        where (upperDeptNo = #{upperDeptNo} OR upperDeptNo is null )and depth = #{depth}
+        where (upper_dept_no = #{upperDeptNo} OR upper_dept_no is null )and depth = #{depth}
+    </select>
+
+
+    <select id="getTree" resultType="com.dq.aquaranth.dept.dto.DeptTreeDTO">
+        select
+        dept_no, orga_no, dept_name, upper_dept_no, ord, depth, company_no, last_dno
+        from
+        v_dept_tree
+
+        where company_no = #{company} order by ord
+    </select>
+
+    <insert id="insertOrga">
+        insert into tbl_orga (upper_orga_no, orga_type, reg_user)
+        values (#{orga}, 'dept' , #{regUser})
+    </insert>
+
+    <insert id="insertOrgaMapping">
+        insert into tbl_dept_mapping (dept_no, orga_no, dept_main, reg_user)
+        values (#{deptNo}, #{orgaNo}, '0', #{regUser})
+    </insert>
+
+    <select id="getLast" resultType="Long">
+        select last_insert_id()
     </select>
 
 </mapper>
