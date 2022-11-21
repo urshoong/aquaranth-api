@@ -1,5 +1,6 @@
 package com.dq.aquaranth.menu.mapper;
 
+import com.dq.aquaranth.menu.dto.request.MenuInsertDTO;
 import com.dq.aquaranth.menu.dto.request.MenuUpdateDTO;
 import com.dq.aquaranth.menu.dto.response.MenuResponseDTO;
 import lombok.extern.log4j.Log4j2;
@@ -62,12 +63,12 @@ class MenuMapperTest {
         assertThat(Objects.requireNonNull(expectedMenuResponseDto.orElseGet(() -> null)).getMenuName()).isEqualTo(menuName);
     }
 
-    @Test
-    @DisplayName(value = "URL 정보를 포함한 모든 메뉴를 조회합니다.")
-    void findAllMenuInformation() {
-        List<MenuResponseDTO> menuResponseDTOList = menuMapper.findAllMenuInformation();
-        assertThat(menuResponseDTOList.get(1).getUrl()).isNotNull();
-    }
+//    @Test
+//    @DisplayName(value = "URL 정보를 포함한 모든 메뉴를 조회합니다.")
+//    void findAllMenuInformation() {
+//        List<MenuResponseDTO> menuResponseDTOList = menuMapper.findAllMenuInformation();
+//        assertThat(menuResponseDTOList.get(1).getUrl()).isNotNull();
+//    }
 
     @Test
     @DisplayName(value = "상위메뉴번호가 없는 메뉴(GNB)를 조회합니다.")
@@ -91,6 +92,24 @@ class MenuMapperTest {
         String menuCode = SYS.getCode();
         List<MenuResponseDTO> menuResponseDTOList = menuMapper.findByMenuCodeUnderRecursive(menuCode);
         assertThat(menuResponseDTOList).extracting("menuCode").contains(ORGA0030.getCode());
+    }
+
+    @Test
+    @DisplayName(value = "메뉴 추가")
+    void insert() {
+        MenuInsertDTO menuInsertDTO = MenuInsertDTO.builder()
+                .upperMenuNo(1L)
+                .menuName("급여 관리")
+                .mainFlag(true)
+                .menuCode("ORGA0040")
+                .menuPath("/SYS/ORGA/ORGA0040")
+                .menuOrder(99L)
+                .uuid("")
+                .filename("")
+                .regUser("admin")
+                .build();
+        menuMapper.insert(menuInsertDTO);
+        log.info(menuInsertDTO);
     }
 
 // TODO : MyBaits OGNL을 이용한 동적 쿼리 작성 # 25

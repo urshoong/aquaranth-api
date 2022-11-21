@@ -1,4 +1,4 @@
-package com.dq.aquaranth.menu.dto.response;
+package com.dq.aquaranth.menu.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,20 +11,19 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class MenuResponseDTO {
+public class MenuInsertDTO {
     private Long menuNo;
     private Long upperMenuNo;
     private String menuName;
     private boolean mainFlag;
     private String menuCode;
-    private boolean deleteFlag;
     private String menuPath;
     private boolean menuRequired;
     private boolean menuAdmin;
     private Long menuOrder;
     private String menuDefault;
     private String uuid;
-    private String fileName;
+    private String filename;
     private String regUser;
     private LocalDateTime regDate;
     private String modUser;

@@ -2,6 +2,7 @@ package com.dq.aquaranth.menu.controller;
 
 
 import com.dq.aquaranth.menu.constant.ErrorCode;
+import com.dq.aquaranth.menu.dto.request.MenuInsertDTO;
 import com.dq.aquaranth.menu.dto.request.MenuUpdateDTO;
 import com.dq.aquaranth.menu.dto.response.MenuResponseDTO;
 import com.dq.aquaranth.menu.exception.MenuException;
@@ -12,6 +13,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
@@ -26,8 +28,8 @@ public class MenuApiController {
 
     @Operation(summary = "전체 메뉴 조회", description = "URL 정보를 포함한 모든 메뉴를 조회합니다.", responses = @ApiResponse(responseCode = "200", content = @Content(mediaType = "application/json")))
     @GetMapping
-    public List<MenuResponseDTO> findAllMenuInformation() {
-        return menuService.findAllMenuInformation();
+    public List<MenuResponseDTO> findAll() {
+        return menuService.findAll();
     }
 
     //    TODO : MyBaits OGNL을 이용한 동적 쿼리 작성 # 25
@@ -73,5 +75,10 @@ public class MenuApiController {
     @PutMapping("/update")
     public Optional<MenuResponseDTO> update(MenuUpdateDTO menuUpdateDTO) {
         return menuService.update(menuUpdateDTO);
+    }
+    @Operation(summary = "메뉴 추가", description = "메뉴를 추가합니다. 반환되는 정보는 추가된 메뉴의 정보입니다.", responses = @ApiResponse(responseCode = "200", content = @Content(mediaType = "application/json")))
+    @PutMapping("/insert")
+    public Optional<MenuResponseDTO> insert(MenuInsertDTO menuInsertDTO, @RequestParam("file")MultipartFile multipartFile) throws Exception {
+        return menuService.insert(menuInsertDTO, multipartFile);
     }
 }

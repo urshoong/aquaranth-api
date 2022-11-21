@@ -1,6 +1,7 @@
 package com.dq.aquaranth.rolegroup.mapper;
 
 import com.dq.aquaranth.rolegroup.domain.RoleGroup;
+import com.dq.aquaranth.rolegroup.dto.RoleGroupUpdateDTO;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

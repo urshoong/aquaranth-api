@@ -14,9 +14,7 @@ import java.util.UUID;
 public class MinioObjectStorageService implements ObjectStorageService {
     private final MinioAdaptor minioAdaptor;
     @Override
-    public ObjectResponseDTO postObject(MultipartFile multipartFile) throws Exception {
-        String uuid = UUID.randomUUID().toString();
-        String filename = uuid + "_" + multipartFile.getOriginalFilename();
+    public ObjectResponseDTO postObject(MultipartFile multipartFile, String filename) throws Exception {
         minioAdaptor.putObject(filename, multipartFile);
         return ObjectResponseDTO.builder()
                 .url(minioAdaptor.getPresignedObjectUrl(filename))

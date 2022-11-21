@@ -20,7 +20,7 @@ public class MenuUpdateDTO {
 
     @Builder.Default
     @NotBlank(message = "사용 여부는 반드시 체크되어야 합니다.")
-    private boolean menuUse = false;
+    private boolean mainFlag = false;
 
     @Builder.Default
     private Long menuOrder = 99L;

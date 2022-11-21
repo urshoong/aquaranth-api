@@ -1,5 +1,6 @@
 package com.dq.aquaranth.menu.service;
 
+import com.dq.aquaranth.menu.dto.request.MenuInsertDTO;
 import com.dq.aquaranth.menu.dto.request.MenuUpdateDTO;
 import com.dq.aquaranth.menu.dto.response.MenuResponseDTO;
 import lombok.extern.log4j.Log4j2;
@@ -67,12 +68,12 @@ class DefaultMenuServiceTest {
         assertThat(Objects.requireNonNull(expectedMenuResponseDto.orElseGet(() -> null)).getMenuName()).isEqualTo(menuName);
     }
 
-    @Test
-    @DisplayName(value = "URL 정보를 포함한 모든 메뉴를 조회합니다.")
-    void findAllMenuInformation() {
-        List<MenuResponseDTO> menuResponseDTOList = menuService.findAllMenuInformation();
-        Assertions.assertThat(menuResponseDTOList.get(1).getUrl()).isNotNull();
-    }
+//    @Test
+//    @DisplayName(value = "URL 정보를 포함한 모든 메뉴를 조회합니다.")
+//    void findAllMenuInformation() {
+//        List<MenuResponseDTO> menuResponseDTOList = menuService.findAllMenuInformation();
+//        Assertions.assertThat(menuResponseDTOList.get(1).getUrl()).isNotNull();
+//    }
 
     @Test
     @DisplayName(value = "상위메뉴번호가 없는 메뉴(GNB)를 조회합니다.")
@@ -97,6 +98,22 @@ class DefaultMenuServiceTest {
         List<MenuResponseDTO> menuResponseDTOList = menuService.findByMenuCodeUnderRecursive(menuCode);
         Assertions.assertThat(menuResponseDTOList).extracting("menuCode").contains(ORGA0030.getCode());
     }
+
+//    @Test
+//    void insert() {
+//        MenuInsertDTO menuInsertDTO = MenuInsertDTO.builder()
+//                .upperMenuNo(1L)
+//                .menuName("급여 관리")
+//                .mainFlag(true)
+//                .menuCode("ORGA0040")
+//                .menuPath("/SYS/ORGA/ORGA0040")
+//                .menuOrder(99L)
+//                .uuid("")
+//                .fileName("")
+//                .regUser("admin")
+//                .build();
+//        menuService.insert(menuInsertDTO);
+//    }
 
 //    @Test
 //    void findMenusByLoginUsername() {
