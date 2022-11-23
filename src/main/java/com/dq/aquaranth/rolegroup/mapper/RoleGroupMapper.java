@@ -38,4 +38,6 @@ public interface RoleGroupMapper {
      * @param roleGroupNo : 삭제할 권한그룹번호
      */
     void deleteById(Long roleGroupNo);
+
+    void hideById(Long roleGroupNo);
 }

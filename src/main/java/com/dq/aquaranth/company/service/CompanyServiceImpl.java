@@ -5,15 +5,13 @@ import com.dq.aquaranth.company.dto.CompanyListDTO;
 import com.dq.aquaranth.company.dto.CompanyModifyDTO;
 import com.dq.aquaranth.company.dto.CompanyOrgaDTO;
 import com.dq.aquaranth.company.mapper.CompanyMapper;
-import com.dq.aquaranth.dept.service.DeptService2;
+import com.dq.aquaranth.dept.service.DeptService;
 import com.dq.aquaranth.emp.service.EmpService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -22,8 +20,6 @@ import java.util.List;
 public class CompanyServiceImpl implements CompanyService {
 
     private final CompanyMapper companyMapper;
-    private final DeptService2 deptService;
-    private final EmpService empService;
 
     @Override
     public List<CompanyListDTO> findAll() {

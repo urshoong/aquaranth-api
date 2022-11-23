@@ -19,6 +19,12 @@
         where role_group_no = #{roleGroupNo}
     </update>
 
+    <update id="hideById">
+        update tbl_role_group
+        set role_group_use = false
+        where role_group_no = #{roleGroupNo}
+    </update>
+
     <delete id="deleteById" parameterType="long">
         delete
         from tbl_role_group
@@ -29,6 +35,7 @@
         select *
         from tbl_role_group
     </select>
+
     <select id="findById" resultType="com.dq.aquaranth.rolegroup.domain.RoleGroup" parameterType="long">
         select *
         from tbl_role_group
