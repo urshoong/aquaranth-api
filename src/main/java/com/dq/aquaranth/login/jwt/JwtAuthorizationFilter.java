@@ -7,9 +7,13 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import com.dq.aquaranth.commons.utils.JWTUtil;
 import com.dq.aquaranth.commons.utils.SendResponseUtils;
 import com.dq.aquaranth.login.domain.CustomUser;
+import com.dq.aquaranth.login.dto.RedisDTO;
 import com.dq.aquaranth.login.service.UserService;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -23,9 +27,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.concurrent.TimeUnit;
 
-import static com.dq.aquaranth.login.jwt.JwtProperties.SECRET;
-import static com.dq.aquaranth.login.jwt.JwtProperties.TOKEN_PREFIX;
+import static com.dq.aquaranth.login.jwt.JwtProperties.*;
+import static com.dq.aquaranth.login.jwt.JwtProperties.REFRESH_TOKEN_EXPIRATION_TIME;
 import static java.util.Arrays.stream;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpStatus.UNAUTHORIZED;
@@ -61,6 +66,15 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 //                    stream(roles).forEach(role -> authorities.add(new SimpleGrantedAuthority(role)));
 
                     CustomUser customUser = (CustomUser) userDetailsService.loadUserByUsername(username);
+                    ObjectMapper objectMapper = new ObjectMapper();
+                    String loginUserInfo = objectMapper
+                            .registerModule(new JavaTimeModule())
+                            .writeValueAsString(RedisDTO.builder()
+                                    .company(customUser.getCompanyDTO())
+                                    .dept(customUser.getDeptDTO())
+                                    .emp(customUser.getEmpDTO())
+                                    .menuList(customUser.getMenuList())
+                                    .build());
 
                     // 암호가 필요없는 이유는 token 검증을 끝마쳤기 때문에 이미 유효한 token 으로 인증이 된 사용자이다.
                     UsernamePasswordAuthenticationToken authenticationToken =

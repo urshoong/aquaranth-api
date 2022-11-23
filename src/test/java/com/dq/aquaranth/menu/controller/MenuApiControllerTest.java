@@ -40,17 +40,12 @@ class MenuApiControllerTest {
         String httpBody = objectMapper.writeValueAsString(loginReqDTO);
 
         //then
-        mockMvc.perform(post("/api/login")
-                        .content(httpBody)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andDo(log::info);
+        mockMvc.perform(post("/api/login").content(httpBody).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk()).andDo(log::info);
     }
 
     @Test
     void update() throws Exception {
-        mockMvc.perform(get("/api/menu/gnb"))
-                .andExpect(status().isOk());
+        mockMvc.perform(get("/api/menu/gnb")).andExpect(status().isOk());
     }
 
 }

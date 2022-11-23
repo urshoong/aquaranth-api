@@ -9,6 +9,7 @@ import com.dq.aquaranth.emp.dto.EmpDTO;
 import com.dq.aquaranth.emp.mapper.EmpMapper;
 import com.dq.aquaranth.login.domain.CustomUser;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -23,7 +24,7 @@ import static com.dq.aquaranth.login.jwt.JwtProperties.*;
 @Service
 @RequiredArgsConstructor
 @Transactional
-@Slf4j
+@Log4j2
 public class UserService implements UserDetailsService {
     private final EmpMapper empMapper;
     private final JWTUtil jwtUtil;
@@ -39,11 +40,7 @@ public class UserService implements UserDetailsService {
             throw new UsernameNotFoundException("User not found in the database");
         }
         log.info("사원 정보를 찾았습니다 username => {}", username);
-
-//        FIXME : test 가 끝나면 인라인화
-        CustomUser customUser = userSessionService.findUserInfoInDatabase(empDTO);
-        log.info("custom user 객체 ->{}", customUser.toString());
-        return customUser;
+        return userSessionService.findUserInfoInDatabase(empDTO);
     }
 
     //    TODO : 오쏘라에서 체크하는게 맞지 않을까?

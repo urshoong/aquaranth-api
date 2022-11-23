@@ -29,6 +29,14 @@ Type mismatch 에러가 떠서 select Key에 result Type을 long타입으로 바
 
 [//]: # (TODO : add, delete)
 
+1. tbl_dept테이블 drop하고 다시만든후 insert 테스트 해보면 getNextOrd 메서드에 int로 선언했는데 null값을 준다고 에러 뜸
 
-### 11 / 8
-- bCryptEncode 를 어디서 호출하는거지?
+2. service와 controller 구현후 swagger에서 부서 등록작업을 하면 ord값과 lastDno값이 들어가지 않음
+{
+   "result newGno": 1,
+   "parentDeptNo": 2,
+   "result lastDno": 0,
+   "result newDeptNo": 0,
+   "result ord": 3,
+   "result newParent": 2
+}

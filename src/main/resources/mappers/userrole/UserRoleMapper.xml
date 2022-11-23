@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dq.aquaranth.userrole.mapper.UserRoleMapper">
+
+    <select id="findCompany" resultType="com.dq.aquaranth.userrole.dto.UserRoleCompanyDTO">
+        select company_no, company_name, orga_no
+        from tbl_company
+        where orga_no = #{orgaNo}
+    </select>
+
+    <select id="findRoleGroupByCompanyName" resultType="com.dq.aquaranth.userrole.dto.UserRoleRoleGroupBasedListDTO">
+        select trg.role_group_no, trg.role_group_name, trg.company_no, tc.company_name
+        from tbl_company tc
+        left join tbl_role_group trg on trg.company_no = tc.company_no
+        where trg.role_group_use = true
+        and tc.orga_no = #{orgaNo}
+        <if test="roleGroupSearch != null">
+            and trg.role_group_name like concat('%', #{roleGroupSearch}, '%')
+        </if>
+    </select>
+
+    <select id="findOrgaByRoleGroupNo" resultType="com.dq.aquaranth.userrole.dto.UserRoleGroupBasedUserListDTO">
+        SELECT FN_GET_HIERARCHY_ORGA(rg.orga_no) orga_info
+             , tem.emp_rank
+             , te.emp_name
+             , te.username
+             , rg.orga_no
+        FROM (
+                 SELECT trg.role_group_no
+                      , trg.role_group_name
+                      , trg.company_no
+                      , tor.orga_role_no
+                      , tor.orga_no
+                      , to2.upper_orga_no
+                      , to2.orga_type
+                      , (SELECT tc.company_name FROM tbl_company tc WHERE tc.company_no = trg.company_no) as company_name
+                 FROM tbl_role_group trg
+                          LEFT JOIN tbl_orga_role tor ON tor.role_group_no = trg.role_group_no
+                          LEFT JOIN tbl_orga to2 ON to2.orga_no = tor.orga_no
+                 WHERE trg.role_group_use = true
+                   AND trg.role_group_no = #{roleGroupNo}
+                   AND trg.company_no = #{companyNo}
+             ) rg
+                 JOIN tbl_orga og ON og.orga_no = rg.orga_no
+                 LEFT JOIN tbl_dept_mapping tdm ON tdm.orga_no = og.orga_no
+                 LEFT JOIN tbl_dept td ON tdm.dept_no = td.dept_no
+                 LEFT JOIN tbl_emp_mapping tem ON tem.orga_no = og.orga_no
+                 LEFT JOIN tbl_emp te ON te.emp_no = tem.emp_no
+        <if test="userListSearch != null and userListSearch != ''">
+        WHERE (
+                   rg.company_name LIKE CONCAT('%', '#{userListSearch}', '%')
+                OR td.dept_name LIKE CONCAT('%', '#{userListSearch}', '%')
+                OR tem.emp_rank LIKE CONCAT('%', '#{userListSearch}', '%')
+                OR te.emp_name  LIKE CONCAT('%', '#{userListSearch}', '%')
+                OR te.username  LIKE CONCAT('%', '#{userListSearch}', '%')
+              )
+        </if>
+    </select>
+
+<!--  TODO : insertUserRole 쿼리에서 사용자 정보 강제로 입력한 부분 수정해야됨  -->
+    <insert id="insertUserRole">
+        insert into tbl_orga_role (role_group_no, orga_no, reg_user)
+        select #{roleGroupNo}, t.orga_no, '준성'
+        from tbl_emp te
+        left join tbl_emp_mapping tem on te.emp_no = tem.emp_no
+        left join tbl_orga t on tem.orga_no = t.orga_no
+        where t.orga_no not in (select tog.orga_no
+                                from tbl_orga_role tor
+                                left join tbl_orga tog on tor.orga_no = tog.orga_no
+                                where role_group_no = #{roleGroupNo})
+        <if test="orgaNoList != null and orgaNoList.size != 0">
+            and t.orga_no in
+            <foreach collection="orgaNoList" item="item" index="index" separator="," open="(" close=")">
+                #{item}
+            </foreach>
+        </if>
+    </insert>
+
+    <delete id="removeUserRole">
+            delete
+            from tbl_orga_role
+            <if test="removeOrgaRoleList != null and removeOrgaRoleList.size != 0">
+                where orga_no in
+                <foreach collection="removeOrgaRoleList" item="item" index="index" separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            and role_group_no = #{roleGroupNo}
+    </delete>
+
+    <select id="findUserListByOrgaNo" resultType="com.dq.aquaranth.userrole.dto.UserRoleUserListBasedDTO">
+        select orga_no, orga_info, company_name, dept_name, emp_rank, username, emp_name, roles
+        from
+            (
+                with recursive r_emp as (
+                    select *
+                    from tbl_orga
+                    where orga_no = #{orgaNo}
+                    union all
+                    select tor.*
+                    from r_emp e
+                             join tbl_orga tor on tor.upper_orga_no = e.orga_no
+                )
+                select re.orga_no
+                     , FN_GET_HIERARCHY_ORGA(re.orga_no) orga_info
+                     , (select company_name from tbl_company tc join tbl_dept t on tc.company_no = t.company_no join tbl_dept_mapping m on t.dept_no = m.dept_no where m.orga_no = re.upper_orga_no) company_name
+                     , (select dept_name from tbl_dept td join tbl_dept_mapping tdm on tdm.dept_no = td.dept_no where tdm.orga_no = re.upper_orga_no) dept_name
+                     , tem.emp_rank
+                     , te.username
+                     , te.emp_name
+                     , FN_GET_ROLE_CNT(re.orga_no, #{searchRole}) roles
+                from r_emp re
+                         join tbl_emp_mapping tem on tem.orga_no = re.orga_no
+                         join tbl_emp te on tem.emp_no = te.emp_no
+                where re.orga_type = 'emp'
+                  and (
+                        te.username like concat('%', #{searchEmp}, '%') or
+                        te.emp_name like concat('%', #{searchEmp}, '%')
+                      )
+            ) emps
+        where emps.roles > 0
+    </select>
+
+    <select id="findByRoleGroupByUser" resultType="com.dq.aquaranth.userrole.dto.UserRoleUserBasedRoleGroupDTO">
+        with recursive cte as (
+            select *
+            from tbl_orga
+            where orga_no = #{orgaNo}
+            union all
+            select o.*
+            from cte c
+            join tbl_orga o on o.orga_no = c.upper_orga_no
+        )
+        select cte.orga_no, tor.orga_role_no, trg.role_group_no, trg.role_group_name
+             , ${orgaNo} cur_orga_no, tc.company_no, tc.company_name, tc.orga_no com_orga_no
+        from cte
+        join tbl_orga o on o.orga_no = cte.orga_no
+        join tbl_orga_role tor on tor.orga_no = o.orga_no
+        join tbl_role_group trg on trg.role_group_no = tor.role_group_no and trg.role_group_use = true
+        left join tbl_company tc on o.orga_no = tc.orga_no
+    </select>
+</mapper>
