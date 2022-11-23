@@ -105,16 +105,13 @@ public class DefaultMenuService implements MenuService {
 
     @Override
     @Transactional
-    public Optional<MenuResponseDTO> updateByMenuIcon(MultipartFile multipartFile, String menuCode) throws Exception {
+    public Optional<MenuResponseDTO> updateByMenuIcon(MultipartFile multipartFile) throws Exception {
         String uuid = UUID.randomUUID().toString();
         String filename = multipartFile.getOriginalFilename();
         MenuIconUpdateDTO menuIconUpdateDTO = MenuIconUpdateDTO.builder()
-                .menuCode(menuCode)
                 .uuid(uuid)
                 .filename(filename)
                 .build();
-
-
         objectStorageService.postObject(multipartFile, uuid + filename);
 
         return Optional.empty();

@@ -2,6 +2,7 @@ package com.dq.aquaranth.menu.controller;
 
 
 import com.dq.aquaranth.menu.constant.ErrorCode;
+import com.dq.aquaranth.menu.dto.request.FileDto;
 import com.dq.aquaranth.menu.dto.request.MenuInsertDTO;
 import com.dq.aquaranth.menu.dto.request.MenuUpdateDTO;
 import com.dq.aquaranth.menu.dto.response.MenuResponseDTO;
@@ -75,11 +76,9 @@ public class MenuApiController {
         return menuService.insert(menuInsertDTO, multipartFile);
     }
     @Operation(summary = "메뉴 상태 업데이트", description = "메뉴 상태를 업데이트 합니다. 반환되는 정보는 업데이트된 메뉴의 정보입니다.", responses = @ApiResponse(responseCode = "200", content = @Content(mediaType = "application/json")))
-    @PutMapping("/updateicon")
-    public Optional<MenuResponseDTO> updateByMenuIcon(@RequestParam("file") MultipartFile multipartFile, String menuCode) throws Exception {
-        log.info(multipartFile);
-        log.info(menuCode);
-        return menuService.updateByMenuIcon(multipartFile, menuCode);
+    @PostMapping("/updateicon")
+    public Optional<MenuResponseDTO> updateByMenuIcon(FileDto fileDto) throws Exception {
+        return menuService.updateByMenuIcon(fileDto.getMultipartFile());
     }
 
 }
