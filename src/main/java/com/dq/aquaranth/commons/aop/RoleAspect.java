@@ -30,8 +30,8 @@ public class RoleAspect {
 //                  2.
 //                  2.
 //
-        log.info("{} 컨트롤러 ", jp.getSignature().getName());
-        CustomUser customUser = (CustomUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        System.out.println(customUser);
+        log.info("[ROLE ASPECT]{} 컨트롤러 ", jp.getSignature().getName());
+//        CustomUser customUser = (CustomUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//        System.out.println(customUser);
     }
 }

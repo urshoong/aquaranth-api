@@ -41,4 +41,5 @@
         from tbl_role_group
         where role_group_no = #{roleGroupNo}
     </select>
+
 </mapper>

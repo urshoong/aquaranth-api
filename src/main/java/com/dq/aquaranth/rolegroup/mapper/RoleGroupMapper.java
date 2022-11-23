@@ -40,4 +40,6 @@ public interface RoleGroupMapper {
     void deleteById(Long roleGroupNo);
 
     void hideById(Long roleGroupNo);
+
+    List<RoleGroup> findRoleGroupsByUsernameAndCompanyNo(String username, Long companyNo);
 }
