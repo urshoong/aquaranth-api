@@ -1,5 +1,6 @@
 package com.dq.aquaranth.objectstorage.controller;
 
+
 import com.dq.aquaranth.objectstorage.dto.request.ObjectRequestDTO;
 import com.dq.aquaranth.objectstorage.dto.response.ObjectResponseDTO;
 import com.dq.aquaranth.objectstorage.service.ObjectStorageService;
@@ -20,10 +21,10 @@ public class ObjectStorageController {
     private final ObjectStorageService objectStorageService;
 
     @PostMapping
-    public ResponseEntity<ObjectResponseDTO> postObject(@RequestParam("file") MultipartFile multipartFile) throws Exception {
+    public ResponseEntity<ObjectResponseDTO> postObject(@RequestParam("file") MultipartFile multipartFile, String filename) throws Exception {
         return ResponseEntity.status(HttpStatus.OK)
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(objectStorageService.postObject(multipartFile));
+                .body(objectStorageService.postObject(multipartFile, filename));
     }
 
     @GetMapping("/{filename}")

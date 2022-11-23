@@ -27,7 +27,7 @@ public class MenuApiController {
     @Operation(summary = "전체 메뉴 조회", description = "URL 정보를 포함한 모든 메뉴를 조회합니다.", responses = @ApiResponse(responseCode = "200", content = @Content(mediaType = "application/json")))
     @GetMapping
     public List<MenuResponseDTO> findAllMenuInformation() {
-        return menuService.findAllMenuInformation();
+        return menuService.findAll();
     }
 
     //    TODO : MyBaits OGNL을 이용한 동적 쿼리 작성 # 25
@@ -43,12 +43,6 @@ public class MenuApiController {
     public Optional<MenuResponseDTO> findByMenuNo(@RequestParam(value = "menuNo") Long menuNo) {
         return Optional.ofNullable(menuService.findByMenuNo(menuNo)
                 .orElseThrow(() -> new MenuException(ErrorCode.MENU_NOT_FOUND)));
-    }
-
-    @Operation(summary = "GNB 메뉴 조회", description = "상위메뉴번호가 없는 메뉴(GNB)를 조회합니다.", responses = @ApiResponse(responseCode = "200", content = @Content(mediaType = "application/json")))
-    @GetMapping("/gnb")
-    public List<MenuResponseDTO> findGnbMenus() {
-        return menuService.findByUpperMenuNoIsNull();
     }
 
     @Operation(summary = "상위 메뉴 조회", description = "하위 메뉴코드를 이용하여 상위메뉴들를 조회합니다.", responses = @ApiResponse(responseCode = "200", content = @Content(mediaType = "application/json")))
@@ -71,7 +65,7 @@ public class MenuApiController {
 
     @Operation(summary = "메뉴 상태 업데이트", description = "메뉴 상태를 업데이트 합니다. 반환되는 정보는 업데이트된 메뉴의 정보입니다.", responses = @ApiResponse(responseCode = "200", content = @Content(mediaType = "application/json")))
     @PutMapping("/update")
-    public Optional<MenuResponseDTO> update(MenuUpdateDTO menuUpdateDTO) {
+    public Optional<MenuResponseDTO> update(@RequestBody MenuUpdateDTO menuUpdateDTO) {
         return menuService.update(menuUpdateDTO);
     }
 }

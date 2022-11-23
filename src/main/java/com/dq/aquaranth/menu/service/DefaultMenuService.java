@@ -1,20 +1,25 @@
 package com.dq.aquaranth.menu.service;
 
+import com.dq.aquaranth.menu.dto.request.MenuInsertDTO;
 import com.dq.aquaranth.menu.dto.request.MenuUpdateDTO;
 import com.dq.aquaranth.menu.dto.response.MenuResponseDTO;
 import com.dq.aquaranth.menu.mapper.MenuMapper;
+import com.dq.aquaranth.objectstorage.service.ObjectStorageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class DefaultMenuService implements MenuService {
 
     private final MenuMapper menuMapper;
+    private final ObjectStorageService objectStorageService;
 
     /**
      * 권한 여부와 상관없이 모든 메뉴를 조회합니다.
@@ -49,6 +54,42 @@ public class DefaultMenuService implements MenuService {
     }
 
     /**
+     * 메뉴를 추가합니다. 반환되는 정보는 추가된 메뉴의 정보입니다.
+     * @param menuInsertDTO
+     * @param multipartFile
+     * @return
+     * @throws Exception
+     */
+    @Override
+    @Transactional
+    public Optional<MenuResponseDTO> insert(MenuInsertDTO menuInsertDTO, MultipartFile multipartFile) throws Exception {
+
+        Optional<MenuResponseDTO> findByUpperMenu =
+                menuMapper.findByMenuNo(menuInsertDTO.getUpperMenuNo());
+
+        MenuResponseDTO upperMenu = findByUpperMenu.orElseGet(() -> MenuResponseDTO.builder()
+                .menuPath("/")
+                .depth(0L)
+                .build());
+
+        menuInsertDTO.setMenuPath(upperMenu.getMenuPath() + "/" + menuInsertDTO.getMenuPath());
+        menuInsertDTO.setDepth(upperMenu.getDepth() + 1L);
+
+
+        if (!multipartFile.isEmpty()){
+            String uuid = UUID.randomUUID().toString();
+            String filename = multipartFile.getOriginalFilename();
+            menuInsertDTO.setUuid(uuid);
+            menuInsertDTO.setFilename(filename);
+            objectStorageService.postObject(multipartFile, uuid + filename);
+        }
+
+        menuMapper.insert(menuInsertDTO);
+
+        return menuMapper.findByMenuCode(menuInsertDTO.getMenuCode());
+    }
+
+    /**
      * 메뉴 상태를 업데이트 합니다. 반환되는 정보는 업데이트된 메뉴의 정보입니다.
      *
      * @param menuUpdateDTO
@@ -61,21 +102,14 @@ public class DefaultMenuService implements MenuService {
         return menuMapper.findByMenuNo(menuUpdateDTO.getMenuNo());
     }
 
-    /**
-     * URL 정보를 포함한 모든 메뉴를 조회합니다.
-     *
-     * @return
-     */
     @Override
-    public List<MenuResponseDTO> findAllMenuInformation() {
-        return menuMapper.findAllMenuInformation();
+    public Optional<MenuResponseDTO> updateByMenuIcon(MenuUpdateDTO menuUpdateDTO) {
+        return Optional.empty();
     }
-
 
     @Override
     public List<MenuResponseDTO> findByUpperMenuNoIsNull() {
         return menuMapper.findByUpperMenuNoIsNull();
-
     }
 
     /**

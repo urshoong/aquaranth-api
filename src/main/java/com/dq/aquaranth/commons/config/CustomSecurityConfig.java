@@ -5,7 +5,6 @@ import com.dq.aquaranth.emp.mapper.EmpMapper;
 import com.dq.aquaranth.login.handler.CustomLogoutSuccessHandler;
 import com.dq.aquaranth.login.jwt.JwtAuthenticationFilter;
 import com.dq.aquaranth.login.jwt.JwtAuthorizationFilter;
-import com.dq.aquaranth.menu.service.MenuService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

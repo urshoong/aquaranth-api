@@ -69,13 +69,6 @@ class DefaultMenuServiceTest {
     }
 
     @Test
-    @DisplayName(value = "URL 정보를 포함한 모든 메뉴를 조회합니다.")
-    void findAllMenuInformation() {
-        List<MenuResponseDTO> menuResponseDTOList = menuService.findAllMenuInformation();
-        Assertions.assertThat(menuResponseDTOList.get(1).getUrl()).isNotNull();
-    }
-
-    @Test
     @DisplayName(value = "상위메뉴번호가 없는 메뉴(GNB)를 조회합니다.")
     void findByUpperMenuNoIsNull() {
         List<MenuResponseDTO> menuResponseDTOList = menuService.findByUpperMenuNoIsNull();
