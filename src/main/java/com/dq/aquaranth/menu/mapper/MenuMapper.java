@@ -1,5 +1,6 @@
 package com.dq.aquaranth.menu.mapper;
 
+import com.dq.aquaranth.menu.dto.request.MenuIconUpdateDTO;
 import com.dq.aquaranth.menu.dto.request.MenuInsertDTO;
 import com.dq.aquaranth.menu.dto.request.MenuUpdateDTO;
 import com.dq.aquaranth.menu.dto.response.MenuResponseDTO;
@@ -17,14 +18,10 @@ public interface MenuMapper {
     Optional<MenuResponseDTO> findByMenuCode(String menuCode);
 
     MenuResponseDTO update(MenuUpdateDTO menuUpdateDTO);
+
+    Integer updateMenuIcon(MenuIconUpdateDTO menuIconUpdateDTO);
     MenuInsertDTO insert(MenuInsertDTO menuUpdateDTO);
 
-
-    /**
-     * URL 정보를 포함한 모든 메뉴를 조회합니다.
-     * @returnv
-     */
-    List<MenuResponseDTO> findAllMenuInformation();
 
     /**
      * 상위메뉴번호가 없는 메뉴(GNB)를 조회합니다.
@@ -57,7 +54,6 @@ public interface MenuMapper {
     List<MenuResponseDTO> findMenusByLoginUsername(String username);
 
 
-//    TODO : MyBaits OGNL을 이용한 동적 쿼리 작성 # 25
-//    Optional<MenuResponseDTO> findBy(@Param("menuCode") String menuCode,
-//                                     @Param("menuNo") Long menuNo);
+
+
 }

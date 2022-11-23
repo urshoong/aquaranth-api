@@ -29,6 +29,14 @@
         FROM tbl_menu
     </select>
 
+    <update id="updateMenuIcon">
+        UPDATE tbl_menu
+        SET uuid = #{uuid},
+        filename = #{filename}
+        WHERE menu_code = #{menuCode}
+    </update>
+
+
     <select id="findUpperMenu" resultType="com.dq.aquaranth.menu.dto.response.MenuResponseDTO">
         SELECT um.*
         FROM tbl_menu m

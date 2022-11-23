@@ -19,7 +19,7 @@ public interface MenuService {
     Optional<MenuResponseDTO> insert(MenuInsertDTO menuInsertDTO, MultipartFile multipartFile) throws Exception;
 
     Optional<MenuResponseDTO> update(MenuUpdateDTO menuUpdateDTO);
-    Optional<MenuResponseDTO> updateByMenuIcon(MenuUpdateDTO menuUpdateDTO);
+    Optional<MenuResponseDTO> updateByMenuIcon(MultipartFile multipartFile, String menuCode) throws Exception;
 
     List<MenuResponseDTO> findByUpperMenuNoIsNull();
 

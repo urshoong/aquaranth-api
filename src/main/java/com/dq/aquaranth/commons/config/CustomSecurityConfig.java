@@ -77,9 +77,9 @@ public class CustomSecurityConfig {
                 .logoutSuccessHandler(logoutSuccessHandler())
 
                 .and()
-                .authenticationManager(authenticationManager)
-                .addFilter(authenticationFilter) // 인증필터
-                .addFilterBefore(new JwtAuthorizationFilter(jwtUtil, userDetailsService), UsernamePasswordAuthenticationFilter.class); // 권한필터, 모든 요청을 받으려면 다른 필터들 보다 먼저 처리되어야 한다.
+                .authenticationManager(authenticationManager);
+//                .addFilter(authenticationFilter) // 인증필터
+//                .addFilterBefore(new JwtAuthorizationFilter(jwtUtil, userDetailsService), UsernamePasswordAuthenticationFilter.class); // 권한필터, 모든 요청을 받으려면 다른 필터들 보다 먼저 처리되어야 한다.
 
         return http.build();
     }

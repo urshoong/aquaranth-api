@@ -61,7 +61,7 @@ class DefaultMenuServiceTest {
         MenuUpdateDTO menuUpdateDTO = MenuUpdateDTO.builder()
                 .menuNo(menuNo)
                 .menuName(menuName)
-                .menuUse(false)
+                .mainFlag(false)
                 .menuOrder(99L)
                 .build();
         Optional<MenuResponseDTO> expectedMenuResponseDto = menuService.update(menuUpdateDTO);

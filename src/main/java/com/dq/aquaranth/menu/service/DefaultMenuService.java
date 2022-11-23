@@ -1,5 +1,6 @@
 package com.dq.aquaranth.menu.service;
 
+import com.dq.aquaranth.menu.dto.request.MenuIconUpdateDTO;
 import com.dq.aquaranth.menu.dto.request.MenuInsertDTO;
 import com.dq.aquaranth.menu.dto.request.MenuUpdateDTO;
 import com.dq.aquaranth.menu.dto.response.MenuResponseDTO;
@@ -103,7 +104,19 @@ public class DefaultMenuService implements MenuService {
     }
 
     @Override
-    public Optional<MenuResponseDTO> updateByMenuIcon(MenuUpdateDTO menuUpdateDTO) {
+    @Transactional
+    public Optional<MenuResponseDTO> updateByMenuIcon(MultipartFile multipartFile, String menuCode) throws Exception {
+        String uuid = UUID.randomUUID().toString();
+        String filename = multipartFile.getOriginalFilename();
+        MenuIconUpdateDTO menuIconUpdateDTO = MenuIconUpdateDTO.builder()
+                .menuCode(menuCode)
+                .uuid(uuid)
+                .filename(filename)
+                .build();
+
+
+        objectStorageService.postObject(multipartFile, uuid + filename);
+
         return Optional.empty();
     }
 
