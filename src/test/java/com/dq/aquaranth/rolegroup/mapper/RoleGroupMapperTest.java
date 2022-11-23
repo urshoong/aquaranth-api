@@ -1,11 +1,15 @@
 package com.dq.aquaranth.rolegroup.mapper;
 
+import com.dq.aquaranth.login.domain.LoginUser;
 import com.dq.aquaranth.rolegroup.domain.RoleGroup;
+import com.dq.aquaranth.rolegroup.dto.RoleGroupUpdateDTO;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -81,7 +85,6 @@ class RoleGroupMapperTest {
         log.info("수정 후 권한그룹 => {}", afterDTO);
     }
 
-
     @Test
     @DisplayName("권한그룹번호로 권한그룹을 삭제합니다.")
     void deleteById() {
@@ -95,5 +98,25 @@ class RoleGroupMapperTest {
         assertNull(roleGroupMapper.findById(deleteRoleGroupNo));
     }
 
+    @Test
+    @DisplayName("로그인한 사원의 권한그룹들을 가져옵니다.")
+    void findRoleGroupsByLoginUser() {
+        // given
+        String username = "user";
+        Long companyNo = 1L; // MEGAZONE(orgaNo=2)
+        Long deptNo = 1L; // 개발팀(orgaNo=7)
 
+        LoginUser loginUser = LoginUser.builder()
+                .loginCompanyNo(companyNo)
+                .loginDeptNo(deptNo)
+                .username(username).build();
+
+        // when
+        List<RoleGroup> roleGroups = roleGroupMapper.findRoleGroupsByLoginUser(loginUser);
+
+        // then
+        for (RoleGroup roleGroup : roleGroups) {
+            log.info(roleGroup);
+        }
+    }
 }

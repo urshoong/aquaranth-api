@@ -42,4 +42,22 @@
         where role_group_no = #{roleGroupNo}
     </select>
 
+    <select id="findRoleGroupsByLoginUser" resultType="com.dq.aquaranth.rolegroup.domain.RoleGroup">
+        select *
+        from tbl_role_group
+        where role_group_no in (select distinct tor.role_group_no
+                                from tbl_emp emp
+                                         # 사원의 조직번호 알아내기
+                                         join tbl_emp_mapping emapping on emp.emp_no = emapping.emp_no
+                                    # 입력받은 부서번호로 조직번호 알아내기
+                                         join tbl_dept_mapping dmapping on dmapping.dept_no = #{loginDeptNo}
+                                    # 입력받은 회사번호로 조직번호 알아내기
+                                         join tbl_company company on company_no = #{loginCompanyNo}
+                                    # 조직권한 테이블에서 얻어낸 3개의 조직번호로 권한그룹번호들을 알아내기
+                                         join tbl_orga_role tor
+                                where username = #{username} and tor.orga_no = emapping.orga_no
+                                   or tor.orga_no = dmapping.orga_no
+                                   or tor.orga_no = company.orga_no);
+    </select>
+
 </mapper>

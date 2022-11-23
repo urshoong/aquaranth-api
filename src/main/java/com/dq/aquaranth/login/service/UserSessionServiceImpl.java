@@ -10,7 +10,9 @@ import com.dq.aquaranth.company.mapper.CompanyMapper;
 import com.dq.aquaranth.dept.dto.DeptDTO;
 import com.dq.aquaranth.dept.mapper.DeptMapper;
 import com.dq.aquaranth.emp.dto.EmpDTO;
+import com.dq.aquaranth.emp.mapper.EmpMapper;
 import com.dq.aquaranth.login.domain.CustomUser;
+import com.dq.aquaranth.login.domain.LoginUser;
 import com.dq.aquaranth.login.dto.RedisDTO;
 import com.dq.aquaranth.rolegroup.domain.RoleGroup;
 import com.dq.aquaranth.rolegroup.mapper.RoleGroupMapper;
@@ -26,9 +28,9 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
-import static com.dq.aquaranth.login.jwt.JwtProperties.SECRET;
-import static com.dq.aquaranth.login.jwt.JwtProperties.TOKEN_PREFIX;
+import static com.dq.aquaranth.login.jwt.JwtProperties.*;
 
 @Service
 @RequiredArgsConstructor
@@ -36,6 +38,10 @@ import static com.dq.aquaranth.login.jwt.JwtProperties.TOKEN_PREFIX;
 public class UserSessionServiceImpl implements UserSessionService {
     private final RedisTemplate<String, Object> redisTemplate;
     private final JWTUtil jwtUtil;
+    private final RoleGroupMapper roleGroupMapper;
+    private final CompanyMapper companyMapper;
+    private final EmpMapper empMapper;
+    private final DeptMapper deptMapper;
 
     @Override
     public RedisDTO findUserInfoInRedis(String username) {
@@ -77,5 +83,40 @@ public class UserSessionServiceImpl implements UserSessionService {
         } else {
             throw new RuntimeException("Refresh token is missing");
         }
+    }
+
+    /**
+     * 사용자가 로그인을 한 후 접속할 회사, 부서를 선택하면 호출되어 redis 에 정보를 저장합니다.
+     * @param loginUser : 접속한 사원이 소속된 조직정보가 담긴 객체입니다.
+     * @return redis에 저장된 dto 객체입니다.
+     */
+    @Override
+    public RedisDTO loadUserInfoByLoginUser(LoginUser loginUser) {
+        // TODO : 부서정보 넣어야함 mapper 안만들어져 있음
+        RedisDTO redisDTO = RedisDTO.builder()
+                .emp(empMapper.findByUsername(loginUser.getUsername()))
+                .company(companyMapper.findById(loginUser.getLoginCompanyNo()))
+                .roleGroups(roleGroupMapper.findRoleGroupsByLoginUser(loginUser))
+                .build();
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        String loginUserInfo;
+
+        try {
+            loginUserInfo = objectMapper.registerModule(new JavaTimeModule()).writeValueAsString(redisDTO);
+        } catch (JsonProcessingException e) {
+            log.error("redisDTO 를 직렬화 하던중 예외가 발생했습니다.");
+            throw new RuntimeException(e);
+        }
+
+        log.info("redis에 유저 정보를 저장합니다. {} 초 후 만료됨.",REFRESH_TOKEN_EXPIRATION_TIME);
+        redisTemplate.opsForValue().set(
+                loginUser.getUsername(),
+                loginUserInfo,
+                REFRESH_TOKEN_EXPIRATION_TIME,
+                TimeUnit.MILLISECONDS
+        );
+
+        return redisDTO;
     }
 }

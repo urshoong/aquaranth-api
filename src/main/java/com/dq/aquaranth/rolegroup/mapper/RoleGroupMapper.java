@@ -1,5 +1,6 @@
 package com.dq.aquaranth.rolegroup.mapper;
 
+import com.dq.aquaranth.login.domain.LoginUser;
 import com.dq.aquaranth.rolegroup.domain.RoleGroup;
 import com.dq.aquaranth.rolegroup.dto.RoleGroupUpdateDTO;
 
@@ -41,5 +42,5 @@ public interface RoleGroupMapper {
 
     void hideById(Long roleGroupNo);
 
-    List<RoleGroup> findRoleGroupsByUsernameAndCompanyNo(String username, Long companyNo);
+    List<RoleGroup> findRoleGroupsByLoginUser(LoginUser loginUser);
 }
