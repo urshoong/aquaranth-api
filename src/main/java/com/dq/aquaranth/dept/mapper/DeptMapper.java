@@ -33,6 +33,7 @@ public interface DeptMapper {
     List<DeptDTO> getFromParent(@Param("upperDeptNo") Long upperDeptNo, @Param("depth") int depth);
 
 
+//    트리 구조 조회
     List<DeptTreeDTO> getTree(@Param("company") Long company );
 
 

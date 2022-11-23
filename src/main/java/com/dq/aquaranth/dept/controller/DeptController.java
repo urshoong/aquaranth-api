@@ -42,17 +42,6 @@ public class DeptController {
         return result;
     }
 
-//    @PostMapping("/")
-//    public Map<Object, Object> register(@RequestBody DeptDTO2 deptDTO2) {
-//
-//        log.info(deptDTO2);
-//
-//
-//        Map<Object, Object> result = deptService2.register(deptDTO2);
-//
-//        return result;
-//    }
-
     //삭제
     @DeleteMapping("/{dept_no}")
     public Map<Object, Object> remove(@PathVariable("dept_no") Long dept_no) {
@@ -72,6 +61,7 @@ public class DeptController {
 
     }
 
+
     @GetMapping("/list")
     public List<DeptDTO> list(DeptCriteria deptCriteria) {
         return deptService.list(deptCriteria.getSkip(), deptCriteria.getSize());
@@ -85,12 +75,15 @@ public class DeptController {
     }
     //에로사항 : /api/dept2/{gno} 는 /api/dept2/{dept_no}와 곂쳐서 에러 뜸 => 앞에 list붙여서 출력함
 
+
+    //상위부서 밑의 하위부서만 조회
     @GetMapping("/list/{upper_dept_no}/{depth}")
     public List<DeptDTO> listDept2 (@PathVariable("upper_dept_no") Long upper_dept_no, @PathVariable("depth") int depth) {
 
         return deptService.listDepth(upper_dept_no, depth);
     }
 
+//    트리 구조 조회
     @GetMapping("/tree/{companyCode}")
     public List<DeptTreeDTO> listTree(@PathVariable("companyCode") Long companyCode ){
 

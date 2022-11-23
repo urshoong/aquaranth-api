@@ -66,6 +66,9 @@
     </update>
 
 
+
+<!--    ===========================================-->
+
 <!--    전체 리스트 조회-->
     <select id="getList" resultType="com.dq.aquaranth.dept.dto.DeptDTO">
         select * from tbl_dept order by dept_no asc limit #{skip}, #{size}
@@ -79,7 +82,6 @@
 
 
 
-
     <select id="getFromParent" resultType="com.dq.aquaranth.dept.dto.DeptDTO">
         select *
         from tbl_dept
@@ -87,6 +89,7 @@
     </select>
 
 
+<!--    트리 구조 조회-->
     <select id="getTree" resultType="com.dq.aquaranth.dept.dto.DeptTreeDTO">
         select
         dept_no, orga_no, dept_name, upper_dept_no, ord, depth, company_no, last_dno

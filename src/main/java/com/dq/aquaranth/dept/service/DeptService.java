@@ -122,11 +122,11 @@ public class DeptService {
 
         log.info("no : " + no);
 
-        DeptDTO modiftDTO = deptMapper.select(no);
+        DeptDTO modifyDTO = deptMapper.select(no);
 
-        log.info("modify : " + modiftDTO);
+        log.info("modify : " + modifyDTO);
 
-        return modiftDTO;
+        return modifyDTO;
     }
 
     public Long remove(Long deptNo) {
@@ -154,6 +154,8 @@ public class DeptService {
         return deptMapper.getFromParent(upperDeptNo, depth);
     }
 
+
+    //트리 구조 조회
     public List<DeptTreeDTO> getTree(Long company){
 
         return deptMapper.getTree(company);
@@ -164,5 +166,6 @@ public class DeptService {
     public List<DepartmentDTO> findByCompanyNo(Long companyNo)
     {
         return deptMapper.findByCompanyNo(companyNo);
+
     }
 }

@@ -78,10 +78,10 @@ public class CustomSecurityConfig {
                 .logoutSuccessHandler(logoutSuccessHandler())
 
                 .and()
-                .authenticationManager(authenticationManager)
-                .addFilter(authenticationFilter) // 인증필터
-                .addFilterBefore(new JwtAuthorizationFilter(jwtUtil, userDetailsService), UsernamePasswordAuthenticationFilter.class); // 권한필터, 모든 요청을 받으려면 다른 필터들 보다 먼저 처리되어야 한다.
-
+                .authenticationManager(authenticationManager);
+//                .addFilter(authenticationFilter) // 인증필터
+//                .addFilterBefore(new JwtAuthorizationFilter(jwtUtil, userDetailsService), UsernamePasswordAuthenticationFilter.class); // 권한필터, 모든 요청을 받으려면 다른 필터들 보다 먼저 처리되어야 한다.
+// 스웨거나 포스트맨 사용하고 싶으면 위에 2개 주석 처리
         return http.build();
     }
 

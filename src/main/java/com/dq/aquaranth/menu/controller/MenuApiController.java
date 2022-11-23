@@ -27,7 +27,7 @@ public class MenuApiController {
     @Operation(summary = "전체 메뉴 조회", description = "URL 정보를 포함한 모든 메뉴를 조회합니다.", responses = @ApiResponse(responseCode = "200", content = @Content(mediaType = "application/json")))
     @GetMapping
     public List<MenuResponseDTO> findAllMenuInformation() {
-        return menuService.findAllMenuInformation();
+        return menuService.findAll();
     }
 
     //    TODO : MyBaits OGNL을 이용한 동적 쿼리 작성 # 25
