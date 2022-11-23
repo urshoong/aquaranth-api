@@ -1,6 +1,7 @@
 package com.dq.aquaranth.menu.controller;
 
 
+import com.dq.aquaranth.commons.annotation.Test123;
 import com.dq.aquaranth.menu.constant.ErrorCode;
 import com.dq.aquaranth.menu.dto.request.FileDto;
 import com.dq.aquaranth.menu.dto.request.MenuInsertDTO;
@@ -23,6 +24,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/menu")
 @RequiredArgsConstructor
+//@Menu("ROLE0010")
 public class MenuApiController {
 
     private final MenuService menuService;
@@ -35,7 +37,7 @@ public class MenuApiController {
 
     @Operation(summary = "메뉴코드 단건 메뉴 조회", description = "메뉴코드를 이용하여 단건 메뉴를 조회합니다.", responses = @ApiResponse(responseCode = "200", content = @Content(mediaType = "application/json")))
     @GetMapping("/findcode")
-    public Optional<MenuResponseDTO> findByMenuCode(@RequestParam(value = "menuCode") String menuCode) {
+    public Optional<MenuResponseDTO> findByMenuCode(@RequestParam(value = "menuCode") @Test123 String menuCode) {
         return Optional.ofNullable(menuService.findByMenuCode(menuCode)
                 .orElseThrow(() -> new MenuException(ErrorCode.MENU_NOT_FOUND)));
     }
