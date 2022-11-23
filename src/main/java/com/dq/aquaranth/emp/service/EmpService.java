@@ -25,7 +25,7 @@ public interface EmpService {
 
     Long updateFile(EmpFileDTO empFileDTO);
 
-    List<EmpLoginDTO> findLoginInformationByUsername(String username);
+    EmpLoginEmpDTO findLoginInformationByUsername(String username);
 
     ///////////////
 

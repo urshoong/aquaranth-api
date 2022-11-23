@@ -96,9 +96,9 @@
     </update>
 
     <select id="findLoginInformationByUsername"  resultType="com.dq.aquaranth.emp.dto.EmpLoginDTO">
-        select te.emp_name, te.last_login_time, te.last_login_ip,
+        select te.emp_name, te.emp_no, te.username, te.last_login_time, te.last_login_ip,
                FN_GET_HIERARCHY_ORGA(tem.orga_no) info,
-               tem.emp_rank, tc.company_name, td.dept_name, tor.orga_no
+               tem.emp_rank, tc.company_name, td.dept_name, tem.orga_no, td.dept_no, tc.company_no
         FROM tbl_emp te
                  LEFT JOIN tbl_emp_mapping tem on te.emp_no = tem.emp_no
                  LEFT JOIN tbl_orga tor on tor.orga_no = tem.orga_no

@@ -183,18 +183,17 @@ public class EmpController {
      * 로그인한 회원 정보 띄우기
      */
     @GetMapping("/readLogin")
-    public List<EmpLoginDTO> getEmpLoginInformationList(@RequestBody EmpLoginDTO empLoginDTO, Authentication authentication){
+    public EmpLoginEmpDTO getEmpLoginInformationList(@RequestBody EmpLoginEmpDTO empLoginDTO, Authentication authentication){
         CustomUser customUser = (CustomUser) authentication.getPrincipal();
         String username = customUser.getEmpDTO().getUsername();
 
-        log.info(customUser.getCompanyDTO().getCompanyName());
+        log.info(customUser.getCompanyDTO().getCompanyName()); // 이거 왜 햇는데 나
 
         return empService.findLoginInformationByUsername(username);
     }
 
     /**
      * 사원 프로필 업데이트
-     * @return
      */
     private final ObjectStorageService objectStorageService;
     @PutMapping("/upload/{empNo}")

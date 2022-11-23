@@ -10,6 +10,8 @@ import java.util.Map;
 @NoArgsConstructor
 @Data
 public class EmpLoginCompanyDTO {
-    private String CompanyName;
-    private Map<Integer, EmpLoginDepartmentDTO> deptList;
+    private String companyName;
+    private Long companyNo;
+
+    private Map<Long, EmpLoginDepartmentDTO> deptList;
 }

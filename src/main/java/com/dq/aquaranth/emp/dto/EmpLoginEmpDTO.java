@@ -6,22 +6,20 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
+
 @Builder
-public class EmpLoginDTO {
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
+public class EmpLoginEmpDTO {
     private String empName;
     private LocalDateTime lastLoginTime;
     private String lastLoginIp;
     private String username;
     private Long empNo;
-    private String companyName;
-    private Long companyNo;
-    private String deptName;
-    private Long deptNo;
-    private String empRank;
-    private String info;
-    private Long orgaNo;
+
+    private Map<Long, EmpLoginCompanyDTO> companyList;
+
 }
