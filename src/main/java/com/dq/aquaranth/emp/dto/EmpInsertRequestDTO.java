@@ -16,5 +16,5 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class EmpInsertRequestDTO {
     private String empName, username, password, gender, empPhone, empAddress, empProfile, email;
-    private LocalDate firstHiredate;
+    private LocalDate firstHiredDate;
 }

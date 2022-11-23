@@ -21,8 +21,7 @@ public interface EmpMapper {
     EmpDTO findById(Long empNo);
 
     /**
-     *
-     * @return
+     * 선택된 사원의 조직 정보를 조회합니다.
      */
     List<EmpSelectOrga> orgaFindById(Long empNo);
 
@@ -51,12 +50,41 @@ public interface EmpMapper {
 
     /**
      * 조직 번호로 조직 정보를 수정합니다.
+     *
      * @param empOrgaUpdateDTO : 수정할 사원의 조직 객체
      */
     Long orgaUpdate(EmpOrgaUpdateDTO empOrgaUpdateDTO);
 
-
+    /**
+     * 사원 아이디(username)로 사원을 찾습니다.
+     *
+     * @param username : 사원 아이디(username)
+     */
     EmpDTO findByUsername(String username);
 
+    /**
+     * 사원의 프로필 사진을 수정합니다.
+     *
+     * @param empFileDTO : 프로필로 지정할 파일 정보
+     */
+    Long updateFile(EmpFileDTO empFileDTO);
 
+    /**
+     * 로그인한 username 받아서 보여줄 정보를 조회합니다.
+     * @param username : 로그인한 회원의 아이디
+     */
+    List<EmpLoginDTO> findLoginInformationByUsername(String username);
+
+    /////////
+
+    /**
+     * 임시. security 적용된 emp 만들기 위한 임시 생성 mapper
+     * @param empDTO
+     * @return
+     */
+    Long insertEmp(EmpDTO empDTO);
+
+    ////////////
+
+    List<OrgaTreeDTO> selectDeptPath();
 }

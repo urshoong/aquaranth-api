@@ -10,10 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.management.openmbean.KeyAlreadyExistsException;
-import java.util.List;
-import java.util.Objects;
-
-import static java.time.LocalDateTime.now;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -100,7 +97,32 @@ public class EmpServiceImpl implements EmpService {
         return empMapper.orgaFindById(empNo);
     }
 
+    @Override
+    public Long updateFile(EmpFileDTO empFileDTO) {
+        return empMapper.updateFile(empFileDTO);
+    }
 
+    @Override
+    public List<EmpLoginDTO> findLoginInformationByUsername(String username) {
 
+        return empMapper.findLoginInformationByUsername(username);
+    }
 
+    @Override
+    public Long insertEmp(EmpDTO empDTO) {
+        empDTO.setPassword(passwordEncoder.encode(empDTO.getPassword()));
+
+        return empMapper.insertEmp(empDTO);
+    }
+
+    @Override
+    public List<OrgaTreeDTO> selectDeptPath() {
+        List<OrgaTreeDTO> list = empMapper.selectDeptPath();
+//
+//        for (int i = 0; i < list.size(); i++) {
+//            StringTokenizer st = new StringTokenizer(list);
+//        }
+
+        return null;
+    }
 }

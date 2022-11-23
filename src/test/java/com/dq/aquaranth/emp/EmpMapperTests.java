@@ -10,7 +10,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDate;
 
-import static java.time.LocalDateTime.now;
 
 @SpringBootTest
 @Log4j2
@@ -44,7 +43,6 @@ public class EmpMapperTests {
                 .gender("남성")
                 .empPhone("01088890009")
                 .empAddress("경주시 경주월드")
-                .empProfile("profileYul")
                 .email("user08@naver.com")
                 .build();
         log.info(empMapper.insert(empDTO));
@@ -95,17 +93,10 @@ public class EmpMapperTests {
                         .empRank("인턴")
                         .empRole("ROLE_USER")
                         .deptNo(1L)
-                        .modUser("mapperTest")
                         .orgaNo(40L)
                         .build();
 
         empMapper.orgaUpdate(empOrgaUpdateDTO);
-    }
-
-
-    @Test
-    void empDeleteByIdTest() {
-        log.info(empMapper.deleteById(11L));
     }
 
 }

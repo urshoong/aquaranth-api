@@ -17,7 +17,7 @@
     <select id="orgaFindById" resultType="com.dq.aquaranth.emp.dto.EmpSelectOrga">
         SELECT tc.company_name, td.dept_name, tem.emp_rank, tem.emp_no,
             tem.hired_date, tem.reg_date, tc.company_tel, tc.company_address,
-               tdm.dept_main, tem.emp_role, tor.orga_no, tc.company_no
+               tdm.dept_main, tem.emp_role, tor.orga_no, tc.company_no, tdm.dept_no
         FROM tbl_emp
             LEFT JOIN tbl_emp_mapping tem on tbl_emp.emp_no = tem.emp_no
             LEFT JOIN tbl_orga tor on tor.orga_no = tem.orga_no
@@ -72,20 +72,16 @@
         WHERE emp_no = #{empNo}
     </update>
 
-    <update id="orgaUpdate" parameterType="com.dq.aquaranth.emp.dto.EmpOrgaUpdateDTO">
+    <update id="orgaUpdate">
         UPDATE tbl_emp_mapping e
             join tbl_orga t on t.orga_no = e.orga_no
             SET
             e.emp_rank = #{empRank}, e.emp_role = #{empRole},
             t.upper_orga_no = (SELECT tbl_dept_mapping.orga_no
                                 FROM tbl_dept_mapping
-                                JOIN tbl_dept td ON td.dept_no = tbl_dept_mapping.dept_no
-                                WHERE td.dept_no = #{deptNo}),
-            e.mod_date = now(), e.mod_user = #{modUser},
-            t.mod_date = now(), t.mod_user = #{modUser}
+                                WHERE tbl_dept_mapping.dept_no = #{deptNo})
         where e.orga_no = #{orgaNo};
     </update>
-
 
     <select id="findByUsername" resultType="com.dq.aquaranth.emp.dto.EmpDTO">
         SELECT *
@@ -93,6 +89,35 @@
         WHERE username = #{username}
     </select>
 
+    <update id="updateFile" parameterType="com.dq.aquaranth.emp.dto.EmpFileDTO">
+        UPDATE tbl_emp
+        SET uuid = #{uuid}, file_name = #{fileName}
+        WHERE emp_no = #{empNo};
+    </update>
 
+    <select id="findLoginInformationByUsername"  resultType="com.dq.aquaranth.emp.dto.EmpLoginDTO">
+        select te.emp_name, te.last_login_time, te.last_login_ip,
+               FN_GET_HIERARCHY_ORGA(tem.orga_no) info,
+               tem.emp_rank, tc.company_name, td.dept_name, tor.orga_no
+        FROM tbl_emp te
+                 LEFT JOIN tbl_emp_mapping tem on te.emp_no = tem.emp_no
+                 LEFT JOIN tbl_orga tor on tor.orga_no = tem.orga_no
+                 LEFT JOIN tbl_dept_mapping tdm on tor.upper_orga_no = tdm.orga_no
+                 LEFT JOIN tbl_dept td on td.dept_no = tdm.dept_no
+                 LEFT JOIN tbl_company tc on td.company_no = tc.company_no
+        where username=#{username};
+
+    </select>
+
+    <insert id="insertEmp" parameterType="com.dq.aquaranth.emp.dto.EmpDTO">
+        insert into aquaranth2.tbl_emp (emp_name, username, password, gender, first_hired_date, reg_user)
+        VALUES (#{empName}, #{username}, #{password}, #{gender}, #{firstHiredDate}, #{regUser})
+    </insert>
+
+
+    <!-- 조직도 테스트용 -->
+    <select id="selectDeptPath" resultType="com.dq.aquaranth.emp.dto.OrgaTreeDTO">
+        select dept_path from aquaranth2.tbl_dept_mapping;
+    </select>
 
 </mapper>
