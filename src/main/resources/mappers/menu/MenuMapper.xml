@@ -3,15 +3,51 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.dq.aquaranth.menu.mapper.MenuMapper">
+    <insert id="insert" parameterType="com.dq.aquaranth.menu.dto.request.MenuInsertDTO">
+        insert into tbl_menu (upper_menu_no, menu_name, main_flag, menu_code, menu_path, menu_required,
+        menu_admin, menu_order, menu_default, uuid, filename, reg_user, reg_date)
+        VALUE (#{upperMenuNo},
+        #{menuName},
+        #{mainFlag},
+        #{menuCode},
+        #{menuPath},
+        #{menuRequired},
+        #{menuAdmin},
+        #{menuOrder},
+        #{menuDefault},
+        #{uuid},
+        #{filename},
+        #{regUser},
+        #{regDate})
+        <selectKey keyProperty="menuNo" resultType="long" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+    </insert>
 
     <select id="findAll" resultType="com.dq.aquaranth.menu.dto.response.MenuResponseDTO">
         SELECT *
         FROM tbl_menu
     </select>
 
+    <update id="updateMenuIcon">
+        UPDATE tbl_menu
+        SET uuid = #{uuid},
+        filename = #{filename}
+        WHERE menu_code = #{menuCode}
+    </update>
+
+
+    <select id="findUpperMenu" resultType="com.dq.aquaranth.menu.dto.response.MenuResponseDTO">
+        SELECT um.*
+        FROM tbl_menu m
+                 JOIN tbl_menu um on um.menu_no = m.upper_menu_no
+        WHERE m.menu_code = #{menuCode}
+    </select>
+
     <select id="findByMenuNo" resultType="com.dq.aquaranth.menu.dto.response.MenuResponseDTO">
         SELECT *
         FROM tbl_menu
+        WHERE menu_no = #{menuNo}
     </select>
 
     <select id="findByMenuCode" resultType="com.dq.aquaranth.menu.dto.response.MenuResponseDTO">
@@ -30,54 +66,9 @@
         UPDATE tbl_menu
         SET menu_name  = #{menuName},
             menu_order = #{menuOrder},
-            menu_use   = #{menuUse}
+            main_flag  = #{mainFlag}
         WHERE menu_no = #{menuNo}
     </update>
-
-    <select id="findAllMenuInformation" resultType="com.dq.aquaranth.menu.dto.response.MenuResponseDTO">
-        with recursive etc as (select menu_no
-                                    , upper_menu_no
-                                    , menu_name
-                                    , uuid
-                                    , file_name
-                                    , menu_code
-                                    , menu_required
-                                    , menu_admin
-                                    , reg_user
-                                    , reg_date
-                                    , mod_user
-                                    , mod_date
-                                    , menu_order
-                                    , menu_default
-                                    , 0                    depth
-                                    , concat(menu_no)   AS no_path
-                                    , concat(menu_code) AS url
-                               from tbl_menu
-                               where upper_menu_no IS NULL
-                               union all
-                               select m.menu_no
-                                    , m.upper_menu_no
-                                    , m.menu_name
-                                    , m.uuid
-                                    , m.file_name
-                                    , m.menu_code
-                                    , m.menu_required
-                                    , m.menu_admin
-                                    , m.reg_user
-                                    , m.reg_date
-                                    , m.mod_user
-                                    , m.mod_date
-                                    , m.menu_order
-                                    , m.menu_default
-                                    , depth + 1
-                                    , concat(no_path, '->', m.menu_no) AS no_path
-                                    , concat(url, '/', m.menu_code)    AS url
-                               from etc e
-                                        join tbl_menu m on e.menu_no = m.upper_menu_no)
-        select *
-        from etc
-        # FIXME : MENU_ORDER
-    </select>
 
     <select id="findByUpperMenuNoIsNull" resultType="com.dq.aquaranth.menu.dto.response.MenuResponseDTO">
         SELECT *
@@ -99,10 +90,9 @@
                                   where username = #{username}
 #                                     and d.dept_main = true
                                   UNION ALL
-                                  select
-                                      o.orga_no,
-                                      o.upper_orga_no,
-                                      o.orga_type
+                                  select o.orga_no,
+                                         o.upper_orga_no,
+                                         o.orga_type
                                   from etc f
                                            inner join tbl_orga o on f.upper_orga_no = o.orga_no)
               select f.orga_no, f.orga_type
@@ -120,7 +110,7 @@
                                     , upper_menu_no
                                     , menu_name
                                     , uuid
-                                    , file_name
+                                    , filename
                                     , menu_code
                                     , menu_required
                                     , menu_admin
@@ -140,7 +130,7 @@
                                     , m.upper_menu_no
                                     , m.menu_name
                                     , m.uuid
-                                    , m.file_name
+                                    , m.filename
                                     , m.menu_code
                                     , m.menu_required
                                     , m.menu_admin
@@ -165,7 +155,7 @@
                                     , upper_menu_no
                                     , menu_name
                                     , uuid
-                                    , file_name
+                                    , filename
                                     , menu_code
                                     , menu_required
                                     , menu_admin
@@ -185,7 +175,7 @@
                                     , m.upper_menu_no
                                     , m.menu_name
                                     , m.uuid
-                                    , m.file_name
+                                    , m.filename
                                     , m.menu_code
                                     , m.menu_required
                                     , m.menu_admin
@@ -204,22 +194,22 @@
         from etc
         # FIXME : MENU_ORDER
     </select>
-<!--TODO : MyBaits OGNL을 이용한 동적 쿼리 작성 # 25-->
-<!--    <sql id="find_menu">-->
-<!--        <where>-->
-<!--            <if test="menuCode != null">-->
-<!--                AND menu_code = #{menuCode}-->
-<!--            </if>-->
-<!--            <if test="menuNo != null">-->
-<!--                AND menu_no = #{menuNo}-->
-<!--            </if>-->
-<!--        </where>-->
-<!--    </sql>-->
-<!--    <select id="findBy" resultType="com.dq.aquaranth.menu.dto.response.MenuResponseDTO">-->
-<!--        SELECT *-->
-<!--        FROM tbl_menu-->
-<!--        <include refid="find_menu" />-->
-<!--    </select>-->
+    <!--TODO : MyBaits OGNL을 이용한 동적 쿼리 작성 # 25-->
+    <!--    <sql id="find_menu">-->
+    <!--        <where>-->
+    <!--            <if test="menuCode != null">-->
+    <!--                AND menu_code = #{menuCode}-->
+    <!--            </if>-->
+    <!--            <if test="menuNo != null">-->
+    <!--                AND menu_no = #{menuNo}-->
+    <!--            </if>-->
+    <!--        </where>-->
+    <!--    </sql>-->
+    <!--    <select id="findBy" resultType="com.dq.aquaranth.menu.dto.response.MenuResponseDTO">-->
+    <!--        SELECT *-->
+    <!--        FROM tbl_menu-->
+    <!--        <include refid="find_menu" />-->
+    <!--    </select>-->
 
 
 </mapper>

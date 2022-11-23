@@ -1,7 +1,10 @@
 package com.dq.aquaranth.menu.controller;
 
 
+import com.dq.aquaranth.commons.annotation.Test123;
 import com.dq.aquaranth.menu.constant.ErrorCode;
+import com.dq.aquaranth.menu.dto.request.FileDto;
+import com.dq.aquaranth.menu.dto.request.MenuInsertDTO;
 import com.dq.aquaranth.menu.dto.request.MenuUpdateDTO;
 import com.dq.aquaranth.menu.dto.response.MenuResponseDTO;
 import com.dq.aquaranth.menu.exception.MenuException;
@@ -12,6 +15,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,6 +24,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/menu")
 @RequiredArgsConstructor
+//@Menu("ROLE0010")
 public class MenuApiController {
 
     private final MenuService menuService;
@@ -30,10 +35,9 @@ public class MenuApiController {
         return menuService.findAll();
     }
 
-    //    TODO : MyBaits OGNL을 이용한 동적 쿼리 작성 # 25
     @Operation(summary = "메뉴코드 단건 메뉴 조회", description = "메뉴코드를 이용하여 단건 메뉴를 조회합니다.", responses = @ApiResponse(responseCode = "200", content = @Content(mediaType = "application/json")))
     @GetMapping("/findcode")
-    public Optional<MenuResponseDTO> findByMenuCode(@RequestParam(value = "menuCode") String menuCode) {
+    public Optional<MenuResponseDTO> findByMenuCode(@RequestParam(value = "menuCode") @Test123 String menuCode) {
         return Optional.ofNullable(menuService.findByMenuCode(menuCode)
                 .orElseThrow(() -> new MenuException(ErrorCode.MENU_NOT_FOUND)));
     }
@@ -43,12 +47,6 @@ public class MenuApiController {
     public Optional<MenuResponseDTO> findByMenuNo(@RequestParam(value = "menuNo") Long menuNo) {
         return Optional.ofNullable(menuService.findByMenuNo(menuNo)
                 .orElseThrow(() -> new MenuException(ErrorCode.MENU_NOT_FOUND)));
-    }
-
-    @Operation(summary = "GNB 메뉴 조회", description = "상위메뉴번호가 없는 메뉴(GNB)를 조회합니다.", responses = @ApiResponse(responseCode = "200", content = @Content(mediaType = "application/json")))
-    @GetMapping("/gnb")
-    public List<MenuResponseDTO> findGnbMenus() {
-        return menuService.findByUpperMenuNoIsNull();
     }
 
     @Operation(summary = "상위 메뉴 조회", description = "하위 메뉴코드를 이용하여 상위메뉴들를 조회합니다.", responses = @ApiResponse(responseCode = "200", content = @Content(mediaType = "application/json")))
@@ -71,7 +69,18 @@ public class MenuApiController {
 
     @Operation(summary = "메뉴 상태 업데이트", description = "메뉴 상태를 업데이트 합니다. 반환되는 정보는 업데이트된 메뉴의 정보입니다.", responses = @ApiResponse(responseCode = "200", content = @Content(mediaType = "application/json")))
     @PutMapping("/update")
-    public Optional<MenuResponseDTO> update(MenuUpdateDTO menuUpdateDTO) {
+    public Optional<MenuResponseDTO> update(@RequestBody MenuUpdateDTO menuUpdateDTO) {
         return menuService.update(menuUpdateDTO);
     }
+    @Operation(summary = "메뉴 추가", description = "메뉴를 추가합니다. 반환되는 정보는 추가된 메뉴의 정보입니다.", responses = @ApiResponse(responseCode = "200", content = @Content(mediaType = "application/json")))
+    @PutMapping("/insert")
+    public Optional<MenuResponseDTO> insert(MenuInsertDTO menuInsertDTO, @RequestParam("file") MultipartFile multipartFile) throws Exception {
+        return menuService.insert(menuInsertDTO, multipartFile);
+    }
+    @Operation(summary = "메뉴 상태 업데이트", description = "메뉴 상태를 업데이트 합니다. 반환되는 정보는 업데이트된 메뉴의 정보입니다.", responses = @ApiResponse(responseCode = "200", content = @Content(mediaType = "application/json")))
+    @PostMapping("/updateicon")
+    public Optional<MenuResponseDTO> updateByMenuIcon(FileDto fileDto) throws Exception {
+        return menuService.updateByMenuIcon(fileDto.getMultipartFile());
+    }
+
 }

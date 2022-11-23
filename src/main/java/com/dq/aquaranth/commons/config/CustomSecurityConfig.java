@@ -5,7 +5,6 @@ import com.dq.aquaranth.emp.mapper.EmpMapper;
 import com.dq.aquaranth.login.handler.CustomLogoutSuccessHandler;
 import com.dq.aquaranth.login.jwt.JwtAuthenticationFilter;
 import com.dq.aquaranth.login.jwt.JwtAuthorizationFilter;
-import com.dq.aquaranth.menu.service.MenuService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,6 +24,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -34,19 +34,13 @@ public class CustomSecurityConfig {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final RedisTemplate<String, Object> redisTemplate;
     private final JWTUtil jwtUtil;
-    private final EmpMapper empMapper;
 
     @Bean
     public SecurityFilterChain filterChain(final HttpSecurity http) throws Exception {
         // Basic AuthenticationManager and UserDetailService Create
         AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
-
-        authenticationManagerBuilder
-                .userDetailsService(userDetailsService)
-                .passwordEncoder(bCryptPasswordEncoder);
-
-        AuthenticationManager authenticationManager
-                = authenticationManagerBuilder.build();
+        authenticationManagerBuilder.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder);
+        AuthenticationManager authenticationManager = authenticationManagerBuilder.build();
 
         /**
          *  원래는 UsernamePasswordAuthenticationFilter 에서 /login 이 기본으로 구현되어 있지만,
@@ -65,7 +59,6 @@ public class CustomSecurityConfig {
 
                 .and()
                 .formLogin().disable()
-
 
                 // 권한 설정
                 .authorizeHttpRequests()
@@ -93,7 +86,7 @@ public class CustomSecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOriginPatterns(Arrays.asList("*"));
+        configuration.setAllowedOriginPatterns(List.of("*"));
         configuration.setAllowedMethods(Arrays.asList("HEAD", "GET", "POST", "PUT", "DELETE"));
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
         configuration.setAllowCredentials(true);

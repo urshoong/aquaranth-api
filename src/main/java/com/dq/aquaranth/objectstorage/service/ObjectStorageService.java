@@ -6,7 +6,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface ObjectStorageService {
 
-    ObjectResponseDTO postObject(MultipartFile multipartFile) throws Exception;
+    ObjectResponseDTO postObject(MultipartFile multipartFile, String filename) throws Exception;
 
     ObjectResponseDTO getObject(ObjectRequestDTO objectRequestDTO) throws Exception;
 

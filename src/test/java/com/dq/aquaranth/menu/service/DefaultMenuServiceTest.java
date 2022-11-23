@@ -8,6 +8,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -60,18 +61,11 @@ class DefaultMenuServiceTest {
         MenuUpdateDTO menuUpdateDTO = MenuUpdateDTO.builder()
                 .menuNo(menuNo)
                 .menuName(menuName)
-                .menuUse(false)
+                .mainFlag(false)
                 .menuOrder(99L)
                 .build();
         Optional<MenuResponseDTO> expectedMenuResponseDto = menuService.update(menuUpdateDTO);
         assertThat(Objects.requireNonNull(expectedMenuResponseDto.orElseGet(() -> null)).getMenuName()).isEqualTo(menuName);
-    }
-
-    @Test
-    @DisplayName(value = "URL 정보를 포함한 모든 메뉴를 조회합니다.")
-    void findAllMenuInformation() {
-        List<MenuResponseDTO> menuResponseDTOList = menuService.findAllMenuInformation();
-        Assertions.assertThat(menuResponseDTOList.get(1).getUrl()).isNotNull();
     }
 
     @Test
