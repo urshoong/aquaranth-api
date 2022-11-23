@@ -6,11 +6,11 @@ import java.util.List;
 
 public interface CompanyService {
 
-    List<CompanyListDTO> findAll();
-    CompanyDTO findById(Long companyNo);
-    Long insert(CompanyDTO companyDTO);
-    Long update(CompanyModifyDTO companyModifyDTO);
-    Long deleteById(Long companyNo);
+    List<CompanyListDTO> findAllCompany();
+    CompanyInformationDTO findByCompanyNo(Long companyNo);
+    Long insert(CompanyInformationDTO companyInformationDTO, String username);
+    Long update(CompanyUpdateDTO companyUpdateDTO, String username);
+    Long deleteByCompanyNo(Long companyNo);
     List<CompanyListDTO> search(Boolean companyUse, String companySearch);
 }
 

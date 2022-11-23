@@ -1,49 +1,50 @@
 package com.dq.aquaranth.company.mapper;
 
 import com.dq.aquaranth.company.dto.*;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
 public interface CompanyMapper {
 
     /**
-     * 회사코드, 회사명, 대표자명, 사용여부 리스트 출력
+     * 회사 일부정보(회사번호, 회사명, 대표자명, 사용여부만)가 포함된 전체 리스트 출력
      */
-    List<CompanyListDTO> findAll();
+    List<CompanyListDTO> findAllCompany();
 
     /**
-     * 회사 기본 정보 출력
+     * 해당 회사에 대한 기본정보 출력
      */
-    CompanyDTO findById(Long companyNo);
+    CompanyInformationDTO findByCompanyNo(Long companyNo);
 
     /**
-     * 조직에 회사 정보 추가
+     * 상위 조직번호가 없고 'company' 타입인 조직 추가
      */
     Long insertOrga(CompanyOrgaDTO companyOrgaDTO);
 
     /**
-     * 회사 기본 정보 추가
+     * 회사 기본정보 추가
      */
-    Long insert(CompanyDTO companyDTO);
+    Long insert(CompanyInformationDTO companyInformationDTO);
 
     /**
-     * 회사 기본 정보 수정
+     * 회사 기본정보 수정
      */
-    Long update(CompanyModifyDTO companyModifyDTO);
+    Long update(CompanyUpdateDTO companyUpdateDTO);
 
     /**
-     * 회사 정보 삭제
+     * 회사 기본정보 삭제(즉, 사용 여부가 '사용'인 회사를 '미사용'으로 변경)
      */
-    Long deleteById(Long companyNo);
+    Long deleteByCompanyNo(Long companyNo);
 
     /**
-     * 회사 코드, 회사명, 사용여부로 검색
+     * 회사코드, 회사명, 사용여부로 회사 기본정보 검색
      */
     List<CompanyListDTO> search(Boolean companyUse, String companySearch);
 
     /**
      * 사용자 아이디에 맞는 회사 정보 출력
      */
-    CompanyDTO findByUsername(String username);
+    CompanyInformationDTO findByUsername(String username);
 
 }
