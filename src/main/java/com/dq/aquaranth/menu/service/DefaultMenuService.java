@@ -96,14 +96,14 @@ public class DefaultMenuService implements MenuService {
         }
 
         menuMapper.insert(menuInsertDTO);
-        return menuMapper.findBy(MenuRequestDTO.builder().menuCode(menuInsertDTO.getMenuCode()).build()).get();
+        return findBy(MenuRequestDTO.builder().menuCode(menuInsertDTO.getMenuCode()).build());
     }
 
     @Override
     @Transactional
     public MenuResponseDTO update(MenuUpdateDTO menuUpdateDTO) {
         menuMapper.update(menuUpdateDTO);
-        return menuMapper.findBy(MenuRequestDTO.builder().menuCode(menuUpdateDTO.getMenuCode()).build()).get();
+        return findBy(MenuRequestDTO.builder().menuCode(menuUpdateDTO.getMenuCode()).build());
     }
 
     @Override
@@ -118,7 +118,7 @@ public class DefaultMenuService implements MenuService {
 
         menuMapper.updateIcon(menuIconUpdateDTO);
         objectStorageService.postObject(objectPostRequestDTO);
-        return menuMapper.findBy(MenuRequestDTO.builder().menuCode(multipartFileDTO.getKey()).build()).get();
+        return findBy(MenuRequestDTO.builder().menuCode(multipartFileDTO.getKey()).build());
     }
 
     @Override
