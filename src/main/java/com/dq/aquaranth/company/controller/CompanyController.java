@@ -22,8 +22,8 @@ public class CompanyController {
      * 회사 일부정보(회사번호, 회사명, 대표자명, 사용여부만)가 포함된 전체 리스트 출력
      */
     @GetMapping("/list")
-    public List<CompanyListDTO> getCompanyList(Authentication authentication) {
-        log.info("authentication : {}", authentication.getPrincipal());
+    public List<CompanyListDTO> getCompanyList() {
+        //log.info("authentication : {}", authentication.getPrincipal());
         return companyService.findAllCompany();
     }
 
@@ -42,6 +42,7 @@ public class CompanyController {
     public Long registerCompany(@RequestBody CompanyInformationDTO companyInformationDTO, Authentication authentication) {
         CustomUser customUser = (CustomUser) authentication.getPrincipal();
         String username = customUser.getUsername();
+        log.info(username);
         return companyService.insert(companyInformationDTO, username);
     }
 

@@ -5,16 +5,11 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.dq.aquaranth.commons.utils.JWTUtil;
-import com.dq.aquaranth.company.dto.CompanyDTO;
 import com.dq.aquaranth.company.mapper.CompanyMapper;
-import com.dq.aquaranth.dept.dto.DeptDTO;
 import com.dq.aquaranth.dept.mapper.DeptMapper;
-import com.dq.aquaranth.emp.dto.EmpDTO;
 import com.dq.aquaranth.emp.mapper.EmpMapper;
-import com.dq.aquaranth.login.domain.CustomUser;
 import com.dq.aquaranth.login.domain.LoginUser;
 import com.dq.aquaranth.login.dto.RedisDTO;
-import com.dq.aquaranth.rolegroup.domain.RoleGroup;
 import com.dq.aquaranth.rolegroup.mapper.RoleGroupMapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -25,7 +20,6 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
@@ -95,7 +89,7 @@ public class UserSessionServiceImpl implements UserSessionService {
         // TODO : 부서정보 넣어야함 mapper 안만들어져 있음
         RedisDTO redisDTO = RedisDTO.builder()
                 .emp(empMapper.findByUsername(loginUser.getUsername()))
-                .company(companyMapper.findById(loginUser.getLoginCompanyNo()))
+                .company(companyMapper.findByCompanyNo(loginUser.getLoginCompanyNo()))
                 .roleGroups(roleGroupMapper.findRoleGroupsByLoginUser(loginUser))
                 .build();
 

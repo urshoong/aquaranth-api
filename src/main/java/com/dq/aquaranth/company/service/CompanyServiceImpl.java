@@ -35,6 +35,7 @@ public class CompanyServiceImpl implements CompanyService {
     @Transactional
     public Long insert(CompanyInformationDTO companyInformationDTO, String username) {
         log.info("상위 조직번호가 없고 'company' 타입인 조직을 먼저 추가");
+        log.info(username);
         CompanyOrgaDTO companyOrgaDTO = CompanyOrgaDTO
                 .builder()
                 .orgaType("company")
