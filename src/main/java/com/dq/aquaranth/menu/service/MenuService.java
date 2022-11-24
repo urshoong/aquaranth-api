@@ -1,5 +1,6 @@
 package com.dq.aquaranth.menu.service;
 
+import com.dq.aquaranth.objectstorage.dto.request.MultipartFileDTO;
 import com.dq.aquaranth.menu.dto.request.MenuInsertDTO;
 import com.dq.aquaranth.menu.dto.request.MenuUpdateDTO;
 import com.dq.aquaranth.menu.dto.response.MenuResponseDTO;
@@ -19,7 +20,7 @@ public interface MenuService {
     Optional<MenuResponseDTO> insert(MenuInsertDTO menuInsertDTO, MultipartFile multipartFile) throws Exception;
 
     Optional<MenuResponseDTO> update(MenuUpdateDTO menuUpdateDTO);
-    Optional<MenuResponseDTO> updateByMenuIcon(MultipartFile multipartFile) throws Exception;
+    Optional<MenuResponseDTO> updateIcon(MultipartFileDTO fileDto) throws Exception;
 
     List<MenuResponseDTO> findByUpperMenuNoIsNull();
 

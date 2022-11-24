@@ -1,12 +1,16 @@
 package com.dq.aquaranth.menu.service;
 
-import com.dq.aquaranth.menu.dto.request.MenuIconUpdateDTO;
 import com.dq.aquaranth.menu.dto.request.MenuInsertDTO;
 import com.dq.aquaranth.menu.dto.request.MenuUpdateDTO;
+import com.dq.aquaranth.menu.dto.request.MenuIconUpdateDTO;
 import com.dq.aquaranth.menu.dto.response.MenuResponseDTO;
 import com.dq.aquaranth.menu.mapper.MenuMapper;
+import com.dq.aquaranth.objectstorage.dto.request.MultipartFileDTO;
+import com.dq.aquaranth.objectstorage.dto.request.ObjectGetRequestDTO;
+import com.dq.aquaranth.objectstorage.dto.request.ObjectPostRequestDTO;
 import com.dq.aquaranth.objectstorage.service.ObjectStorageService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -16,6 +20,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
+@Log4j2
 @RequiredArgsConstructor
 public class DefaultMenuService implements MenuService {
 
@@ -29,7 +34,19 @@ public class DefaultMenuService implements MenuService {
      */
     @Override
     public List<MenuResponseDTO> findAll() {
-        return menuMapper.findAll();
+        List<MenuResponseDTO> menuResponseDTOList = menuMapper.findAll();
+        menuResponseDTOList.
+                forEach(menuResponseDTO -> {
+                    ObjectGetRequestDTO objectRequestDTO = ObjectGetRequestDTO.builder()
+                            .filename(menuResponseDTO.getUuid() + menuResponseDTO.getFilename())
+                            .build();
+                    try {
+                        menuResponseDTO.setIconUrl(objectStorageService.getObject(objectRequestDTO).getUrl());
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+        return menuResponseDTOList;
     }
 
     /**
@@ -56,6 +73,7 @@ public class DefaultMenuService implements MenuService {
 
     /**
      * 메뉴를 추가합니다. 반환되는 정보는 추가된 메뉴의 정보입니다.
+     *
      * @param menuInsertDTO
      * @param multipartFile
      * @return
@@ -77,12 +95,16 @@ public class DefaultMenuService implements MenuService {
         menuInsertDTO.setDepth(upperMenu.getDepth() + 1L);
 
 
-        if (!multipartFile.isEmpty()){
+        if (!multipartFile.isEmpty()) {
             String uuid = UUID.randomUUID().toString();
             String filename = multipartFile.getOriginalFilename();
+            ObjectPostRequestDTO objectPostRequestDTO = ObjectPostRequestDTO.builder()
+                            .filename(uuid + filename)
+                                    .multipartFile(multipartFile)
+                    .build();
             menuInsertDTO.setUuid(uuid);
             menuInsertDTO.setFilename(filename);
-            objectStorageService.postObject(multipartFile, uuid + filename);
+            objectStorageService.postObject(objectPostRequestDTO);
         }
 
         menuMapper.insert(menuInsertDTO);
@@ -105,16 +127,25 @@ public class DefaultMenuService implements MenuService {
 
     @Override
     @Transactional
-    public Optional<MenuResponseDTO> updateByMenuIcon(MultipartFile multipartFile) throws Exception {
+    public Optional<MenuResponseDTO> updateIcon(MultipartFileDTO multipartFileDTO) throws Exception {
         String uuid = UUID.randomUUID().toString();
-        String filename = multipartFile.getOriginalFilename();
+        String filename = multipartFileDTO.getMultipartFile().getOriginalFilename();
+
+        ObjectPostRequestDTO objectPostRequestDTO = ObjectPostRequestDTO
+                .builder()
+                .filename(uuid + filename)
+                .multipartFile(multipartFileDTO.getMultipartFile())
+                .build();
+
         MenuIconUpdateDTO menuIconUpdateDTO = MenuIconUpdateDTO.builder()
+                .menuCode(multipartFileDTO.getKey())
                 .uuid(uuid)
                 .filename(filename)
                 .build();
-        objectStorageService.postObject(multipartFile, uuid + filename);
 
-        return Optional.empty();
+        menuMapper.updateIcon(menuIconUpdateDTO);
+        objectStorageService.postObject(objectPostRequestDTO);
+        return menuMapper.findByMenuCode(multipartFileDTO.getKey());
     }
 
     @Override

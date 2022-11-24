@@ -1,7 +1,8 @@
 package com.dq.aquaranth.objectstorage.controller;
 
 
-import com.dq.aquaranth.objectstorage.dto.request.ObjectRequestDTO;
+import com.dq.aquaranth.objectstorage.dto.request.ObjectGetRequestDTO;
+import com.dq.aquaranth.objectstorage.dto.request.ObjectPostRequestDTO;
 import com.dq.aquaranth.objectstorage.dto.response.ObjectResponseDTO;
 import com.dq.aquaranth.objectstorage.service.ObjectStorageService;
 import lombok.RequiredArgsConstructor;
@@ -21,19 +22,20 @@ public class ObjectStorageController {
     private final ObjectStorageService objectStorageService;
 
     @PostMapping
+    // FIXME
     public ResponseEntity<ObjectResponseDTO> postObject(@RequestParam("file") MultipartFile multipartFile, String filename) throws Exception {
         return ResponseEntity.status(HttpStatus.OK)
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(objectStorageService.postObject(multipartFile, filename));
+                .body(objectStorageService.postObject(ObjectPostRequestDTO.builder().build()));
     }
 
     @GetMapping("/{filename}")
     public ResponseEntity<ObjectResponseDTO> getUrl(@PathVariable("filename") String filename) throws Exception {
-        ObjectRequestDTO objectRequestDTO = ObjectRequestDTO.builder()
+        ObjectGetRequestDTO objectGetRequestDTO = ObjectGetRequestDTO.builder()
                 .filename(filename)
                 .build();
         return ResponseEntity.status(HttpStatus.OK)
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(objectStorageService.getObject(objectRequestDTO));
+                .body(objectStorageService.getObject(objectGetRequestDTO));
     }
 }

@@ -1,28 +1,28 @@
 package com.dq.aquaranth.objectstorage.service;
 
-import com.dq.aquaranth.objectstorage.dto.request.ObjectRequestDTO;
+import com.dq.aquaranth.objectstorage.dto.request.ObjectGetRequestDTO;
+import com.dq.aquaranth.objectstorage.dto.request.ObjectPostRequestDTO;
 import com.dq.aquaranth.objectstorage.dto.response.ObjectResponseDTO;
 import com.dq.aquaranth.objectstorage.repository.MinioAdaptor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
 public class MinioObjectStorageService implements ObjectStorageService {
     private final MinioAdaptor minioAdaptor;
     @Override
-    public ObjectResponseDTO postObject(MultipartFile multipartFile, String filename) throws Exception {
-        minioAdaptor.putObject(filename, multipartFile);
+    public ObjectResponseDTO postObject(ObjectPostRequestDTO objectPostRequestDTO) throws Exception {
+        minioAdaptor.putObject(objectPostRequestDTO.getFilename(), objectPostRequestDTO.getMultipartFile());
         return ObjectResponseDTO.builder()
-                .url(minioAdaptor.getPresignedObjectUrl(filename))
+                .url(minioAdaptor.getPresignedObjectUrl(objectPostRequestDTO.getFilename()))
                 .build();
     }
 
     @Override
-    public ObjectResponseDTO getObject(ObjectRequestDTO objectRequestDTO) throws Exception {
+    public ObjectResponseDTO getObject(ObjectGetRequestDTO objectGetRequestDTO) throws Exception {
         return ObjectResponseDTO.builder()
-                .url(minioAdaptor.getPresignedObjectUrl(objectRequestDTO.getFilename()))
+                .url(minioAdaptor.getPresignedObjectUrl(objectGetRequestDTO.getFilename()))
                 .build();
     }
 }
