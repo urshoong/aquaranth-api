@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class MenuRequestDTO {
-    private String menuName;
+    private Long menuNo;
     private String menuCode;
     private String keyword;
 }

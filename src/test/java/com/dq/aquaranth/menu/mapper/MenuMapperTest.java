@@ -1,6 +1,7 @@
 package com.dq.aquaranth.menu.mapper;
 
 import com.dq.aquaranth.menu.dto.request.MenuInsertDTO;
+import com.dq.aquaranth.menu.dto.request.MenuRequestDTO;
 import com.dq.aquaranth.menu.dto.request.MenuUpdateDTO;
 import com.dq.aquaranth.menu.dto.response.MenuResponseDTO;
 import lombok.extern.log4j.Log4j2;
@@ -11,10 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 
 import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 
-import static com.dq.aquaranth.menu.constant.MenuCode.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 
@@ -29,7 +27,8 @@ class MenuMapperTest {
     @Test
     @DisplayName(value = "전체 메뉴를 조회")
     void findAll() {
-        List<MenuResponseDTO> menuResponseDTOList = menuMapper.findAll();
+        MenuRequestDTO menuRequestDTO = MenuRequestDTO.builder().build();
+        List<MenuResponseDTO> menuResponseDTOList = menuMapper.findAllBy(menuRequestDTO);
         menuResponseDTOList.forEach(log::info);
         assertThat(menuResponseDTOList).isNotNull();
     }
@@ -60,17 +59,10 @@ class MenuMapperTest {
         log.info(menuInsertDTO);
     }
 
-// TODO : MyBaits OGNL을 이용한 동적 쿼리 작성 # 25
     @Test
-    void findBy() {
-        String menuCode = ROLE0020.getCode();
-        Long menuNo = 10L;
+    void findMenusByLoginUsername() {
+        String username = "admin";
+        List<MenuResponseDTO> menuResponseDTOList = menuMapper.findMenusByLoginUsername(username);
+        log.info(menuResponseDTOList);
     }
-
-//    @Test
-//    void findMenusByLoginUsername() {
-//        String username = "admin";
-//        List<MenuResponseDTO> menuResponseDTOList = menuMapper.findByMenuCodeUnderRecursive(username);
-//        log.info(menuResponseDTOList);
-//    }
 }

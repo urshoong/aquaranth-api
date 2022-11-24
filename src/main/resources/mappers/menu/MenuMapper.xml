@@ -3,6 +3,59 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.dq.aquaranth.menu.mapper.MenuMapper">
+
+    <sql id="find_all">
+        <where>
+            <if test="menuCode != null">
+                OR menu_code = #{menuCode}
+            </if>
+            <if test="menuNo != null">
+                OR menu_no = #{menuNo}
+            </if>
+            <if test="keyword eq 'gnb'">
+                OR upper_menu_no IS NULL
+            </if>
+        </where>
+    </sql>
+
+    <sql id="find_one">
+        <where>
+            <if test="menuCode != null">
+                AND menu_code = #{menuCode}
+            </if>
+            <if test="menuNo != null">
+                AND menu_no = #{menuNo}
+            </if>
+            <if test="keyword eq 'gnb'">
+                AND upper_menu_no IS NULL
+            </if>
+        </where>
+    </sql>
+
+    <sql id="menu">
+        <where>
+            <if test="menuCode != null">
+                AND menu_code = #{menuCode}
+            </if>
+            <if test="menuNo != null">
+                AND menu_no = #{menuNo}
+            </if>
+        </where>
+    </sql>
+
+    <select id="findBy" resultType="com.dq.aquaranth.menu.dto.response.MenuResponseDTO">
+        SELECT *
+        FROM tbl_menu m
+        <include refid="find_one" />
+    </select>
+
+    <select id="findAllBy" resultType="com.dq.aquaranth.menu.dto.response.MenuResponseDTO">
+        SELECT *
+        FROM tbl_menu
+        <include refid="find_all" />
+    </select>
+
+
     <insert id="insert" parameterType="com.dq.aquaranth.menu.dto.request.MenuInsertDTO">
         insert into tbl_menu (upper_menu_no, menu_name, main_flag, menu_code, menu_path, menu_required,
         menu_admin, menu_order, menu_default, uuid, filename, reg_user, reg_date)
@@ -24,42 +77,25 @@
         </selectKey>
     </insert>
 
-    <select id="findAll" resultType="com.dq.aquaranth.menu.dto.response.MenuResponseDTO">
-        SELECT *
-        FROM tbl_menu
-    </select>
-
     <update id="updateIcon">
         UPDATE tbl_menu
         SET uuid = #{uuid},
         filename = #{filename}
-        WHERE menu_code = #{menuCode}
+        <include refid="menu" />
     </update>
 
 
-    <select id="findUpperMenu" resultType="com.dq.aquaranth.menu.dto.response.MenuResponseDTO">
+    <select id="findUpperMenuBy" resultType="com.dq.aquaranth.menu.dto.response.MenuResponseDTO">
         SELECT um.*
         FROM tbl_menu m
                  JOIN tbl_menu um on um.menu_no = m.upper_menu_no
-        WHERE m.menu_code = #{menuCode}
-    </select>
-
-    <select id="findByMenuNo" resultType="com.dq.aquaranth.menu.dto.response.MenuResponseDTO">
-        SELECT *
-        FROM tbl_menu
-        WHERE menu_no = #{menuNo}
-    </select>
-
-    <select id="findByMenuCode" resultType="com.dq.aquaranth.menu.dto.response.MenuResponseDTO">
-        SELECT *
-        FROM tbl_menu
-        WHERE menu_code = #{menuCode}
+        <include refid="menu" />
     </select>
 
     <delete id="delete">
         DELETE
         FROM tbl_menu
-        WHERE menu_code = #{menuCode}
+        <include refid="menu" />
     </delete>
 
     <update id="update">
@@ -67,7 +103,7 @@
         SET menu_name  = #{menuName},
             menu_order = #{menuOrder},
             main_flag  = #{mainFlag}
-        WHERE menu_no = #{menuNo}
+        <include refid="menu" />
     </update>
 
 
@@ -97,23 +133,5 @@
                  join tbl_menu m on mr.menu_no = m.menu_no
         order by f.orga_type
     </select>
-
-
-        <sql id="find_menu">
-            <where>
-                <if test="menuCode != null">
-                    OR menu_code = #{menuCode}
-                </if>
-                <if test="menuNo != null">
-                    OR menu_no = #{menuNo}
-                </if>
-            </where>
-        </sql>
-        <select id="findBy" resultType="com.dq.aquaranth.menu.dto.response.MenuResponseDTO">
-            SELECT *
-            FROM tbl_menu
-            <include refid="find_menu" />
-        </select>
-
 
 </mapper>
