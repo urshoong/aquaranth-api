@@ -10,8 +10,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class MenuIconUpdateDTO {
+public class MenuRequestDTO {
+    private String menuName;
     private String menuCode;
-    private String uuid;
-    private String filename;
+    private String keyword;
 }

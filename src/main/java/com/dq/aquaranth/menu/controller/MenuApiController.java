@@ -1,9 +1,8 @@
 package com.dq.aquaranth.menu.controller;
 
 
-import com.dq.aquaranth.commons.annotation.Test123;
 import com.dq.aquaranth.menu.constant.ErrorCode;
-import com.dq.aquaranth.menu.dto.request.FileDto;
+import com.dq.aquaranth.objectstorage.dto.request.MultipartFileDTO;
 import com.dq.aquaranth.menu.dto.request.MenuInsertDTO;
 import com.dq.aquaranth.menu.dto.request.MenuUpdateDTO;
 import com.dq.aquaranth.menu.dto.response.MenuResponseDTO;
@@ -14,6 +13,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -37,7 +37,7 @@ public class MenuApiController {
 
     @Operation(summary = "메뉴코드 단건 메뉴 조회", description = "메뉴코드를 이용하여 단건 메뉴를 조회합니다.", responses = @ApiResponse(responseCode = "200", content = @Content(mediaType = "application/json")))
     @GetMapping("/findcode")
-    public Optional<MenuResponseDTO> findByMenuCode(@RequestParam(value = "menuCode") @Test123 String menuCode) {
+    public Optional<MenuResponseDTO> findByMenuCode(@RequestParam(value = "menuCode") String menuCode) {
         return Optional.ofNullable(menuService.findByMenuCode(menuCode)
                 .orElseThrow(() -> new MenuException(ErrorCode.MENU_NOT_FOUND)));
     }
@@ -77,10 +77,14 @@ public class MenuApiController {
     public Optional<MenuResponseDTO> insert(MenuInsertDTO menuInsertDTO, @RequestParam("file") MultipartFile multipartFile) throws Exception {
         return menuService.insert(menuInsertDTO, multipartFile);
     }
+//    @Operation(summary = "메뉴 상태 업데이트", description = "메뉴 상태를 업데이트 합니다. 반환되는 정보는 업데이트된 메뉴의 정보입니다.", responses = @ApiResponse(responseCode = "200", content = @Content(mediaType = "application/json")))
+//    @PostMapping("/updateicon")
+//    public Optional<MenuResponseDTO> updateByMenuIcon(@RequestPart(value = "file") MultipartFile multipartFile, String menuCode) throws Exception {
+//        log.info(menuCode);
+//        return menuService.updateByMenuIcon(multipartFile);
     @Operation(summary = "메뉴 상태 업데이트", description = "메뉴 상태를 업데이트 합니다. 반환되는 정보는 업데이트된 메뉴의 정보입니다.", responses = @ApiResponse(responseCode = "200", content = @Content(mediaType = "application/json")))
-    @PostMapping("/updateicon")
-    public Optional<MenuResponseDTO> updateByMenuIcon(FileDto fileDto) throws Exception {
-        return menuService.updateByMenuIcon(fileDto.getMultipartFile());
+    @PutMapping(value = "/updateicon", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public Optional<MenuResponseDTO> updateByMenuIcon(MultipartFileDTO fileDto) throws Exception {
+        return menuService.updateIcon(fileDto);
     }
-
 }

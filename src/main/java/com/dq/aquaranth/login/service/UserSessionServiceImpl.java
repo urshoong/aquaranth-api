@@ -14,7 +14,6 @@ import com.dq.aquaranth.emp.mapper.EmpMapper;
 import com.dq.aquaranth.login.domain.CustomUser;
 import com.dq.aquaranth.login.domain.LoginUser;
 import com.dq.aquaranth.login.dto.RedisDTO;
-import com.dq.aquaranth.rolegroup.domain.RoleGroup;
 import com.dq.aquaranth.rolegroup.mapper.RoleGroupMapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
