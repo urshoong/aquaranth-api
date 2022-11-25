@@ -1,6 +1,7 @@
 package com.dq.aquaranth.rolegroup.service.impl;
 
 import com.dq.aquaranth.rolegroup.domain.RoleGroup;
+import com.dq.aquaranth.rolegroup.dto.RoleGroupResponseDTO;
 import com.dq.aquaranth.rolegroup.dto.RoleGroupUpdateDTO;
 import com.dq.aquaranth.rolegroup.mapper.RoleGroupMapper;
 import com.dq.aquaranth.rolegroup.service.RoleGroupService;
@@ -18,7 +19,7 @@ import java.util.Objects;
 public class RoleGroupServiceImpl implements RoleGroupService {
     private final RoleGroupMapper roleGroupMapper;
     @Override
-    public List<RoleGroup> findAll() {
+    public List<RoleGroupResponseDTO> findAll() {
         log.info("권한그룹을 조회합니다");
         return roleGroupMapper.findAll();
     }

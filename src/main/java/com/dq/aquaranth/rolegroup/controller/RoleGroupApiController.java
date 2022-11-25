@@ -5,6 +5,7 @@ import com.dq.aquaranth.login.dto.LoginUserInfo;
 import com.dq.aquaranth.login.service.UserSessionService;
 import com.dq.aquaranth.rolegroup.domain.RoleGroup;
 import com.dq.aquaranth.rolegroup.dto.RoleGroupInsertReqDTO;
+import com.dq.aquaranth.rolegroup.dto.RoleGroupResponseDTO;
 import com.dq.aquaranth.rolegroup.dto.RoleGroupUpdateDTO;
 import com.dq.aquaranth.rolegroup.dto.RoleGroupUpdateReqDTO;
 import com.dq.aquaranth.rolegroup.service.RoleGroupService;
@@ -25,7 +26,7 @@ public class RoleGroupApiController {
     private final UserSessionService userSessionService;
 
     @GetMapping("")
-    public List<RoleGroup> getRoleGroupList() {
+    public List<RoleGroupResponseDTO> getRoleGroupList() {
         return roleGroupService.findAll();
     }
 
@@ -37,15 +38,11 @@ public class RoleGroupApiController {
     @PostMapping("")
     public RoleGroup register(@RequestBody RoleGroupInsertReqDTO reqDTO, Authentication authentication) {
 //      TODO:  mockup data 로그인 세션처리 완성되면 레디스에서 들고와야함.
-        String username = "admin";
-
-        LoginUserInfo loginUserInfo = userSessionService.findUserInfoInRedis(authentication.getName());
-
         RoleGroup insertRoleGroup = RoleGroup.builder()
                 .companyNo(reqDTO.getCompanyNo())
                 .roleGroupName(reqDTO.getRoleGroupName())
                 .roleGroupUse(reqDTO.isRoleGroupUse())
-                .regUser(username)
+                .regUser(authentication.getName())
                 .regDate(LocalDateTime.now())
                 .build();
 
