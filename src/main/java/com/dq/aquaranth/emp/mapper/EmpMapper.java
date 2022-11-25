@@ -79,12 +79,13 @@ public interface EmpMapper {
 
     /**
      * 임시. security 적용된 emp 만들기 위한 임시 생성 mapper
-     * @param empDTO
-     * @return
      */
     Long insertEmp(EmpDTO empDTO);
 
     ////////////
 
     List<OrgaTreeDTO> selectDeptPath();
+
+    List<EmpLoginEmpDTO> findLoginUser(String username);
+
 }

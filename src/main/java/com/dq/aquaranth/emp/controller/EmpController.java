@@ -2,7 +2,7 @@ package com.dq.aquaranth.emp.controller;
 
 import com.dq.aquaranth.emp.dto.*;
 import com.dq.aquaranth.emp.service.EmpService;
-import com.dq.aquaranth.login.domain.CustomUser;
+import com.dq.aquaranth.login.service.UserSessionService;
 import com.dq.aquaranth.objectstorage.dto.response.ObjectResponseDTO;
 import com.dq.aquaranth.objectstorage.service.ObjectStorageService;
 import lombok.RequiredArgsConstructor;
@@ -10,7 +10,6 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -27,6 +26,7 @@ import java.util.List;
 @RequestMapping("/api/emp")
 public class EmpController {
     private final EmpService empService;
+    private final UserSessionService userSessionService;
 
     @GetMapping("/information")
     public List<EmpDTO> getEmpList() {
@@ -180,19 +180,6 @@ public class EmpController {
     }
 
     /**
-     * 로그인한 회원 정보 띄우기
-     */
-    @GetMapping("/readLogin")
-    public EmpLoginEmpDTO getEmpLoginInformationList(@RequestBody EmpLoginEmpDTO empLoginDTO, Authentication authentication){
-        CustomUser customUser = (CustomUser) authentication.getPrincipal();
-        String username = customUser.getEmpDTO().getUsername();
-
-        log.info(customUser.getCompanyDTO().getCompanyName()); // 이거 왜 햇는데 나
-
-        return empService.findLoginInformationByUsername(username);
-    }
-
-    /**
      * 사원 프로필 업데이트
      */
     private final ObjectStorageService objectStorageService;
@@ -205,6 +192,30 @@ public class EmpController {
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(objectStorageService.postObject(multipartFile));
     }
+
+    /**
+     * 로그인한 회원 정보
+     */
+    @GetMapping("/loginlist")
+    public List<EmpLoginEmpDTO> findLoginUser(){
+        return empService.findLoginUser("emp01");
+    }
+
+//    @PostMapping("/registerLoginUser")
+//    public LoginUser registerLoginUser(@RequestBody LoginUser loginUser, Authentication authentication) {
+//        log.info("---------지금이니~---------");
+//        log.error(loginUser);
+//        String username = authentication.getName();
+//        loginUser.setUsername(username);
+//
+//        userSessionService.loadUserInfoByLoginUser(loginUser);
+////            String username = customUser.getEmpDTO().getUsername();
+////
+////            loginUser.setUsername(username);
+////
+////            log.info(loginUser);
+//        return null;
+//    }
 
 
 

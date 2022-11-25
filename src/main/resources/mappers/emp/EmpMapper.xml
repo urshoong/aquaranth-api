@@ -109,10 +109,50 @@
 
     </select>
 
+<!--    새로운 DB에 emp만 넣는 쿼리문 임시 작성 (추후 삭제)-->
     <insert id="insertEmp" parameterType="com.dq.aquaranth.emp.dto.EmpDTO">
         insert into aquaranth2.tbl_emp (emp_name, username, password, gender, first_hired_date, reg_user)
         VALUES (#{empName}, #{username}, #{password}, #{gender}, #{firstHiredDate}, #{regUser})
     </insert>
+
+<!--    resultMap시작-->
+    <resultMap id="empMap" type="com.dq.aquaranth.emp.dto.EmpLoginEmpDTO" >
+        <id property="empNo" column="emp_no"></id>
+        <result property="empName" column="emp_name"></result>
+        <result property="lastLoginTime" column="last_login_time"></result>
+        <result property="lastLoginIp" column="last_login_ip"></result>
+        <result property="username" column="username"></result>
+        <collection property="companyList" resultMap="companyMap"></collection>
+    </resultMap>
+
+    <resultMap id="companyMap" type="com.dq.aquaranth.emp.dto.EmpLoginCompanyDTO">
+        <id property="companyName" column="company_name"></id>
+        <result property="companyNo" column="company_no"></result>
+        <collection property="deptList" resultMap="departmentMap"></collection>
+    </resultMap>
+
+    <resultMap id="departmentMap" type="com.dq.aquaranth.emp.dto.EmpLoginDepartmentDTO">
+        <result property="deptNo" column="dept_no"></result>
+        <result property="deptName" column="dept_name"></result>
+        <result property="empRank" column="emp_rank"></result>
+        <result property="orgaNo" column="orga_no"></result>
+    </resultMap>
+
+    <select id="findLoginUser" resultMap="empMap">
+        select te.emp_name, te.emp_no, te.username, te.last_login_time, te.last_login_ip,
+               tem.emp_rank, tc.company_name, td.dept_name, tem.orga_no, td.dept_no, tc.company_no
+        FROM tbl_emp te
+                 LEFT JOIN tbl_emp_mapping tem on te.emp_no = tem.emp_no
+                 LEFT JOIN tbl_orga tor on tor.orga_no = tem.orga_no
+                 LEFT JOIN tbl_dept_mapping tdm on tor.upper_orga_no = tdm.orga_no
+                 LEFT JOIN tbl_dept td on td.dept_no = tdm.dept_no
+                 LEFT JOIN tbl_company tc on td.company_no = tc.company_no
+        where username=#{username}
+    </select>
+
+    <!--    resultMap 끝-->
+
+
 
 
     <!-- 조직도 테스트용 -->

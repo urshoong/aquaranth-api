@@ -98,5 +98,9 @@ public class EmpMapperTests {
 
         empMapper.orgaUpdate(empOrgaUpdateDTO);
     }
+    @Test
+    void mapTests(){
+        log.info(empMapper.findLoginUser("emp01"));
+    }
 
 }

@@ -16,7 +16,6 @@ import java.util.*;
 @RequiredArgsConstructor
 @Log4j2
 public class EmpServiceImpl implements EmpService {
-
     private final EmpMapper empMapper;
     private final EmpMappingMapper empMappingMapper;
     private final PasswordEncoder passwordEncoder;
@@ -102,91 +101,21 @@ public class EmpServiceImpl implements EmpService {
         return empMapper.updateFile(empFileDTO);
     }
 
-    /**
-     * 로그인한 회원 가져오기
-     */
-    @Override
-    public EmpLoginEmpDTO findLoginInformationByUsername(String username) {
-        //모든 정보 이름이 들어있는 DTO. 실행해서 나온 모든 결과 담는 DTO
-        List<EmpLoginDTO> list = empMapper.findLoginInformationByUsername(username);
 
-        //EMP관련 정보 담는 DTO
-        EmpLoginEmpDTO result = EmpLoginEmpDTO.builder().build();
-
-        //모든거 담겨잇는 DTO를 foreach돌려서 데이터 파싱(처리)
-        list.forEach(empLoginDTO -> {
-            result.setEmpName(empLoginDTO.getEmpName());
-            result.setLastLoginTime(empLoginDTO.getLastLoginTime());
-            result.setLastLoginIp(empLoginDTO.getLastLoginIp());
-            result.setUsername(empLoginDTO.getUsername());
-            result.setEmpNo(empLoginDTO.getEmpNo());
-
-            //담겨잇는 데이터에서 회사 번호를 가져온다.
-            Long companyNo = empLoginDTO.getCompanyNo();
-
-            log.info("companyNo : " + companyNo);
-
-            //회사 리스트 꺼내기. (회사 정보만 담겨있다. 그리고 부서 리스트정보를 담고있는 DTO가 담긴 map)
-            Map<Long, EmpLoginCompanyDTO> companyList = result.getCompanyList();
-
-            //호ㅣ사 리스트가 비어잇으면, 빈 map을 만들어서? 회사 정보를 set해준다.
-            if(companyList == null){
-                log.info("회사 정보가 비어있음");
-                companyList = new HashMap<>();
-                result.setCompanyList(companyList);
-            }
-
-            //회사 목록에 해당하는 companyNo의 데이터가 없으면 만들어준다. (put)
-            if(!companyList.containsKey(companyNo)){
-                EmpLoginCompanyDTO tempCompanyDTO = EmpLoginCompanyDTO.builder()
-                        .companyNo(empLoginDTO.getCompanyNo())
-                        .companyName(empLoginDTO.getCompanyName())
-                        .build();
-                companyList.put(companyNo, tempCompanyDTO); //해당하는 companyNo에 대한 데이터(tempDTO)를 만들어서
-                                                            //// companyList에 넣는다.
-            }
-
-            //회사 목록에서 companyNo를 가져와서 해당 회사 정보가 담긴 DTO에 담는다.
-            EmpLoginCompanyDTO companyDTO = companyList.get(companyNo);
-
-            //정보를 다 들고 있는 DTO에서 부서번호를 가져온다.
-            Long deptNo = empLoginDTO.getDeptNo();
-
-            log.info("deptNO : " + deptNo);
-
-            //회사 DTO에서 부서 목록을 꺼내서 map에 넣는다.
-            Map<Long, EmpLoginDepartmentDTO> deptList = companyDTO.getDeptList();
-
-            // 부서 목록이 null 이라면 비어있는 map을 만들고, 회사 DTO에 부서 목록을 set해준다.
-            if(deptList == null){
-                log.info("부서 정보가 비어있음");
-                deptList = new HashMap<>();
-                companyDTO.setDeptList(deptList);
-            }
-
-            //부서 목록에 deptNo정보가 없다면 만들어서 넣어준다.
-            if(!deptList.containsKey(deptNo)){
-                EmpLoginDepartmentDTO tempDeptDTO = EmpLoginDepartmentDTO.builder()
-                        .deptNo(deptNo)
-                        .deptName(empLoginDTO.getDeptName())
-                        .orgaNo(empLoginDTO.getOrgaNo())
-                        .info(empLoginDTO.getInfo())
-                        .empRank(empLoginDTO.getEmpRank())
-                        .build();
-                deptList.put(deptNo, tempDeptDTO);
-            }
-        });
-
-        log.info(result);
-
-        return result;
-    }
 
     @Override
     public Long insertEmp(EmpDTO empDTO) {
         empDTO.setPassword(passwordEncoder.encode(empDTO.getPassword()));
 
         return empMapper.insertEmp(empDTO);
+    }
+
+    /**
+     * 로그인한 회원 가져오기
+     */
+    @Override
+    public List<EmpLoginEmpDTO> findLoginUser(String username) {
+        return empMapper.findLoginUser(username);
     }
 
     @Override

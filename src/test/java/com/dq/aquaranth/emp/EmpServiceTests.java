@@ -112,14 +112,6 @@ public class EmpServiceTests {
         service.empOrgaInsert(orgaDTO, empMappingDTO, empNo);
     }
 
-    /**
-     * 로그인한 회원 정보
-     */
-    @Test
-    void findLoginInformationByUsernameTest() {
-        log.info(service.findLoginInformationByUsername("emp01"));
-    }
-
 
     ///////////////////
 

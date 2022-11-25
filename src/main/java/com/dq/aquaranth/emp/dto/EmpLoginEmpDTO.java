@@ -6,8 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.Map;
-
+import java.util.List;
 
 @Builder
 @AllArgsConstructor
@@ -20,6 +19,5 @@ public class EmpLoginEmpDTO {
     private String username;
     private Long empNo;
 
-    private Map<Long, EmpLoginCompanyDTO> companyList;
-
+    private List<EmpLoginCompanyDTO> companyList;
 }

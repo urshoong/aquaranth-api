@@ -25,12 +25,12 @@ public interface EmpService {
 
     Long updateFile(EmpFileDTO empFileDTO);
 
-    EmpLoginEmpDTO findLoginInformationByUsername(String username);
-
     ///////////////
 
     Long insertEmp(EmpDTO empDTO);
 
     List<OrgaTreeDTO> selectDeptPath();
+
+    List<EmpLoginEmpDTO> findLoginUser(String username);
 
 }

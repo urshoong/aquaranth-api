@@ -4,7 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import java.util.Map;
+
+import java.util.List;
+
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -13,5 +15,5 @@ public class EmpLoginCompanyDTO {
     private String companyName;
     private Long companyNo;
 
-    private Map<Long, EmpLoginDepartmentDTO> deptList;
+    private List<EmpLoginDepartmentDTO> deptList;
 }
