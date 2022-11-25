@@ -29,8 +29,8 @@ public class RoleAspect {
 //                  3. 두개를 비교해서
 //                  2.
 //                  2.
-//
-        log.info("[ROLE ASPECT]{} 컨트롤러 ", jp.getSignature().getName());
+//sou
+        log.info("[ROLE ASPECT] {} method 실행됨 ", jp.getSignature().getName());
 //        CustomUser customUser = (CustomUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 //        System.out.println(customUser);
     }

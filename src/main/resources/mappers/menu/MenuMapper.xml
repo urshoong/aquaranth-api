@@ -3,6 +3,59 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.dq.aquaranth.menu.mapper.MenuMapper">
+
+    <sql id="find_all">
+        <where>
+            <if test="menuCode != null">
+                OR menu_code = #{menuCode}
+            </if>
+            <if test="menuNo != null">
+                OR menu_no = #{menuNo}
+            </if>
+            <if test="keyword eq 'gnb'">
+                OR upper_menu_no IS NULL
+            </if>
+        </where>
+    </sql>
+
+    <sql id="find_one">
+        <where>
+            <if test="menuCode != null">
+                AND menu_code = #{menuCode}
+            </if>
+            <if test="menuNo != null">
+                AND menu_no = #{menuNo}
+            </if>
+            <if test="keyword eq 'gnb'">
+                AND upper_menu_no IS NULL
+            </if>
+        </where>
+    </sql>
+
+    <sql id="menu">
+        <where>
+            <if test="menuCode != null">
+                AND menu_code = #{menuCode}
+            </if>
+            <if test="menuNo != null">
+                AND menu_no = #{menuNo}
+            </if>
+        </where>
+    </sql>
+
+    <select id="findBy" resultType="com.dq.aquaranth.menu.dto.response.MenuResponseDTO">
+        SELECT *
+        FROM tbl_menu m
+        <include refid="find_one" />
+    </select>
+
+    <select id="findAllBy" resultType="com.dq.aquaranth.menu.dto.response.MenuResponseDTO">
+        SELECT *
+        FROM tbl_menu
+        <include refid="find_all" />
+    </select>
+
+
     <insert id="insert" parameterType="com.dq.aquaranth.menu.dto.request.MenuInsertDTO">
         insert into tbl_menu (upper_menu_no, menu_name, main_flag, menu_code, menu_path, menu_required,
         menu_admin, menu_order, menu_default, uuid, filename, reg_user, reg_date)
@@ -24,42 +77,25 @@
         </selectKey>
     </insert>
 
-    <select id="findAll" resultType="com.dq.aquaranth.menu.dto.response.MenuResponseDTO">
-        SELECT *
-        FROM tbl_menu
-    </select>
-
-    <update id="updateMenuIcon">
+    <update id="updateIcon">
         UPDATE tbl_menu
         SET uuid = #{uuid},
         filename = #{filename}
-        WHERE menu_code = #{menuCode}
+        <include refid="menu" />
     </update>
 
 
-    <select id="findUpperMenu" resultType="com.dq.aquaranth.menu.dto.response.MenuResponseDTO">
+    <select id="findUpperMenuBy" resultType="com.dq.aquaranth.menu.dto.response.MenuResponseDTO">
         SELECT um.*
         FROM tbl_menu m
                  JOIN tbl_menu um on um.menu_no = m.upper_menu_no
-        WHERE m.menu_code = #{menuCode}
-    </select>
-
-    <select id="findByMenuNo" resultType="com.dq.aquaranth.menu.dto.response.MenuResponseDTO">
-        SELECT *
-        FROM tbl_menu
-        WHERE menu_no = #{menuNo}
-    </select>
-
-    <select id="findByMenuCode" resultType="com.dq.aquaranth.menu.dto.response.MenuResponseDTO">
-        SELECT *
-        FROM tbl_menu
-        WHERE menu_code = #{menuCode}
+        <include refid="menu" />
     </select>
 
     <delete id="delete">
         DELETE
         FROM tbl_menu
-        WHERE menu_code = #{menuCode}
+        <include refid="menu" />
     </delete>
 
     <update id="update">
@@ -67,14 +103,8 @@
         SET menu_name  = #{menuName},
             menu_order = #{menuOrder},
             main_flag  = #{mainFlag}
-        WHERE menu_no = #{menuNo}
+        <include refid="menu" />
     </update>
-
-    <select id="findByUpperMenuNoIsNull" resultType="com.dq.aquaranth.menu.dto.response.MenuResponseDTO">
-        SELECT *
-        FROM tbl_menu
-        WHERE upper_menu_no IS NULL
-    </select>
 
 
     <select id="findMenusByLoginUsername" resultType="com.dq.aquaranth.menu.dto.response.MenuResponseDTO">
@@ -104,112 +134,9 @@
         order by f.orga_type
     </select>
 
-
     <select id="findByMenuCodeUnderRecursive" resultType="com.dq.aquaranth.menu.dto.response.MenuResponseDTO">
-        with recursive etc as (select menu_no
-                                    , upper_menu_no
-                                    , menu_name
-                                    , uuid
-                                    , filename
-                                    , menu_code
-                                    , menu_required
-                                    , menu_admin
-                                    , reg_user
-                                    , reg_date
-                                    , mod_user
-                                    , mod_date
-                                    , menu_order
-                                    , menu_default
-                                    , 0                    depth
-                                    , concat(menu_no)   AS no_path
-                                    , concat(menu_code) AS url
-                               from tbl_menu
-                               where menu_code = #{menuCode}
-                               union all
-                               select m.menu_no
-                                    , m.upper_menu_no
-                                    , m.menu_name
-                                    , m.uuid
-                                    , m.filename
-                                    , m.menu_code
-                                    , m.menu_required
-                                    , m.menu_admin
-                                    , m.reg_user
-                                    , m.reg_date
-                                    , m.mod_user
-                                    , m.mod_date
-                                    , m.menu_order
-                                    , m.menu_default
-                                    , depth + 1
-                                    , concat(no_path, '->', m.menu_no) AS no_path
-                                    , concat(url, '/', m.menu_code)    AS url
-                               from etc e
-                                        join tbl_menu m on e.menu_no = m.upper_menu_no)
         select *
-        from etc
-        # FIXME : MENU_ORDER
+        from tbl_menu
+        where menu_path like CONCAT('/',#{menuCode},'%')
     </select>
-
-    <select id="findByMenuCodeUpperRecursive" resultType="com.dq.aquaranth.menu.dto.response.MenuResponseDTO">
-        with recursive etc as (select menu_no
-                                    , upper_menu_no
-                                    , menu_name
-                                    , uuid
-                                    , filename
-                                    , menu_code
-                                    , menu_required
-                                    , menu_admin
-                                    , reg_user
-                                    , reg_date
-                                    , mod_user
-                                    , mod_date
-                                    , menu_order
-                                    , menu_default
-                                    , 0                    depth
-                                    , concat(menu_no)   AS no_path
-                                    , concat(menu_code) AS url
-                               from tbl_menu
-                               where menu_code = #{menuCode}
-                               union all
-                               select m.menu_no
-                                    , m.upper_menu_no
-                                    , m.menu_name
-                                    , m.uuid
-                                    , m.filename
-                                    , m.menu_code
-                                    , m.menu_required
-                                    , m.menu_admin
-                                    , m.reg_user
-                                    , m.reg_date
-                                    , m.mod_user
-                                    , m.mod_date
-                                    , m.menu_order
-                                    , m.menu_default
-                                    , depth + 1
-                                    , concat(no_path, '->', m.menu_no) AS no_path
-                                    , concat(url, '/', m.menu_code)    AS url
-                               from etc e
-                                        join tbl_menu m on e.upper_menu_no = m.menu_no)
-        select *
-        from etc
-        # FIXME : MENU_ORDER
-    </select>
-    <!--TODO : MyBaits OGNL을 이용한 동적 쿼리 작성 # 25-->
-    <!--    <sql id="find_menu">-->
-    <!--        <where>-->
-    <!--            <if test="menuCode != null">-->
-    <!--                AND menu_code = #{menuCode}-->
-    <!--            </if>-->
-    <!--            <if test="menuNo != null">-->
-    <!--                AND menu_no = #{menuNo}-->
-    <!--            </if>-->
-    <!--        </where>-->
-    <!--    </sql>-->
-    <!--    <select id="findBy" resultType="com.dq.aquaranth.menu.dto.response.MenuResponseDTO">-->
-    <!--        SELECT *-->
-    <!--        FROM tbl_menu-->
-    <!--        <include refid="find_menu" />-->
-    <!--    </select>-->
-
-
 </mapper>

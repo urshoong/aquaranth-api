@@ -1,17 +1,17 @@
-package com.dq.aquaranth.menu.dto.request;
+package com.dq.aquaranth.objectstorage.dto.request;
 
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class MenuIconUpdateDTO {
-    private String menuCode;
-    private String uuid;
+public class ObjectPostRequestDTO {
     private String filename;
+    private MultipartFile multipartFile;
 }

@@ -31,9 +31,10 @@
         where role_group_no = #{roleGroupNo}
     </delete>
 
-    <select id="findAll" resultType="com.dq.aquaranth.rolegroup.domain.RoleGroup">
-        select *
-        from tbl_role_group
+    <select id="findAll" resultType="com.dq.aquaranth.rolegroup.dto.RoleGroupResponseDTO">
+        select roleGroup.*, company.company_name
+        from tbl_role_group roleGroup
+                 join tbl_company company on roleGroup.company_no = company.company_no
     </select>
 
     <select id="findById" resultType="com.dq.aquaranth.rolegroup.domain.RoleGroup" parameterType="long">
@@ -58,6 +59,14 @@
                                 where username = #{username} and tor.orga_no = emapping.orga_no
                                    or tor.orga_no = dmapping.orga_no
                                    or tor.orga_no = company.orga_no);
+    </select>
+    <select id="findByMenuCode" resultType="com.dq.aquaranth.rolegroup.domain.RoleGroup">
+        select roleGroup.*
+        from tbl_menu_role menuRole
+                 join tbl_menu menu
+                      on menu.menu_no = menuRole.menu_no
+                 join tbl_role_group roleGroup on menuRole.role_group_no = roleGroup.role_group_no
+        where menu_code = #{menuCode}
     </select>
 
 </mapper>

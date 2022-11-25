@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @Data
 public class EmpSelectOrga {
     private String companyName, deptName, empRank, companyTel, companyAddress, empRole;
-    private Long empNo, orgaNo, companyNo;
+    private Long empNo, orgaNo, companyNo, deptNo;
     private boolean deptMain;
     private LocalDate hiredDate, retiredDate;
 }

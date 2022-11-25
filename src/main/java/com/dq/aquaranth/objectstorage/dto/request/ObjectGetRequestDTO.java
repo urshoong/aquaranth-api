@@ -1,4 +1,4 @@
-package com.dq.aquaranth.menu.dto.request;
+package com.dq.aquaranth.objectstorage.dto.request;
 
 
 import lombok.AllArgsConstructor;
@@ -10,8 +10,6 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class MenuIconUpdateDTO {
-    private String menuCode;
-    private String uuid;
+public class ObjectGetRequestDTO {
     private String filename;
 }

@@ -1,31 +1,25 @@
 package com.dq.aquaranth.menu.service;
 
 import com.dq.aquaranth.menu.dto.request.MenuInsertDTO;
+import com.dq.aquaranth.menu.dto.request.MenuRequestDTO;
 import com.dq.aquaranth.menu.dto.request.MenuUpdateDTO;
 import com.dq.aquaranth.menu.dto.response.MenuResponseDTO;
+import com.dq.aquaranth.objectstorage.dto.request.MultipartFileDTO;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface MenuService {
 
-    List<MenuResponseDTO> findAll();
+    MenuResponseDTO findBy(MenuRequestDTO menuRequestDTO);
+    MenuResponseDTO findUpperMenuBy(MenuRequestDTO menuRequestDTO);
+    List<MenuResponseDTO> findAllBy(MenuRequestDTO menuRequestDTO);
 
-    Optional<MenuResponseDTO> findByMenuNo(Long menuNo);
+    MenuResponseDTO insert(MenuInsertDTO menuInsertDTO, MultipartFile multipartFile) throws Exception;
 
-    Optional<MenuResponseDTO> findByMenuCode(String menuCode);
+    MenuResponseDTO update(MenuUpdateDTO menuUpdateDTO);
 
-    Optional<MenuResponseDTO> insert(MenuInsertDTO menuInsertDTO, MultipartFile multipartFile) throws Exception;
-
-    Optional<MenuResponseDTO> update(MenuUpdateDTO menuUpdateDTO);
-    Optional<MenuResponseDTO> updateByMenuIcon(MultipartFile multipartFile) throws Exception;
-
-    List<MenuResponseDTO> findByUpperMenuNoIsNull();
-
-    List<MenuResponseDTO> findByMenuCodeUpperRecursive(String menuCode);
-
-    List<MenuResponseDTO> findByMenuCodeUnderRecursive(String menuCode);
+    MenuResponseDTO updateIcon(MultipartFileDTO fileDto) throws Exception;
 
     List<MenuResponseDTO> findMenusByLoginUsername(String username);
 
