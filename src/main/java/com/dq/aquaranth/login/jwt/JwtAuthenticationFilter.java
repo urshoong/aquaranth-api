@@ -20,7 +20,11 @@ import java.util.Objects;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
-// 로그인이 성공할 때마다 access token 과 refresh token 을 발급해줄 filter
+/**
+ * 로그인이 성공할 때마다 access token 과 refresh token 을 발급해줄 filter
+ *
+ * @author 임종현
+ */
 @Log4j2
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
@@ -30,7 +34,9 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
 
     /**
-     * 인증 시도 호출되는 메서드
+     * /api/login 으로 인증시도를 요청합니다.
+     * @return 인증정보를 담고있는 객체
+     * @throws AuthenticationException 인증과정중 발생하는 예외
      */
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
@@ -61,9 +67,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     }
 
     /**
-     * 인증 성공시(로그인이 되었을 때 호출 될 메서드),
-     * 사용자에게 access token 과,
-     * 성공적으로 로그인 한 후 refresh token 을 제공하는 메서드
+     * 인증 성공시,
+     * 사용자에게 access token 과, refresh token 을 제공합니다.
      */
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException {
@@ -74,6 +79,10 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         new ObjectMapper().writeValue(response.getWriter(), jwtUtil.generateToken(username));
     }
 
+    /**
+     * 인증 실패시,
+     * custom 상태코드를 응답합니다.
+     */
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException {
         log.warn(failed.getMessage());
