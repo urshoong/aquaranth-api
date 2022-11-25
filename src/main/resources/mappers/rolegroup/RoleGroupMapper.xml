@@ -60,5 +60,13 @@
                                    or tor.orga_no = dmapping.orga_no
                                    or tor.orga_no = company.orga_no);
     </select>
+    <select id="findByMenuCode" resultType="com.dq.aquaranth.rolegroup.domain.RoleGroup">
+        select roleGroup.*
+        from tbl_menu_role menuRole
+                 join tbl_menu menu
+                      on menu.menu_no = menuRole.menu_no
+                 join tbl_role_group roleGroup on menuRole.role_group_no = roleGroup.role_group_no
+        where menu_code = #{menuCode}
+    </select>
 
 </mapper>

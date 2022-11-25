@@ -80,11 +80,7 @@ public class UserSessionServiceImpl implements UserSessionService {
         }
     }
 
-    /**
-     * 사용자가 로그인을 한 후 접속할 회사, 부서를 선택하면 호출되어 redis 에 정보를 저장합니다.
-     * @param loginUser : 접속한 사원이 소속된 조직정보가 담긴 객체입니다.
-     * @return redis에 저장된 dto 객체입니다.
-     */
+
     @Override
     public LoginUserInfo loadUserInfoByLoginUser(LoginUser loginUser) {
         LoginUserInfo redisDTO = LoginUserInfo.builder()
