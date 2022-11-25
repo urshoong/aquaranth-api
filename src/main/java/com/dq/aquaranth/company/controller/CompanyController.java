@@ -72,6 +72,14 @@ public class CompanyController {
         return companyService.search(companyUse, companySearch);
     }
 
+    /**
+     * 회사코드, 회사명, 대표자명, 사용여부로 정렬 후 회사 일부정보 리스트 출력
+     */
+    @GetMapping("/sort/{sortValue}")
+    public List<CompanyListDTO> sortCompany(@PathVariable String sortValue) {
+        return companyService.sort(sortValue);
+    }
+
     // TODO: 2022-11-13 조직도 트리와 사원 정보 출력은 다른 디렉토리로 빼기
 
 }

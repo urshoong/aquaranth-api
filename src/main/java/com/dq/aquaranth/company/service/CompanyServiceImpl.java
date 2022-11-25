@@ -69,4 +69,10 @@ public class CompanyServiceImpl implements CompanyService {
         log.info("회사코드, 회사명, 사용여부로 회사 기본정보 검색");
         return companyMapper.search(companyUse, companySearch);
     }
+
+    @Override
+    public List<CompanyListDTO> sort(String sortValue) {
+        log.info("회사코드, 회사명, 대표자명, 사용여부로 정렬 후 회사 일부정보 리스트 출력");
+        return companyMapper.sort(sortValue);
+    }
 }

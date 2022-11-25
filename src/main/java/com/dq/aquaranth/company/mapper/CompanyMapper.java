@@ -1,7 +1,6 @@
 package com.dq.aquaranth.company.mapper;
 
 import com.dq.aquaranth.company.dto.*;
-import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -41,6 +40,11 @@ public interface CompanyMapper {
      * 회사코드, 회사명, 사용여부로 회사 기본정보 검색
      */
     List<CompanyListDTO> search(Boolean companyUse, String companySearch);
+
+    /**
+     * 회사코드, 회사명, 대표자명, 사용여부로 정렬 후 회사 일부정보 리스트 출력
+     */
+    List<CompanyListDTO> sort(String sortValue);
 
     /**
      * 사용자 아이디에 맞는 회사 정보 출력
