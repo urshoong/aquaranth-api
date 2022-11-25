@@ -3,6 +3,7 @@ package com.dq.aquaranth.dept.service;
 import com.dq.aquaranth.dept.dto.DepartmentDTO;
 import com.dq.aquaranth.dept.dto.DeptDTO;
 import com.dq.aquaranth.dept.dto.DeptTreeDTO;
+import com.dq.aquaranth.dept.dto.GetSubDeptDTO;
 import com.dq.aquaranth.dept.mapper.DeptMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -103,7 +104,6 @@ public class DeptService {
                 "lastDno", lastDno,
                 "parentDeptNo", parentDeptNo
         );
-//        return null;
     }
 
 //    public Map<Object, Object> register(DeptDTO2 deptDTO2) {
@@ -159,6 +159,11 @@ public class DeptService {
     public List<DeptTreeDTO> getTree(Long company){
 
         return deptMapper.getTree(company);
+    }
+
+    //맨처음 회사 나오고 버튼 누르면 바로 밑 하위 부서 조회(준성이형)
+    public List<DeptDTO> getSubDepth(GetSubDeptDTO getSubDeptDTO) {
+        return deptMapper.getSubDepth(getSubDeptDTO);
     }
 
 

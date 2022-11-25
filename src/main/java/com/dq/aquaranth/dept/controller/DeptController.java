@@ -1,9 +1,6 @@
 package com.dq.aquaranth.dept.controller;
 
-import com.dq.aquaranth.dept.dto.DeptCriteria;
-import com.dq.aquaranth.dept.dto.DepartmentDTO;
-import com.dq.aquaranth.dept.dto.DeptDTO;
-import com.dq.aquaranth.dept.dto.DeptTreeDTO;
+import com.dq.aquaranth.dept.dto.*;
 import com.dq.aquaranth.dept.service.DeptService;
 import com.dq.aquaranth.emp.dto.EmpDTO;
 import lombok.RequiredArgsConstructor;
@@ -88,6 +85,12 @@ public class DeptController {
     public List<DeptTreeDTO> listTree(@PathVariable("companyCode") Long companyCode ){
 
         return deptService.getTree(companyCode);
+      }
+
+      //회사 바로 출력 되고 클릭하면 바로 밑 하위 부서만 조회(준성이형)
+      @GetMapping("/findTree/{companyNo}/{depth}/{upperDeptNo}")
+      public List<DeptDTO> findTree(@PathVariable("companyNo")Long companyNo ,@PathVariable("depth")int depth, @PathVariable("upperDeptNo")Long upperDeptNo ,GetSubDeptDTO getSubDeptDTO) {
+        return deptService.getSubDepth(getSubDeptDTO);
       }
 
     // 해당 회사의 부서 목록 출력
