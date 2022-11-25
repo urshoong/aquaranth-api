@@ -17,7 +17,7 @@ public interface DeptMapper {
 
     public List<DeptDTO> getList(@Param("skip") int skip, @Param("size") int size);
 
-    public List<DeptDTO> getGnoList(int gno);
+    public List<DeptDTO> getGnoList(Long companyNo);
 
     //===========================등록 트랜잭션======================================
 
@@ -61,5 +61,6 @@ public interface DeptMapper {
      */
     List<DepartmentDTO> findByCompanyNo(Long companyNo);
 
+    //종현
     DeptDTO findByUsername(String username);
 }

@@ -140,8 +140,8 @@ public class DeptService {
     }
 
     //ord번호로 오름차순 정렬 리스트 조회
-    public List<DeptDTO> listDept(int gno) {
-        return deptMapper.getGnoList(gno);
+    public List<DeptDTO> listDept(Long companyNo) {
+        return deptMapper.getGnoList(companyNo);
     }
 
 //    public List<DeptDTO2> registerDept(DeptDTO2 deptDTO2) {
