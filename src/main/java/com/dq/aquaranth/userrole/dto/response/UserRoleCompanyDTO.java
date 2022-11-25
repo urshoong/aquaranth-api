@@ -1,4 +1,4 @@
-package com.dq.aquaranth.userrole.dto;
+package com.dq.aquaranth.userrole.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

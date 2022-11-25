@@ -1,4 +1,4 @@
-package com.dq.aquaranth.userrole.dto;
+package com.dq.aquaranth.userrole.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,7 +11,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserRoleReqRemoveOrgaRoleDTO {
-    Long companyNo, roleGroupNo;
-    List<Long> removeOrgaRoleList;
+public class UserRoleReqInsertOrgaRoleDTO {
+    Long companyNo, roleGroupNo, orgaNo;
+    List<Integer> orgaNoList;
 }

@@ -1,22 +1,33 @@
 package com.dq.aquaranth.userrole.service;
 
-import com.dq.aquaranth.userrole.dto.*;
+import com.dq.aquaranth.userrole.dto.paging.PageRequestDTO;
+import com.dq.aquaranth.userrole.dto.paging.PageResponseDTO;
+import com.dq.aquaranth.userrole.dto.request.*;
+import com.dq.aquaranth.userrole.dto.response.*;
 
 import java.util.List;
 
 public interface UserRoleService {
 
-    List<UserRoleCompanyDTO> findCompany(Long orgaNo);
+    /** GroupList **/
 
-    List<UserRoleRoleGroupBasedListDTO> findRoleGroupByCompanyName(UserRoleReqRoleGroupBasedListDTO userRoleReqRoleGroupBasedListDTO);
+    List<UserRoleCompanyDTO> findCompanyByOrgaNo(Long orgaNo);
 
-    List<UserRoleGroupBasedUserListDTO> findOrgaByRoleGroupNo(UserRoleReqGroupBasedUserListDTO userRoleReqGroupBasedUserListDTO);
+    List<UserRoleCompanyDTO> findCompany(String username);
 
-    Integer insertUserRole(UserRoleReqInsertOrgaRoleDTO userRoleReqInsertOrgaRoleDTO);
+    PageResponseDTO findRoleGroupByOrgaNo(PageRequestDTO pageRequestDTO);
 
-    Integer removeUserRole(UserRoleReqRemoveOrgaRoleDTO userRoleReqRemoveOrgaRoleDTO);
+    PageResponseDTO findOrgaByRoleGroupNo(PageRequestDTO pageRequestDTO);
 
-    List<UserRoleUserListBasedDTO> findUserListByOrgaNo(UserRoleReqUserListBasedDTO userRoleReqUserListBasedDTO);
+    Integer insertUserRole(UserRoleReqInsertOrgaRoleDTO userRoleReqInsertOrgaRoleDTO, String username);
 
-    List<UserRoleUserBasedRoleGroupDTO> findByRoleGroupByUser(Long orgaNo);
+    Integer removeOrgaRole(UserRoleReqRemoveOrgaRoleDTO userRoleReqRemoveOrgaRoleDTO);
+
+    /** UserList **/
+
+    PageResponseDTO findUserListByOrgaNo(PageRequestDTO pageRequestDTO);
+
+    PageResponseDTO findRoleGroupByUser(PageRequestDTO pageRequestDTO);
+
+    UserRoleResponseDTO removeOrgaRole(List<UserRoleReqRemoveUserRoleDTO> removeData);
 }

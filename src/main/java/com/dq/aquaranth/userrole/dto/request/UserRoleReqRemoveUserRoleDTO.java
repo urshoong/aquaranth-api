@@ -1,4 +1,4 @@
-package com.dq.aquaranth.userrole.dto;
+package com.dq.aquaranth.userrole.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserRoleRemoveOrgaRoleDTO {
-    Integer status;
-    String message;
+public class UserRoleReqRemoveUserRoleDTO {
+    private Long orgaNo, roleGroupNo, targetOrgaNo;
 }

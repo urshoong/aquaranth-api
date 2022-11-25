@@ -1,4 +1,4 @@
-package com.dq.aquaranth.userrole.dto;
+package com.dq.aquaranth.userrole.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserRoleGroupBasedUserListDTO {
+public class UserRoleReqUserListBasedDTO {
     Long orgaNo;
-    String orgaInfo, empRank, empName, username;
+    String searchEmp;
+    String searchRole;
 }
