@@ -1,9 +1,12 @@
 package com.dq.aquaranth.login.controller;
 
+import com.dq.aquaranth.company.dto.CompanyDTO;
+import com.dq.aquaranth.login.dto.LoginUserInfo;
 import com.dq.aquaranth.login.service.UserSessionService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -37,4 +40,13 @@ public class UserApiController {
         return tokens;
     }
 
+    @GetMapping("/login/company")
+    public CompanyDTO getLoginUserCompany(Authentication authentication) {
+        return userSessionService.findLoginUserCompany(authentication.getName());
+    }
+
+    @GetMapping("/login/userinfo")
+    public LoginUserInfo getLoginUserInfo(Authentication authentication) {
+        return userSessionService.findUserInfoInRedis(authentication.getName());
+    }
 }

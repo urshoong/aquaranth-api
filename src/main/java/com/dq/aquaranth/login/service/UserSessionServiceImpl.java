@@ -9,7 +9,7 @@ import com.dq.aquaranth.company.mapper.CompanyMapper;
 import com.dq.aquaranth.dept.mapper.DeptMapper;
 import com.dq.aquaranth.emp.mapper.EmpMapper;
 import com.dq.aquaranth.login.domain.LoginUser;
-import com.dq.aquaranth.login.dto.RedisDTO;
+import com.dq.aquaranth.login.dto.LoginUserInfo;
 import com.dq.aquaranth.rolegroup.mapper.RoleGroupMapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -38,7 +38,7 @@ public class UserSessionServiceImpl implements UserSessionService {
     private final DeptMapper deptMapper;
 
     @Override
-    public RedisDTO findUserInfoInRedis(String username) {
+    public LoginUserInfo findUserInfoInRedis(String username) {
         String value = (String) redisTemplate.opsForValue().get(username);
         if (Objects.isNull(value)) {
             return null;
@@ -48,10 +48,10 @@ public class UserSessionServiceImpl implements UserSessionService {
                 .registerModule(new JavaTimeModule())
                 .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 
-        RedisDTO userInfo;
+        LoginUserInfo userInfo;
 
         try {
-            userInfo = mapper.readValue(value, RedisDTO.class);
+            userInfo = mapper.readValue(value, LoginUserInfo.class);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
@@ -85,9 +85,9 @@ public class UserSessionServiceImpl implements UserSessionService {
      * @return redis에 저장된 dto 객체입니다.
      */
     @Override
-    public RedisDTO loadUserInfoByLoginUser(LoginUser loginUser) {
+    public LoginUserInfo loadUserInfoByLoginUser(LoginUser loginUser) {
         // TODO : 부서정보 넣어야함 mapper 안만들어져 있음
-        RedisDTO redisDTO = RedisDTO.builder()
+        LoginUserInfo redisDTO = LoginUserInfo.builder()
                 .emp(empMapper.findByUsername(loginUser.getUsername()))
                 .company(companyMapper.findByCompanyNo(loginUser.getLoginCompanyNo()))
                 .roleGroups(roleGroupMapper.findRoleGroupsByLoginUser(loginUser))
@@ -99,7 +99,7 @@ public class UserSessionServiceImpl implements UserSessionService {
         try {
             loginUserInfo = objectMapper.registerModule(new JavaTimeModule()).writeValueAsString(redisDTO);
         } catch (JsonProcessingException e) {
-            log.error("redisDTO 를 직렬화 하던중 예외가 발생했습니다.");
+            log.error("redis에 저장할 객체를 직렬화 하던중 예외가 발생했습니다.");
             throw new RuntimeException(e);
         }
 
@@ -112,5 +112,10 @@ public class UserSessionServiceImpl implements UserSessionService {
         );
 
         return redisDTO;
+    }
+
+    @Override
+    public CompanyDTO findLoginUserCompany(String username) {
+        return findUserInfoInRedis(username).getCompany();
     }
 }

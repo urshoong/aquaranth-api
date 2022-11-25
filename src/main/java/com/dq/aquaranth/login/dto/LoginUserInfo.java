@@ -14,8 +14,8 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @ToString
-public class RedisDTO {
-    private CompanyInformationDTO company;
+public class LoginUserInfo {
+    private CompanyDTO company;
     private DeptDTO dept;
     private EmpDTO emp;
     private List<RoleGroup> roleGroups;
