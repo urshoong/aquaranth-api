@@ -31,9 +31,10 @@
         where role_group_no = #{roleGroupNo}
     </delete>
 
-    <select id="findAll" resultType="com.dq.aquaranth.rolegroup.domain.RoleGroup">
-        select *
-        from tbl_role_group
+    <select id="findAll" resultType="com.dq.aquaranth.rolegroup.dto.RoleGroupResponseDTO">
+        select roleGroup.*, company.company_name
+        from tbl_role_group roleGroup
+                 join tbl_company company on roleGroup.company_no = company.company_no
     </select>
 
     <select id="findById" resultType="com.dq.aquaranth.rolegroup.domain.RoleGroup" parameterType="long">

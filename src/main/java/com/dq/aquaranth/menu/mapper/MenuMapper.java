@@ -27,4 +27,5 @@ public interface MenuMapper {
      */
     List<MenuResponseDTO> findMenusByLoginUsername(String username);
 
+    List<MenuResponseDTO> findByMenuCodeUnderRecursive(String menuCode);
 }

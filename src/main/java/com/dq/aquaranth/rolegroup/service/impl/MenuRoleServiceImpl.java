@@ -47,9 +47,7 @@ public class MenuRoleServiceImpl implements MenuRoleService {
     @Override
     @Transactional
     public void save(List<MenuRole> insertMenuRoles, String moduleCode, Long roleGroupNo) {
-        if (menuMapper.findAllBy(MenuRequestDTO.builder()
-                        .menuCode(moduleCode)
-                .build()).isEmpty()) {
+        if (menuMapper.findAllBy(MenuRequestDTO.builder().menuCode(moduleCode).build()).isEmpty()) {
             log.error("GNB MenuCode {}는 존재하지 않습니다.", moduleCode);
             return;
         }

@@ -87,9 +87,9 @@ public class UserSessionServiceImpl implements UserSessionService {
      */
     @Override
     public LoginUserInfo loadUserInfoByLoginUser(LoginUser loginUser) {
-        // TODO : 부서정보 넣어야함 mapper 안만들어져 있음
         LoginUserInfo redisDTO = LoginUserInfo.builder()
                 .emp(empMapper.findByUsername(loginUser.getUsername()))
+                .dept(deptMapper.select(loginUser.getLoginDeptNo()))
                 .company(companyMapper.findById(loginUser.getLoginCompanyNo()))
                 .roleGroups(roleGroupMapper.findRoleGroupsByLoginUser(loginUser))
                 .build();

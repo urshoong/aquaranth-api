@@ -2,6 +2,7 @@ package com.dq.aquaranth.rolegroup.mapper;
 
 import com.dq.aquaranth.login.domain.LoginUser;
 import com.dq.aquaranth.rolegroup.domain.RoleGroup;
+import com.dq.aquaranth.rolegroup.dto.RoleGroupResponseDTO;
 import com.dq.aquaranth.rolegroup.dto.RoleGroupUpdateDTO;
 
 import java.util.List;
@@ -11,7 +12,7 @@ public interface RoleGroupMapper {
     /**
      * 권한그룹들을 조회합니다.
      */
-    List<RoleGroup> findAll();
+    List<RoleGroupResponseDTO> findAll();
 
     /**
      * 권한그룹번호로 권한그룹들을 조회합니다.
