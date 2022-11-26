@@ -13,18 +13,17 @@ import java.util.Optional;
 @Mapper
 public interface MenuMapper {
     Optional<MenuResponseDTO> findBy(MenuRequestDTO menuRequestDTO);
+
     List<MenuResponseDTO> findAllBy(MenuRequestDTO menuRequestDTO);
+
     Optional<MenuResponseDTO> findUpperMenuBy(MenuRequestDTO menuRequestDTO);
+
     MenuInsertDTO insert(MenuInsertDTO menuUpdateDTO);
+
     MenuResponseDTO update(MenuUpdateDTO menuUpdateDTO);
+
     Integer updateIcon(MenuIconUpdateDTO menuIconUpdateDTO);
 
-    /**
-     * Username을 이용하여
-     * 해당하는 사용자가 접근할 수 있는
-     * 모든 메뉴 목록을 가져옵니다.
-     * @return
-     */
     List<MenuResponseDTO> findMenusByLoginUsername(String username);
 
 }
