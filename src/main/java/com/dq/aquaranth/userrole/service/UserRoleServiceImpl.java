@@ -58,8 +58,8 @@ public class UserRoleServiceImpl implements UserRoleService {
     }
 
     @Override
-    public Integer insertUserRole(UserRoleReqInsertOrgaRoleDTO userRoleReqInsertOrgaRoleDTO, String username) {
-        return userRoleMapper.insertUserRole(userRoleReqInsertOrgaRoleDTO, username);
+    public Integer insertUserRole(UserRoleReqInsertOrgaRoleDTO userRoleReqInsertOrgaRoleDTO) {
+        return userRoleMapper.insertUserRole(userRoleReqInsertOrgaRoleDTO);
     }
 
     @Override
@@ -96,7 +96,6 @@ public class UserRoleServiceImpl implements UserRoleService {
 
     @Override
     public UserRoleResponseDTO removeOrgaRole(List<UserRoleReqRemoveUserRoleDTO> removeData) {
-        log.info("<< service removeOrgaRole >>");
         UserRoleResponseDTO result = UserRoleResponseDTO.builder().build();
         AtomicBoolean flag = new AtomicBoolean(false);
         AtomicReference<Long> targetOrgaNo = new AtomicReference<>((long) 0);
@@ -112,17 +111,23 @@ public class UserRoleServiceImpl implements UserRoleService {
         }else{
             List<Long> removeUserRoleList = removeData.stream()
                     .filter(dto -> dto.getTargetOrgaNo() == dto.getOrgaNo() ? true : false)
-                    .map(dto -> dto.getOrgaNo())
+                    .map(dto -> dto.getRoleGroupNo())
                     .collect(Collectors.toList());
 
-            log.info("Orga No List");
-            removeUserRoleList.forEach(log::info);
+            Integer beforeSize = removeUserRoleList.size();
+
+            UserRoleReqRemoveUserRoleDTO2 userRoleReqRemoveUserRoleDTO2 = UserRoleReqRemoveUserRoleDTO2.builder()
+                    .targetOrgaNo(targetOrgaNo.get())
+                    .removeUserRoleList(removeUserRoleList)
+                    .build();
+
+            Integer afterSize = userRoleMapper.removeUserRole(userRoleReqRemoveUserRoleDTO2);
+
+//            log.info("beforeSize : " + beforeSize);
+//            log.info("afterSize : " + afterSize);
 
             result.setState("success");
-            result.setMessage("전달 성공");
-
-//            UserRoleReqRemoveUserRoleDTO2 userRoleReqRemoveUserRoleDTO2 = UserRoleReqRemoveUserRoleDTO2.builder().build();
-//            userRoleMapper.removeUserRole(userRoleReqRemoveUserRoleDTO2);
+            result.setMessage("선택한 권한그룹이 해제되었습니다.");
         }
 
         return result;

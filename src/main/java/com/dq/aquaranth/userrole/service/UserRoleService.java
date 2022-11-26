@@ -19,7 +19,7 @@ public interface UserRoleService {
 
     PageResponseDTO findOrgaByRoleGroupNo(PageRequestDTO pageRequestDTO);
 
-    Integer insertUserRole(UserRoleReqInsertOrgaRoleDTO userRoleReqInsertOrgaRoleDTO, String username);
+    Integer insertUserRole(UserRoleReqInsertOrgaRoleDTO userRoleReqInsertOrgaRoleDTO);
 
     Integer removeOrgaRole(UserRoleReqRemoveOrgaRoleDTO userRoleReqRemoveOrgaRoleDTO);
 

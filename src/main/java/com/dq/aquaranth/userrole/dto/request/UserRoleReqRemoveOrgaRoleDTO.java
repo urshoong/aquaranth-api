@@ -12,6 +12,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserRoleReqRemoveOrgaRoleDTO {
-    Long companyNo, roleGroupNo, orgaNo;
-    List<Long> removeOrgaRoleList;
+    private Long companyNo, roleGroupNo, orgaNo;
+    private List<Long> removeOrgaRoleList;
 }

@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserRoleRemoveOrgaRoleDTO {
-    Integer status;
-    String message;
+    private Integer status;
+    private String message;
 }

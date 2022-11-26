@@ -1,5 +1,6 @@
 package com.dq.aquaranth.userrole.dto.paging;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
 import java.io.UnsupportedEncodingException;
@@ -13,15 +14,18 @@ import java.util.List;
 @NoArgsConstructor
 public class PageResponseDTO <E> {
 
-    private int start,end,prev,next,first,last,total;
-    private boolean prevFlag,nextFlag;
+    private int start, end, prev, next, first, last, total;
+
+    private boolean prevFlag, nextFlag;
+
     private List<E> dtoList;
+
     private PageRequestDTO pageRequestDTO;
     //한 페이지에 보여질 페이지번호 개수
-    private double pageLimit = 5;
+    private double pageLimit;
 
     public PageResponseDTO(PageRequestDTO pageRequestDTO, int total, List<E> dtoList){
-
+        this.pageLimit = 5;
         this.pageRequestDTO = pageRequestDTO;
         this.total = total;
         this.dtoList = dtoList;

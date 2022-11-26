@@ -19,7 +19,7 @@ public interface UserRoleMapper {
     List<UserRoleGroupBasedUserListDTO> findOrgaByRoleGroupNo(PageRequestDTO pageRequestDTO);
     Integer findOrgaTotalByRoleGroupNo(PageRequestDTO pageRequestDTO);
 
-    Integer insertUserRole(UserRoleReqInsertOrgaRoleDTO userRoleReqInsertOrgaRoleDTO, String username);
+    Integer insertUserRole(UserRoleReqInsertOrgaRoleDTO userRoleReqInsertOrgaRoleDTO);
 
     Integer removeOrgaRole(UserRoleReqRemoveOrgaRoleDTO userRoleReqRemoveOrgaRoleDTO);
 

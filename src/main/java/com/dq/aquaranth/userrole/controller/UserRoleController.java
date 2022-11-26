@@ -50,7 +50,8 @@ public class UserRoleController {
     @Operation(summary = "권한그룹 부여", description = "공통 조직도에서 선택한 조직(회사/부서/사원)에 선택한 권한그룹을 부여합니다.")
     @PostMapping("/insertOrgaRole")
     public Integer insertOrgaRole(@RequestBody UserRoleReqInsertOrgaRoleDTO userRoleReqInsertOrgaRoleDTO, Authentication authentication) {
-        return userRoleService.insertUserRole(userRoleReqInsertOrgaRoleDTO, authentication.getName());
+        userRoleReqInsertOrgaRoleDTO.setUsername(authentication.getName());
+        return userRoleService.insertUserRole(userRoleReqInsertOrgaRoleDTO);
     }
 
     @Operation(summary = "부여된 권한그룹 제거", description = "선택한 조직(회사/부서/사원)에 부여된 권한그룹을 제거합니다.")
@@ -76,9 +77,6 @@ public class UserRoleController {
     @Operation(summary = "부여된 권한그룹 제거", description = "선택한 사용자에 부여된 권한그룹 중 본인에게 부여된 권한그룹만 제거 가능합니다.")
     @PostMapping("/removeOrgaRoleByAllRole")
     public UserRoleResponseDTO removeUserRole(@RequestBody List<UserRoleReqRemoveUserRoleDTO> removeData){
-        log.info("<<< removeUserRole >>>");
-        UserRoleResponseDTO userRoleResponseDTO = userRoleService.removeOrgaRole(removeData);
-        log.info(userRoleResponseDTO);
-        return userRoleResponseDTO;
+        return userRoleService.removeOrgaRole(removeData);
     }
 }

@@ -17,14 +17,15 @@
             where orga_no = (
                 select to2.orga_no
                 from tbl_emp e
-                         join tbl_emp_mapping tem on e.emp_no = tem.emp_no
-                         join tbl_orga to2 on tem.orga_no = to2.orga_no
+                join tbl_emp_mapping tem on e.emp_no = tem.emp_no
+                join tbl_orga to2 on tem.orga_no = to2.orga_no
+                join tbl_dept_mapping tdm on to2.upper_orga_no = tdm.orga_no and dept_main = true
                 where e.username = #{username}
             )
             union all
             select o.orga_no, o.upper_orga_no
             from cte t
-                     join tbl_orga o on o.orga_no = t.upper_orga_no
+            join tbl_orga o on o.orga_no = t.upper_orga_no
         )
         select tc.company_no, tc.company_name, tc.orga_no
         from tbl_company tc
@@ -161,15 +162,15 @@
     </insert>
 
     <delete id="removeOrgaRole">
-            delete
-              from tbl_orga_role
-            <if test="removeOrgaRoleList != null and removeOrgaRoleList.size != 0">
-             where orga_no in
-                <foreach collection="removeOrgaRoleList" item="item" index="index" separator="," open="(" close=")">
-                    #{item}
-                </foreach>
-            </if>
-               and role_group_no = #{roleGroupNo}
+        delete
+        from tbl_orga_role
+        <if test="removeOrgaRoleList != null and removeOrgaRoleList.size != 0">
+        where orga_no in
+            <foreach collection="removeOrgaRoleList" item="item" index="index" separator="," open="(" close=")">
+                #{item}
+            </foreach>
+        </if>
+        and role_group_no = #{roleGroupNo}
     </delete>
 
     <select id="findUserListByOrgaNo" resultType="com.dq.aquaranth.userrole.dto.response.UserRoleUserListBasedDTO">
@@ -260,7 +261,8 @@
         join tbl_orga o on o.orga_no = cte.orga_no
         join tbl_orga_role tor on tor.orga_no = o.orga_no
         join tbl_role_group trg on trg.role_group_no = tor.role_group_no and trg.role_group_use = true
-        left join tbl_company tc on o.orga_no = tc.orga_no
+        left join tbl_company tc on trg.company_no = tc.company_no
+        order by trg.role_group_no
         limit #{skip}, #{size}
     </select>
 
@@ -282,8 +284,21 @@
                 join tbl_orga o on o.orga_no = cte.orga_no
                 join tbl_orga_role tor on tor.orga_no = o.orga_no
                 join tbl_role_group trg on trg.role_group_no = tor.role_group_no and trg.role_group_use = true
-                left join tbl_company tc on o.orga_no = tc.orga_no
+                left join tbl_company tc on trg.company_no = tc.company_no
+                order by trg.role_group_no
                 limit #{skip}, #{size}
         ) x
     </select>
+
+    <delete id="removeUserRole">
+        delete
+        from tbl_orga_role
+        <if test="removeUserRoleList != null and removeUserRoleList.size != 0">
+            where role_group_no in
+            <foreach collection="removeUserRoleList" item="item" index="index" separator="," open="(" close=")">
+                #{item}
+            </foreach>
+        </if>
+        and orga_no = #{targetOrgaNo}
+    </delete>
 </mapper>

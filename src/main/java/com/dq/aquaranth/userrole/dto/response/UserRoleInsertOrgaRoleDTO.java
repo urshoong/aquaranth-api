@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserRoleInsertOrgaRoleDTO {
-    Long empNo, orgaNo, upperOrgaNo;
-    String empName;
+    private Long empNo, orgaNo, upperOrgaNo;
+    private String empName;
 }

@@ -12,6 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserRoleReqInsertOrgaRoleDTO {
-    Long companyNo, roleGroupNo, orgaNo;
-    List<Integer> orgaNoList;
+    private Long roleGroupNo, orgaNo;
+    private List<Long> orgaNoList;
+    private String username;
 }
