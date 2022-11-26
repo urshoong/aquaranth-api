@@ -15,9 +15,9 @@ public interface UserRoleService {
 
     List<UserRoleCompanyDTO> findCompany(String username);
 
-    PageResponseDTO findRoleGroupByOrgaNo(PageRequestDTO pageRequestDTO);
+    PageResponseDTO<UserRoleRoleGroupBasedListDTO> findRoleGroupByOrgaNo(PageRequestDTO pageRequestDTO);
 
-    PageResponseDTO findOrgaByRoleGroupNo(PageRequestDTO pageRequestDTO);
+    PageResponseDTO<UserRoleGroupBasedUserListDTO> findOrgaByRoleGroupNo(PageRequestDTO pageRequestDTO);
 
     Integer insertUserRole(UserRoleReqInsertOrgaRoleDTO userRoleReqInsertOrgaRoleDTO);
 
@@ -25,9 +25,9 @@ public interface UserRoleService {
 
     /** UserList **/
 
-    PageResponseDTO findUserListByOrgaNo(PageRequestDTO pageRequestDTO);
+    PageResponseDTO<UserRoleUserListBasedDTO> findUserListByOrgaNo(PageRequestDTO pageRequestDTO);
 
-    PageResponseDTO findRoleGroupByUser(PageRequestDTO pageRequestDTO);
+    PageResponseDTO<UserRoleUserBasedRoleGroupDTO> findRoleGroupByUser(PageRequestDTO pageRequestDTO);
 
     UserRoleResponseDTO removeOrgaRole(List<UserRoleReqRemoveUserRoleDTO> removeData);
 }

@@ -37,13 +37,13 @@ public class UserRoleController {
     }
     @Operation(summary = "권한 그룹 목록 조회", description = "선택한 회사에 부여 가능한 모든 권한그룹의 목록을 조회합니다.")
     @GetMapping("/roleGroupList")
-    public PageResponseDTO findRoleGroupByCompanyNo(PageRequestDTO pageRequestDTO) {
+    public PageResponseDTO<UserRoleRoleGroupBasedListDTO> findRoleGroupByCompanyNo(PageRequestDTO pageRequestDTO) {
         return userRoleService.findRoleGroupByOrgaNo(pageRequestDTO);
     }
 
     @Operation(summary = "조직(회사/부서/사원) 목록 조회", description = "선택한 권한그룹이 부여된 조직(회사/부서/사원) 목록을 조회합니다.")
     @GetMapping("/roleGroupUserList")
-    public PageResponseDTO findOrgaByRoleGroupNo(PageRequestDTO pageRequestDTO) {
+    public PageResponseDTO<UserRoleGroupBasedUserListDTO> findOrgaByRoleGroupNo(PageRequestDTO pageRequestDTO) {
         return userRoleService.findOrgaByRoleGroupNo(pageRequestDTO);
     }
 
@@ -64,13 +64,13 @@ public class UserRoleController {
 
     @Operation(summary = "사용자 목록 조회", description = "선택한 회사에 소속된 모든 사용자의 목록을 조회합니다.")
     @GetMapping("/findUserListByOrgaNo")
-    public PageResponseDTO findUserListByOrgaNo(PageRequestDTO pageRequestDTO){
+    public PageResponseDTO<UserRoleUserListBasedDTO> findUserListByOrgaNo(PageRequestDTO pageRequestDTO){
         return userRoleService.findUserListByOrgaNo(pageRequestDTO);
     }
 
     @Operation(summary = "권한그룹 목록 조회", description = "선택한 사용자에 부여된 모든 권한그룹을 조회합니다.")
     @GetMapping("/findRoleGroupByUser")
-    public PageResponseDTO findRoleGroupByUser(PageRequestDTO pageRequestDTO) {
+    public PageResponseDTO<UserRoleUserBasedRoleGroupDTO> findRoleGroupByUser(PageRequestDTO pageRequestDTO) {
         return userRoleService.findRoleGroupByUser(pageRequestDTO);
     }
 

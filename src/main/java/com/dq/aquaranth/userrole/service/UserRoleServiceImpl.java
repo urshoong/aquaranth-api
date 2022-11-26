@@ -35,23 +35,21 @@ public class UserRoleServiceImpl implements UserRoleService {
         return userRoleMapper.findCompany(username);
     }
 
-    public PageResponseDTO findRoleGroupByOrgaNo(PageRequestDTO pageRequestDTO) {
+    public PageResponseDTO<UserRoleRoleGroupBasedListDTO> findRoleGroupByOrgaNo(PageRequestDTO pageRequestDTO) {
         List<UserRoleRoleGroupBasedListDTO> list = userRoleMapper.findRoleGroupByOrgaNo(pageRequestDTO);
 
         Integer total = userRoleMapper.findRoleGroupTotalByOrgaNo(pageRequestDTO);
-        total = total == null ? 0 : total;
 
-        return new PageResponseDTO(pageRequestDTO, total, list);
+        return new PageResponseDTO<>(pageRequestDTO, total == null ? 0 : total, list);
     }
 
     @Override
-    public PageResponseDTO findOrgaByRoleGroupNo(PageRequestDTO pageRequestDTO) {
+    public PageResponseDTO<UserRoleGroupBasedUserListDTO> findOrgaByRoleGroupNo(PageRequestDTO pageRequestDTO) {
         List<UserRoleGroupBasedUserListDTO> list = userRoleMapper.findOrgaByRoleGroupNo(pageRequestDTO);
 
         Integer total = userRoleMapper.findOrgaTotalByRoleGroupNo(pageRequestDTO);
-        total = total == null ? 0 : total;
 
-        return new PageResponseDTO(pageRequestDTO, total, list);
+        return new PageResponseDTO<>(pageRequestDTO, total == null ? 0 : total, list);
     }
 
     @Override
@@ -68,23 +66,21 @@ public class UserRoleServiceImpl implements UserRoleService {
 
     @Override
     @Transactional
-    public PageResponseDTO findUserListByOrgaNo(PageRequestDTO pageRequestDTO) {
+    public PageResponseDTO<UserRoleUserListBasedDTO> findUserListByOrgaNo(PageRequestDTO pageRequestDTO) {
         List<UserRoleUserListBasedDTO> list = userRoleMapper.findUserListByOrgaNo(pageRequestDTO);
 
         Integer total = userRoleMapper.findUserListTotalByOrgaNo(pageRequestDTO);
-        total = total == null ? 0 : total;
 
-        return new PageResponseDTO(pageRequestDTO, total, list);
+        return new PageResponseDTO<>(pageRequestDTO, total == null ? 0 : total, list);
     }
 
     @Override
-    public PageResponseDTO findRoleGroupByUser(PageRequestDTO pageRequestDTO) {
+    public PageResponseDTO<UserRoleUserBasedRoleGroupDTO> findRoleGroupByUser(PageRequestDTO pageRequestDTO) {
         List<UserRoleUserBasedRoleGroupDTO> list = userRoleMapper.findRoleGroupByUser(pageRequestDTO);
 
         Integer total = userRoleMapper.findRoleGroupTotalByUser(pageRequestDTO);
-        total = total == null ? 0 : total;
 
-        return new PageResponseDTO(pageRequestDTO, total, list);
+        return new PageResponseDTO<>(pageRequestDTO, total == null ? 0 : total, list);
     }
 
     @Override
@@ -107,7 +103,7 @@ public class UserRoleServiceImpl implements UserRoleService {
                     .map(UserRoleReqRemoveUserRoleDTO::getRoleGroupNo)
                     .collect(Collectors.toList());
 
-            Integer beforeSize = removeUserRoleList.size();
+            int beforeSize = removeUserRoleList.size();
 
             UserRoleReqRemoveUserRoleDTO2 userRoleReqRemoveUserRoleDTO2 = UserRoleReqRemoveUserRoleDTO2.builder()
                     .targetOrgaNo(targetOrgaNo.get())
