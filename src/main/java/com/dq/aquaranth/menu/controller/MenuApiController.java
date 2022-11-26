@@ -5,6 +5,7 @@ import com.dq.aquaranth.menu.dto.request.MenuInsertDTO;
 import com.dq.aquaranth.menu.dto.request.MenuRequestDTO;
 import com.dq.aquaranth.menu.dto.request.MenuUpdateDTO;
 import com.dq.aquaranth.menu.dto.response.MenuResponseDTO;
+import com.dq.aquaranth.menu.mapper.MenuMapper;
 import com.dq.aquaranth.menu.service.MenuService;
 import com.dq.aquaranth.objectstorage.dto.request.MultipartFileDTO;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +27,7 @@ import java.util.List;
 public class MenuApiController {
 
     private final MenuService menuService;
+    private final MenuMapper menuMapper;
 
     @GetMapping
     public MenuResponseDTO findBy(MenuRequestDTO menuRequestDTO) {
@@ -55,5 +57,10 @@ public class MenuApiController {
     @PutMapping(value = "/updateicon", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public MenuResponseDTO updateByMenuIcon(MultipartFileDTO fileDto) throws Exception {
         return menuService.updateIcon(fileDto);
+    }
+
+    @GetMapping("/lnb")
+    public List<MenuResponseDTO> getLnbList(String menuCode) {
+        return menuMapper.findByMenuCodeUnderRecursive(menuCode);
     }
 }

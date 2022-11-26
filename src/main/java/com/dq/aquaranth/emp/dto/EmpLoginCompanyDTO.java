@@ -1,16 +1,19 @@
-package com.dq.aquaranth.rolegroup.dto;
+package com.dq.aquaranth.emp.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
+import java.util.List;
+
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class RoleGroupInsertReqDTO {
+@Data
+public class EmpLoginCompanyDTO {
+    private String companyName;
     private Long companyNo;
-    private String roleGroupName;
-    private boolean roleGroupUse;
+
+    private List<EmpLoginDepartmentDTO> deptList;
 }

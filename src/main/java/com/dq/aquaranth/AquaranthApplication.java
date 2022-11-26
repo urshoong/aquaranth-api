@@ -19,4 +19,5 @@ public class AquaranthApplication {
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
 }

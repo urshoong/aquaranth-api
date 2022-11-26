@@ -137,4 +137,9 @@
         order by f.orga_type
     </select>
 
+    <select id="findByMenuCodeUnderRecursive" resultType="com.dq.aquaranth.menu.dto.response.MenuResponseDTO">
+        select *
+        from tbl_menu
+        where menu_path like CONCAT('/',#{menuCode},'%')
+    </select>
 </mapper>
