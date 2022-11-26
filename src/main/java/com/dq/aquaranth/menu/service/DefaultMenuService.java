@@ -5,7 +5,6 @@ import com.dq.aquaranth.menu.dto.request.MenuIconUpdateDTO;
 import com.dq.aquaranth.menu.dto.request.MenuInsertDTO;
 import com.dq.aquaranth.menu.dto.request.MenuRequestDTO;
 import com.dq.aquaranth.menu.dto.request.MenuUpdateDTO;
-import com.dq.aquaranth.menu.dto.response.MenuChildrenResponseDTO;
 import com.dq.aquaranth.menu.dto.response.MenuResponseDTO;
 import com.dq.aquaranth.menu.exception.MenuException;
 import com.dq.aquaranth.menu.mapper.MenuMapper;
@@ -33,12 +32,8 @@ public class DefaultMenuService implements MenuService {
 
     @Override
     public MenuResponseDTO findBy(MenuRequestDTO menuRequestDTO) {
-        MenuResponseDTO menuResponseDTO = menuMapper
-                .findBy(menuRequestDTO)
-                .orElseThrow(() -> new MenuException(ErrorCode.MENU_NOT_FOUND));
-        ObjectGetRequestDTO objectRequestDTO = ObjectGetRequestDTO.builder()
-                .filename(menuResponseDTO.getUuid() + menuResponseDTO.getFilename())
-                .build();
+        MenuResponseDTO menuResponseDTO = menuMapper.findBy(menuRequestDTO).orElseThrow(() -> new MenuException(ErrorCode.MENU_NOT_FOUND));
+        ObjectGetRequestDTO objectRequestDTO = ObjectGetRequestDTO.builder().filename(menuResponseDTO.getUuid() + menuResponseDTO.getFilename()).build();
 
         try {
             menuResponseDTO.setIconUrl(objectStorageService.getObject(objectRequestDTO).getUrl());
@@ -50,8 +45,7 @@ public class DefaultMenuService implements MenuService {
 
     @Override
     public List<MenuResponseDTO> findAllBy(MenuRequestDTO menuRequestDTO) {
-        List<MenuResponseDTO> menuResponseDTOList = menuMapper
-                .findAllBy(menuRequestDTO);
+        List<MenuResponseDTO> menuResponseDTOList = menuMapper.findAllBy(menuRequestDTO);
         if (menuResponseDTOList.isEmpty()) {
             throw new MenuException(ErrorCode.MENU_NOT_FOUND);
         }
@@ -69,13 +63,9 @@ public class DefaultMenuService implements MenuService {
 
     @Override
     public MenuResponseDTO findUpperMenuBy(MenuRequestDTO menuRequestDTO) {
-        MenuResponseDTO upperMenuResponseDTO = menuMapper
-                .findUpperMenuBy(menuRequestDTO)
-                .orElseThrow(() -> new MenuException(ErrorCode.MENU_NOT_FOUND));
+        MenuResponseDTO upperMenuResponseDTO = menuMapper.findUpperMenuBy(menuRequestDTO).orElseThrow(() -> new MenuException(ErrorCode.MENU_NOT_FOUND));
 
-        ObjectGetRequestDTO objectRequestDTO = ObjectGetRequestDTO.builder()
-                .filename(upperMenuResponseDTO.getUuid() + upperMenuResponseDTO.getFilename())
-                .build();
+        ObjectGetRequestDTO objectRequestDTO = ObjectGetRequestDTO.builder().filename(upperMenuResponseDTO.getUuid() + upperMenuResponseDTO.getFilename()).build();
 
         try {
             upperMenuResponseDTO.setIconUrl(objectStorageService.getObject(objectRequestDTO).getUrl());
@@ -95,7 +85,6 @@ public class DefaultMenuService implements MenuService {
 
         menuInsertDTO.setMenuPath(upperMenu.getMenuPath() + "/" + menuInsertDTO.getMenuPath());
         menuInsertDTO.setDepth(upperMenu.getDepth() + 1L);
-
 
         if (!multipartFile.isEmpty()) {
             String uuid = UUID.randomUUID().toString();
@@ -122,11 +111,10 @@ public class DefaultMenuService implements MenuService {
     public MenuResponseDTO updateIcon(MultipartFileDTO multipartFileDTO) throws Exception {
         String uuid = UUID.randomUUID().toString();
         String filename = multipartFileDTO.getMultipartFile().getOriginalFilename();
-
-        ObjectPostRequestDTO objectPostRequestDTO = ObjectPostRequestDTO.builder().filename(uuid + filename).multipartFile(multipartFileDTO.getMultipartFile()).build();
-
-        MenuIconUpdateDTO menuIconUpdateDTO = MenuIconUpdateDTO.builder().menuCode(multipartFileDTO.getKey()).uuid(uuid).filename(filename).build();
-
+        ObjectPostRequestDTO objectPostRequestDTO
+                = ObjectPostRequestDTO.builder().filename(uuid + filename).multipartFile(multipartFileDTO.getMultipartFile()).build();
+        MenuIconUpdateDTO menuIconUpdateDTO
+                = MenuIconUpdateDTO.builder().menuCode(multipartFileDTO.getKey()).uuid(uuid).filename(filename).build();
         menuMapper.updateIcon(menuIconUpdateDTO);
         objectStorageService.postObject(objectPostRequestDTO);
         return findBy(MenuRequestDTO.builder().menuCode(multipartFileDTO.getKey()).build());

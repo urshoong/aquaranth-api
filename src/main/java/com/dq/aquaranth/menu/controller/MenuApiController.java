@@ -55,8 +55,8 @@ public class MenuApiController {
     }
 
     @PutMapping(value = "/updateicon", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public MenuResponseDTO updateByMenuIcon(MultipartFileDTO fileDto) throws Exception {
-        return menuService.updateIcon(fileDto);
+    public MenuResponseDTO updateByMenuIcon(MultipartFileDTO multipartFileDTO) throws Exception {
+        return menuService.updateIcon(multipartFileDTO);
     }
 
     @GetMapping("/lnb")

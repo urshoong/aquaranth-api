@@ -20,7 +20,7 @@ public interface MenuService {
 
     MenuResponseDTO update(MenuUpdateDTO menuUpdateDTO);
 
-    MenuResponseDTO updateIcon(MultipartFileDTO fileDto) throws Exception;
+    MenuResponseDTO updateIcon(MultipartFileDTO multipartFileDTO) throws Exception;
 
     List<MenuResponseDTO> findMenusByLoginUsername(String username);
 

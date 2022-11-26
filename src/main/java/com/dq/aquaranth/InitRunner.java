@@ -63,4 +63,6 @@ public class InitRunner implements ApplicationRunner {
             redisService.setCacheObject(menuCode, value);
         }
     }
+
+
 }
