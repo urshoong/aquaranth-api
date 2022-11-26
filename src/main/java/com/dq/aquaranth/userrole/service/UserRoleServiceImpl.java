@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
@@ -40,9 +41,7 @@ public class UserRoleServiceImpl implements UserRoleService {
         Integer total = userRoleMapper.findRoleGroupTotalByOrgaNo(pageRequestDTO);
         total = total == null ? 0 : total;
 
-        PageResponseDTO result = new PageResponseDTO(pageRequestDTO, total, list);
-
-        return result;
+        return new PageResponseDTO(pageRequestDTO, total, list);
     }
 
     @Override
@@ -52,9 +51,7 @@ public class UserRoleServiceImpl implements UserRoleService {
         Integer total = userRoleMapper.findOrgaTotalByRoleGroupNo(pageRequestDTO);
         total = total == null ? 0 : total;
 
-        PageResponseDTO result = new PageResponseDTO(pageRequestDTO, total, list);
-
-        return result;
+        return new PageResponseDTO(pageRequestDTO, total, list);
     }
 
     @Override
@@ -77,9 +74,7 @@ public class UserRoleServiceImpl implements UserRoleService {
         Integer total = userRoleMapper.findUserListTotalByOrgaNo(pageRequestDTO);
         total = total == null ? 0 : total;
 
-        PageResponseDTO result = new PageResponseDTO(pageRequestDTO, total, list);
-
-        return result;
+        return new PageResponseDTO(pageRequestDTO, total, list);
     }
 
     @Override
@@ -89,9 +84,7 @@ public class UserRoleServiceImpl implements UserRoleService {
         Integer total = userRoleMapper.findRoleGroupTotalByUser(pageRequestDTO);
         total = total == null ? 0 : total;
 
-        PageResponseDTO result = new PageResponseDTO(pageRequestDTO, total, list);
-
-        return result;
+        return new PageResponseDTO(pageRequestDTO, total, list);
     }
 
     @Override
@@ -102,7 +95,7 @@ public class UserRoleServiceImpl implements UserRoleService {
 
         removeData.forEach(dto -> {
             targetOrgaNo.set(dto.getTargetOrgaNo());
-            if(dto.getOrgaNo() != dto.getTargetOrgaNo()) flag.set(true);
+            if(!Objects.equals(dto.getOrgaNo(), dto.getTargetOrgaNo())) flag.set(true);
         });
 
         if(flag.get()){
@@ -110,8 +103,8 @@ public class UserRoleServiceImpl implements UserRoleService {
             result.setMessage("다른 회사/부서/사원에 부여된 권한은 해제할 수 없습니다.");
         }else{
             List<Long> removeUserRoleList = removeData.stream()
-                    .filter(dto -> dto.getTargetOrgaNo() == dto.getOrgaNo() ? true : false)
-                    .map(dto -> dto.getRoleGroupNo())
+                    .filter(dto -> Objects.equals(dto.getTargetOrgaNo(), dto.getOrgaNo()))
+                    .map(UserRoleReqRemoveUserRoleDTO::getRoleGroupNo)
                     .collect(Collectors.toList());
 
             Integer beforeSize = removeUserRoleList.size();
@@ -123,8 +116,8 @@ public class UserRoleServiceImpl implements UserRoleService {
 
             Integer afterSize = userRoleMapper.removeUserRole(userRoleReqRemoveUserRoleDTO2);
 
-//            log.info("beforeSize : " + beforeSize);
-//            log.info("afterSize : " + afterSize);
+            log.info("beforeSize : " + beforeSize);
+            log.info("afterSize : " + afterSize);
 
             result.setState("success");
             result.setMessage("선택한 권한그룹이 해제되었습니다.");
