@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RoleGroupInsertReqDTO {
+    private Long companyNo;
     private String roleGroupName;
     private boolean roleGroupUse;
 }

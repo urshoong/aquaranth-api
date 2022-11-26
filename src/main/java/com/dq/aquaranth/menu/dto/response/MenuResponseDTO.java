@@ -24,10 +24,11 @@ public class MenuResponseDTO {
     private Long menuOrder;
     private String menuDefault;
     private String uuid;
-    private String fileName;
+    private String filename;
     private String regUser;
     private LocalDateTime regDate;
     private String modUser;
     private LocalDateTime modDate;
     private Long depth;
+    private String iconUrl;
 }

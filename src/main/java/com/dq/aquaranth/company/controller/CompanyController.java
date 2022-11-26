@@ -23,7 +23,7 @@ public class CompanyController {
      */
     @GetMapping("/list")
     public List<CompanyListDTO> getCompanyList(Authentication authentication) {
-        log.info("authentication : {}", authentication.getPrincipal());
+//        log.info("authentication : {}", authentication.getPrincipal());
         return companyService.findAll();
     }
 

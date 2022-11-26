@@ -28,18 +28,20 @@ public class MenuRoleApiController {
 
     @PostMapping("")
     public void save(@RequestBody MenuRoleInsertReqDTO reqDTO, Authentication authentication) {
-        CustomUser customUser = (CustomUser) authentication.getPrincipal();
+        Long roleGroupNo = reqDTO.getRoleGroupNo();
+        String moduleCode = reqDTO.getModuleCode();
+
         List<MenuRole> insertMenuRoles = new ArrayList<>();
 
-        for (MenuRoleLnbDTO dto : reqDTO.getDtoList()) {
+        for (Long menuNo : reqDTO.getMenuRoles()) {
             insertMenuRoles.add(MenuRole.builder()
-                    .menuNo(dto.getMenuNo())
-                    .roleGroupNo(reqDTO.getRoleGroupNo())
-                    .regUser(customUser.getEmpDTO().getEmpName())
+                    .menuNo(menuNo)
+                    .roleGroupNo(roleGroupNo)
+                    .regUser(authentication.getName())
                     .regDate(LocalDateTime.now())
                     .build());
         }
 
-        menuRoleService.save(insertMenuRoles, reqDTO.getModuleCode(), reqDTO.getRoleGroupNo());
+        menuRoleService.save(insertMenuRoles, moduleCode, roleGroupNo);
     }
 }

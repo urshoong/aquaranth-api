@@ -13,8 +13,8 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Builder
 public class EmpOrgaUpdateDTO {
-    private Long orgaNo, deptNo, upperOrgaNo, companyNo, empNo;
-    private String empRank, empRole, modUser, companyAddress, companyName, companyTel, deptName;
+    private Long orgaNo, deptNo, companyNo, empNo;
+    private String empRank, empRole,  companyAddress, companyName, companyTel, deptName;
     private boolean deptMain;
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate retiredDate, hiredDate;

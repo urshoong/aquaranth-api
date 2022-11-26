@@ -10,7 +10,6 @@ import java.time.LocalDateTime;
 @Data
 @Builder
 public class EmpInsertInformationDTO {
-
     private String regUser, empRole;
 
     //사원 정보
@@ -20,7 +19,7 @@ public class EmpInsertInformationDTO {
     private String gender, empPhone, empAddress, email;
     private LocalDateTime lastLoginTime;
     private String lastLoginIp;
-    private LocalDate firstHiredate, lastRetiredate;
+    private LocalDate firstHiredDate, lastRetiredDate;
 
     //부서 정보
     private Long deptNo;
