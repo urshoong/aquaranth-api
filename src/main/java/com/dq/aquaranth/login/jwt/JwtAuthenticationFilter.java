@@ -2,6 +2,9 @@ package com.dq.aquaranth.login.jwt;
 
 import com.dq.aquaranth.commons.utils.JWTUtil;
 import com.dq.aquaranth.login.dto.LoginReqDTO;
+import com.dq.aquaranth.menu.constant.ErrorCode;
+import com.dq.aquaranth.menu.dto.response.ErrorResponseDTO;
+import com.dq.aquaranth.menu.exception.MenuException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -16,8 +19,11 @@ import javax.servlet.FilterChain;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
+import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 /**
@@ -84,8 +90,19 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
      * custom 상태코드를 응답합니다.
      */
     @Override
-    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException {
+    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) {
+        log.error("로그인에 실패하였습니다.");
         log.warn(failed.getMessage());
-        response.sendError(499, failed.getMessage());
+
+        Map<String, String> resBody = new HashMap<>();
+        resBody.put("detail", "아이디 또는 비밀번호를 확인해주세요.");
+        resBody.put("detailErrorCode", "3");
+
+        try {
+            response.sendError(499, new ObjectMapper().writeValueAsString(resBody));
+            log.error("try"+ErrorResponseDTO.toResponseEntity(ErrorCode.INVALID_USER));
+        } catch (IOException e) {
+            log.error("res를 보내던중 예외가 발생하였습니다.");
+        }
     }
 }

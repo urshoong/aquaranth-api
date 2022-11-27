@@ -1,6 +1,8 @@
 package com.dq.aquaranth;
 
+import com.dq.aquaranth.login.domain.LoginUser;
 import com.dq.aquaranth.login.service.RedisService;
+import com.dq.aquaranth.login.service.UserSessionService;
 import com.dq.aquaranth.menu.dto.request.MenuRequestDTO;
 import com.dq.aquaranth.menu.dto.response.MenuResponseDTO;
 import com.dq.aquaranth.menu.service.MenuService;
@@ -34,12 +36,15 @@ public class InitRunner implements ApplicationRunner {
     private final MenuService menuService;
     private final RoleGroupService roleGroupService;
 
+    private final UserSessionService userSessionService;
+
     /**
      * springboot load 시 실행됩니다.
      */
     @Override
     public void run(ApplicationArguments args) throws Exception {
         initRedis();
+        testt();
     }
 
     /**
@@ -62,6 +67,15 @@ public class InitRunner implements ApplicationRunner {
             roleGroupService.findByMenuCode(menuCode).forEach(roleGroup -> value.add(roleGroup.getRoleGroupNo()));
             redisService.setCacheObject(menuCode, value);
         }
+    }
+
+    public void testt(){
+        LoginUser loginUser = LoginUser.builder()
+                .username("user")
+                .loginCompanyNo(1L)
+                .loginDeptNo(1L)
+                .build();
+        userSessionService.loadUserInfoByLoginUser(loginUser);
     }
 
 

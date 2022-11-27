@@ -1,7 +1,5 @@
 package com.dq.aquaranth.rolegroup.controller;
 
-import com.dq.aquaranth.login.domain.CustomUser;
-import com.dq.aquaranth.login.dto.LoginUserInfo;
 import com.dq.aquaranth.login.service.UserSessionService;
 import com.dq.aquaranth.rolegroup.domain.RoleGroup;
 import com.dq.aquaranth.rolegroup.dto.RoleGroupInsertReqDTO;

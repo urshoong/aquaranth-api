@@ -4,6 +4,7 @@ import io.minio.GetPresignedObjectUrlArgs;
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
 import io.minio.http.Method;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,9 +20,10 @@ import java.util.concurrent.TimeUnit;
  */
 @Log4j2
 @Component
+@RequiredArgsConstructor
 public class MinioAdaptor {
-    @Autowired
-    private MinioClient minioClient;
+
+    private final MinioClient minioClient;
     @Value("${minio.bucket.name}")
     private String bucketName;
 
