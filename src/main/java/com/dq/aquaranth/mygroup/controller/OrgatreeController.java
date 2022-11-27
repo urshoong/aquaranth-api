@@ -36,10 +36,10 @@ public class OrgatreeController {
         return orgatreeService.findAllEmpInformation(orgaNo);
     }
 
-    @GetMapping("/information/{empNo}")
-    public OrgatreeEmpInformationDTO getEmpInformation(@PathVariable Long empNo) {
+    @GetMapping("/information/{orgaNo}")
+    public OrgatreeEmpInformationDTO getEmpInformation(@PathVariable Long orgaNo) {
         log.info("해당 부서에 소속된 사원 중 한 사원의 정보 조회");
-        return orgatreeService.findByEmpNo(empNo);
+        return orgatreeService.findByEmpNo(orgaNo);
     }
 
 }

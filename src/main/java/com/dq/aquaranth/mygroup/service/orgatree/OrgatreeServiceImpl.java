@@ -32,9 +32,9 @@ public class OrgatreeServiceImpl implements OrgatreeService {
     }
 
     @Override
-    public OrgatreeEmpInformationDTO findByEmpNo(Long empNo) {
+    public OrgatreeEmpInformationDTO findByEmpNo(Long orgaNo) {
         log.info("해당 부서에 소속된 사원 중 한 사원의 정보 조회");
-        return orgatreeMapper.findByEmpNo(empNo);
+        return orgatreeMapper.findByEmpNo(orgaNo);
     }
 
 }

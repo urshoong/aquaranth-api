@@ -13,5 +13,5 @@ public interface OrgatreeService {
      */
     List<OrgaTreeDTO> findAllOrga (Long upperDeptNo, Long depth, Long companyNo);
     List<OrgaTreeEmpListDTO> findAllEmpInformation(Long orgaNo);
-    OrgatreeEmpInformationDTO findByEmpNo(Long empNo);
+    OrgatreeEmpInformationDTO findByEmpNo(Long orgaNo);
 }

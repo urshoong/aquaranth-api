@@ -107,7 +107,7 @@
                     owner_name
                 </when>
                 <when test="sortValue == 'companyUse'">
-                    company_use 
+                    company_use
                 </when>
             </choose>
     </select>

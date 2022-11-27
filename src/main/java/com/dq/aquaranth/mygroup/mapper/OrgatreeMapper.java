@@ -21,5 +21,5 @@ public interface OrgatreeMapper {
     /**
      * 해당 부서에 소속된 사원 중 한 사원의 정보 조회
      */
-    OrgatreeEmpInformationDTO findByEmpNo(Long empNo);
+    OrgatreeEmpInformationDTO findByEmpNo(Long orgaNo);
 }

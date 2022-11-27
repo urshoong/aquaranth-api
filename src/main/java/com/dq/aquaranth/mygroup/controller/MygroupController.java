@@ -25,6 +25,7 @@ public class MygroupController {
         log.info("로그인한 사원의 마이그룹 전체 조회");
         // 로그인한 사원의 아이디를 받아 저장
         String username = authentication.getName();
+        log.info(username);
         return mygroupService.findAllMygroup(username);
     }
 
