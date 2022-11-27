@@ -109,11 +109,6 @@
 
     </select>
 
-<!--    새로운 DB에 emp만 넣는 쿼리문 임시 작성 (추후 삭제)-->
-    <insert id="insertEmp" parameterType="com.dq.aquaranth.emp.dto.EmpDTO">
-        insert into aquaranth2.tbl_emp (emp_name, username, password, gender, first_hired_date, reg_user)
-        VALUES (#{empName}, #{username}, #{password}, #{gender}, #{firstHiredDate}, #{regUser})
-    </insert>
 
 <!--    resultMap시작-->
     <resultMap id="empMap" type="com.dq.aquaranth.emp.dto.EmpLoginEmpDTO" >
@@ -141,6 +136,7 @@
     <select id="findLoginUser" resultMap="empMap">
         select te.emp_name, te.emp_no, te.username, te.last_login_time, te.last_login_ip,
                tem.emp_rank, tc.company_name, td.dept_name, tem.orga_no, td.dept_no, tc.company_no
+
         FROM tbl_emp te
                  LEFT JOIN tbl_emp_mapping tem on te.emp_no = tem.emp_no
                  LEFT JOIN tbl_orga tor on tor.orga_no = tem.orga_no
@@ -151,13 +147,4 @@
     </select>
 
     <!--    resultMap 끝-->
-
-
-
-
-    <!-- 조직도 테스트용 -->
-    <select id="selectDeptPath" resultType="com.dq.aquaranth.emp.dto.OrgaTreeDTO">
-        select dept_path from aquaranth2.tbl_dept_mapping;
-    </select>
-
 </mapper>

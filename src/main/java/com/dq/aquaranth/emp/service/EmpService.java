@@ -25,11 +25,6 @@ public interface EmpService {
 
     Long updateFile(EmpFileDTO empFileDTO);
 
-    ///////////////
-
-    Long insertEmp(EmpDTO empDTO);
-
-    List<OrgaTreeDTO> selectDeptPath();
 
     List<EmpLoginEmpDTO> findLoginUser(String username);
 

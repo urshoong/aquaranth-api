@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.management.openmbean.KeyAlreadyExistsException;
+import java.net.Inet4Address;
+import java.net.UnknownHostException;
 import java.util.*;
 
 @Service
@@ -102,30 +104,27 @@ public class EmpServiceImpl implements EmpService {
     }
 
 
-
-    @Override
-    public Long insertEmp(EmpDTO empDTO) {
-        empDTO.setPassword(passwordEncoder.encode(empDTO.getPassword()));
-
-        return empMapper.insertEmp(empDTO);
-    }
-
     /**
      * 로그인한 회원 가져오기
      */
     @Override
     public List<EmpLoginEmpDTO> findLoginUser(String username) {
-        return empMapper.findLoginUser(username);
+        String ip = null;
+
+        try {
+            ip = Inet4Address.getLocalHost().getHostAddress();
+        } catch (UnknownHostException e) {
+            throw new RuntimeException(e);
+        }
+
+        List<EmpLoginEmpDTO> result = empMapper.findLoginUser(username);
+
+        String finalIp = ip;
+        result.forEach(emp -> {
+            emp.setLoginIp(finalIp);
+        });
+
+        return result;
     }
 
-    @Override
-    public List<OrgaTreeDTO> selectDeptPath() {
-        List<OrgaTreeDTO> list = empMapper.selectDeptPath();
-//
-//        for (int i = 0; i < list.size(); i++) {
-//            StringTokenizer st = new StringTokenizer(list);
-//        }
-
-        return null;
-    }
 }
