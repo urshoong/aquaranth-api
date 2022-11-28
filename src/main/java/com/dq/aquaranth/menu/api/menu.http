@@ -5,7 +5,7 @@ Content-Type: application/json
 
 {
   "username" : "admin",
-  "password" : "admin"
+  "password" : "admin1"
 }
 
 ### 회사 부서 선택
