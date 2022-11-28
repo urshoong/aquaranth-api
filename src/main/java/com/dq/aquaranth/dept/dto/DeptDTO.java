@@ -17,8 +17,9 @@ public class DeptDTO {
     private Long upperDeptNo;
     private String deptName, deptDesc, regUser, modUser;
     private boolean delFlag, mainFlag;
-    private int deptSort,  ord, depth, companyNo;
+    private int ord, depth, companyNo;
     private LocalDateTime regDate, modDate;
     private Long lastDno;
-
+    /*
+*/
 }

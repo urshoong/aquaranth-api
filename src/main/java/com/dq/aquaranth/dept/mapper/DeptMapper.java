@@ -1,10 +1,7 @@
 package com.dq.aquaranth.dept.mapper;
 
 
-import com.dq.aquaranth.dept.dto.DepartmentDTO;
-import com.dq.aquaranth.dept.dto.DeptCriteria;
-import com.dq.aquaranth.dept.dto.DeptDTO;
-import com.dq.aquaranth.dept.dto.DeptTreeDTO;
+import com.dq.aquaranth.dept.dto.*;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -20,7 +17,9 @@ public interface DeptMapper {
 
     public List<DeptDTO> getList(@Param("skip") int skip, @Param("size") int size);
 
-    public List<DeptDTO> getGnoList(int gno);
+    public List<DeptDTO> getGnoList(Long companyNo);
+
+    //===========================등록 트랜잭션======================================
 
     int getNextOrd(@Param("company") Integer company, @Param("parentDeptNo") Long parentDeptNo);
 
@@ -30,17 +29,27 @@ public interface DeptMapper {
 
     void updateLastDno(@Param("parentDeptNo") Long parentDeptNo, @Param("deptNo") Long deptNo);
 
-    List<DeptDTO> getFromParent(@Param("upperDeptNo") Long upperDeptNo, @Param("depth") int depth);
-
-
-    List<DeptTreeDTO> getTree(@Param("company") Long company );
-
-
     void insertOrga( @Param("orga") Long orga, @Param("regUser") String regUser);
 
     Long getLast();
 
     void insertOrgaMapping(@Param("deptNo") Long deptNo, @Param("orgaNo") Long orgaNo, @Param("regUser") String regUser );
+
+    //===========================등록 트랜잭션======================================
+
+
+
+    List<DeptDTO> getFromParent(@Param("upperDeptNo") Long upperDeptNo, @Param("depth") int depth);
+
+//    트리 구조 조회
+    List<DeptTreeDTO> getTree(@Param("company") Long company );
+
+    //상위 회사 먼저 나오고 클릭하면 하위 부서 조회
+    List<DeptDTO> getSubDepth(GetSubDeptDTO getSubDeptDTO);
+
+
+
+
 
 
 //    List<DeptDTO> deptList();
@@ -52,5 +61,6 @@ public interface DeptMapper {
      */
     List<DepartmentDTO> findByCompanyNo(Long companyNo);
 
+    //종현
     DeptDTO findByUsername(String username);
 }

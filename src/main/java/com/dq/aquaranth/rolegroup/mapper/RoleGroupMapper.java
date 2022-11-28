@@ -48,6 +48,7 @@ public interface RoleGroupMapper {
 
     void hideById(Long roleGroupNo);
 
+    //33
     List<RoleGroup> findRoleGroupsByLoginUser(LoginUser loginUser);
 
     List<RoleGroup> findByMenuCode(String menuCode);
