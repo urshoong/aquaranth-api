@@ -94,7 +94,12 @@ public class DeptService {
         //5. deptNo가 상위부서번호와 일치하는 곳의 lastDno에 추가한 deptNo번호 업데이트
 
         log.info("--------------------------------------------------------5");
-
+        log.info("newDeptNo" + newDeptNo);
+        log.info("newGno" + company);
+        log.info("newParent" + parent);
+        log.info("ord" + ord);
+        log.info("lastDno" + lastDno);
+        log.info("parentDeptNo" + parentDeptNo);
 
         return Map.of(
                 "newDeptNo", newDeptNo,

@@ -2,12 +2,25 @@ package com.dq.aquaranth.emp.controller;
 
 import com.dq.aquaranth.emp.dto.*;
 import com.dq.aquaranth.emp.service.EmpService;
+import com.dq.aquaranth.login.domain.LoginUser;
+import com.dq.aquaranth.login.service.UserSessionService;
+import com.dq.aquaranth.menu.annotation.MenuCode;
+import com.dq.aquaranth.menu.constant.MenuCodes;
+import com.dq.aquaranth.objectstorage.dto.request.MultipartFileDTO;
+import com.dq.aquaranth.objectstorage.service.ObjectStorageService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
+import org.springframework.http.MediaType;
+import org.springframework.security.core.Authentication;
+import com.dq.aquaranth.objectstorage.service.ObjectStorageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.net.Inet4Address;
+import java.net.UnknownHostException;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -15,8 +28,10 @@ import java.util.List;
 @Log4j2
 @RequiredArgsConstructor
 @RequestMapping("/api/emp")
+@MenuCode(MenuCodes.ORGA0030)
 public class EmpController {
     private final EmpService empService;
+    private final UserSessionService userSessionService;
 
     @GetMapping("/information")
     public List<EmpDTO> getEmpList() {
@@ -65,7 +80,6 @@ public class EmpController {
     ////////////////////////////////////////////
     @PostMapping("/register")
     public EmpDTO registerEmp (@Valid @RequestBody  EmpInsertInformationDTO reqDTO) throws IllegalAccessException{
-
         log.info(reqDTO);
 
         String registrant = "종현"; //TODO regUser들 로그인 id로 바꾸기
@@ -133,13 +147,21 @@ public class EmpController {
                 .build();
 
         return empService.empOrgaInsert(orgaDTO, empMappingDTO, empNo);
-
     }
 
     @PutMapping(value = "/modify/{empNo}")
     public Long modifyEmp(@Valid @RequestBody EmpUpdateDTO empUpdateDTO, HttpServletRequest request) {
-        String ip  = getRemoteIp(request);
-        log.info("IPIPPPPPPPPP----------------"+ip);
+        String ip = null;
+        try {
+            ip = Inet4Address.getLocalHost().getHostAddress();
+            //TODO IP는 Test용으로 수정에 넣어놓음. 나중에 로그인 성공 시, 받아오기로 변경
+        } catch (UnknownHostException e) {
+            throw new RuntimeException(e);
+        }
+
+
+//        String ip  = getRemoteIp(request);
+        log.info("IP----------------"+ip);
         empUpdateDTO.setLastLoginIp(ip);
         return empService.update(empUpdateDTO);
     }
@@ -147,7 +169,7 @@ public class EmpController {
     @PutMapping(value = "/modifyOrga")
     public Long modifyOrga(@RequestBody ListDTO listDTO) {
 
-        log.info("-----------------------악!");
+        log.info("-----------------------modifyOrga 확인");
 
         log.info(listDTO);
         Long result = 0L;
@@ -158,10 +180,66 @@ public class EmpController {
         for (int i = 0; i < listDTO.getList().size(); i++) {
             result += empService.orgaUpdate(listDTO.getList().get(i));
         }
-//
-        log.info("리절트: "+result);
+        log.info("result: "+result);
         return result;
     }
 
+    /**
+     * 사원 프로필 업데이트
+     */
+    private final ObjectStorageService objectStorageService;
+//    public Long modifyProfile(@RequestBody EmpFileDTO empFileDTO){
+//        return null;
+//    }
 
+@PutMapping(value = "/updateprofile", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+public Long updateEmpProfile(MultipartFileDTO fileDto) throws Exception {
+    return empService.updateFile(fileDto);
+}
+
+
+    /**
+     * 로그인한 회원 정보
+     */
+    @GetMapping("/loginlist")
+    public List<EmpLoginEmpDTO> findLoginUser(Authentication authentication){
+        String username = authentication.getName();
+        return empService.findLoginUser(username);
+    }
+
+    /**
+     * 로그인한 회원 정보 보내서 redis에 올리기
+     */
+    @PostMapping("/registerLoginUser")
+    public LoginUser registerLoginUser(@RequestBody LoginUser loginUser, Authentication authentication) {
+        log.error(loginUser);
+        String username = authentication.getName();
+        loginUser.setUsername(username);
+
+        log.info(loginUser);
+
+        userSessionService.loadUserInfoByLoginUser(loginUser);
+        return null;
+    }
+
+
+
+//    @PostMapping("/upload")
+//    public String upload(@RequestBody MultipartFile[] uploadfile, Model model) throws IllegalAccessException, IOException{
+//        List<EmpFileDTO> list = new ArrayList<>();
+//
+//        for (MultipartFile file : uploadfile){
+//            if(!file.isEmpty()){
+//                EmpFileDTO fileDTO = new EmpFileDTO(UUID.randomUUID().toString(),
+//                                                    file.getOriginalFilename(),
+//                                                    file.getContentType());
+//                list.add(fileDTO);
+//
+//                File newFileName = new File(fileDTO.getUuid()+"_"+fileDTO.getFileName());
+//                file.transferTo(newFileName);
+//            }
+//        }
+//        model.addAttribute("files", list);
+//        return "result";
+//    }
 }

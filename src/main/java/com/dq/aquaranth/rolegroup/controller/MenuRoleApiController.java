@@ -1,6 +1,8 @@
 package com.dq.aquaranth.rolegroup.controller;
 
 import com.dq.aquaranth.login.domain.CustomUser;
+import com.dq.aquaranth.menu.annotation.MenuCode;
+import com.dq.aquaranth.menu.constant.MenuCodes;
 import com.dq.aquaranth.rolegroup.domain.MenuRole;
 import com.dq.aquaranth.rolegroup.dto.MenuRoleInsertReqDTO;
 import com.dq.aquaranth.rolegroup.dto.MenuRoleLnbDTO;
@@ -18,6 +20,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/api/menu-role")
 @Log4j2
+@MenuCode(MenuCodes.ROLE0020)
 public class MenuRoleApiController {
     private final MenuRoleService menuRoleService;
 
@@ -28,18 +31,20 @@ public class MenuRoleApiController {
 
     @PostMapping("")
     public void save(@RequestBody MenuRoleInsertReqDTO reqDTO, Authentication authentication) {
-        CustomUser customUser = (CustomUser) authentication.getPrincipal();
+        Long roleGroupNo = reqDTO.getRoleGroupNo();
+        String moduleCode = reqDTO.getModuleCode();
+
         List<MenuRole> insertMenuRoles = new ArrayList<>();
 
-        for (MenuRoleLnbDTO dto : reqDTO.getDtoList()) {
+        for (Long menuNo : reqDTO.getMenuRoles()) {
             insertMenuRoles.add(MenuRole.builder()
-                    .menuNo(dto.getMenuNo())
-                    .roleGroupNo(reqDTO.getRoleGroupNo())
-                    .regUser(customUser.getEmpDTO().getEmpName())
+                    .menuNo(menuNo)
+                    .roleGroupNo(roleGroupNo)
+                    .regUser(authentication.getName())
                     .regDate(LocalDateTime.now())
                     .build());
         }
 
-        menuRoleService.save(insertMenuRoles, reqDTO.getModuleCode(), reqDTO.getRoleGroupNo());
+        menuRoleService.save(insertMenuRoles, moduleCode, roleGroupNo);
     }
 }

@@ -1,8 +1,11 @@
 package com.dq.aquaranth.rolegroup.controller;
 
-import com.dq.aquaranth.login.domain.CustomUser;
+import com.dq.aquaranth.login.service.UserSessionService;
+import com.dq.aquaranth.menu.annotation.MenuCode;
+import com.dq.aquaranth.menu.constant.MenuCodes;
 import com.dq.aquaranth.rolegroup.domain.RoleGroup;
 import com.dq.aquaranth.rolegroup.dto.RoleGroupInsertReqDTO;
+import com.dq.aquaranth.rolegroup.dto.RoleGroupResponseDTO;
 import com.dq.aquaranth.rolegroup.dto.RoleGroupUpdateDTO;
 import com.dq.aquaranth.rolegroup.dto.RoleGroupUpdateReqDTO;
 import com.dq.aquaranth.rolegroup.service.RoleGroupService;
@@ -18,11 +21,13 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/api/role-group")
 @Log4j2
+@MenuCode(MenuCodes.ROLE0020)
 public class RoleGroupApiController {
     private final RoleGroupService roleGroupService;
+    private final UserSessionService userSessionService;
 
     @GetMapping("")
-    public List<RoleGroup> getRoleGroupList() {
+    public List<RoleGroupResponseDTO> getRoleGroupList() {
         return roleGroupService.findAll();
     }
 
@@ -31,39 +36,35 @@ public class RoleGroupApiController {
         return roleGroupService.findById(roleGroupNo);
     }
 
-//    @PostMapping("")
-//    public RoleGroup register(@RequestBody RoleGroupInsertReqDTO reqDTO, Authentication authentication) {
-//        CustomUser customUser = (CustomUser) authentication.getPrincipal();
-//
-//        RoleGroup insertRoleGroup = RoleGroup.builder()
-//                .roleGroupName(reqDTO.getRoleGroupName())
-//                .roleGroupUse(reqDTO.isRoleGroupUse())
-//                .companyNo(customUser.getCompanyDTO().getCompanyNo())
-//                .regUser(customUser.getEmpDTO().getEmpName())
-//                .regDate(LocalDateTime.now())
-//                .build();
-//
-//        return roleGroupService.insert(insertRoleGroup);
-//    }
-//
-//    @PutMapping("")
-//    public void modify(@RequestBody RoleGroupUpdateReqDTO reqDTO, Authentication authentication) {
-//        CustomUser customUser = (CustomUser) authentication.getPrincipal();
-//
-//        RoleGroupUpdateDTO updateDTO = RoleGroupUpdateDTO.builder()
-//                .roleGroupNo(reqDTO.getRoleGroupNo())
-//                .roleGroupName(reqDTO.getRoleGroupName())
-//                .roleGroupUse(reqDTO.isRoleGroupUse())
-//                .companyNo(customUser.getCompanyDTO().getCompanyNo())
-//                .modUser(customUser.getEmpDTO().getEmpName())
-//                .modDate(LocalDateTime.now())
-//                .build();
-//
-//        roleGroupService.update(updateDTO);
-//    }
+    @PostMapping("")
+    public RoleGroup register(@RequestBody RoleGroupInsertReqDTO reqDTO, Authentication authentication) {
+        RoleGroup insertRoleGroup = RoleGroup.builder()
+                .companyNo(reqDTO.getCompanyNo())
+                .roleGroupName(reqDTO.getRoleGroupName())
+                .roleGroupUse(reqDTO.isRoleGroupUse())
+                .regUser(authentication.getName())
+                .regDate(LocalDateTime.now())
+                .build();
+
+        return roleGroupService.insert(insertRoleGroup);
+    }
+
+    @PutMapping("")
+    public void modify(@RequestBody RoleGroupUpdateReqDTO reqDTO, Authentication authentication) {
+        RoleGroupUpdateDTO updateDTO = RoleGroupUpdateDTO.builder()
+                .roleGroupNo(reqDTO.getRoleGroupNo())
+                .roleGroupName(reqDTO.getRoleGroupName())
+                .roleGroupUse(reqDTO.isRoleGroupUse())
+                .companyNo(reqDTO.getCompanyNo())
+                .modUser(authentication.getName())
+                .modDate(LocalDateTime.now())
+                .build();
+
+        roleGroupService.update(updateDTO);
+    }
 
     @DeleteMapping("/{roleGroupNo}")
     public void remove(@PathVariable Long roleGroupNo) {
-        roleGroupService.hideById(roleGroupNo);
+        roleGroupService.deleteById(roleGroupNo);
     }
 }

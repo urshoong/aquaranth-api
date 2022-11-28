@@ -6,6 +6,11 @@ import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
+/**
+ * 권한그룹 DB 접근을 위한 Mapper.
+ *
+ * @author 임종현
+ */
 public interface MenuRoleMapper {
 
     List<MenuRole> findAllByRoleGroupNo(Long roleGroupNo);
