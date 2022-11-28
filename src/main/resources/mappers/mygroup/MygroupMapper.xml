@@ -22,6 +22,14 @@
         ;
     </select>
 
+    <!--해당 마이그룹 조회-->
+    <select id="findByMygroupNo" resultType="com.dq.aquaranth.mygroup.dto.mygroup.MygroupInformationDTO">
+        select mygroup_no, mygroup_name
+        from tbl_mygroup
+        where mygroup_no=#{mygroupNo}
+        ;
+    </select>
+
 
     <!--Create-->
     <!--로그인한 사원의 마이그룹 생성-->

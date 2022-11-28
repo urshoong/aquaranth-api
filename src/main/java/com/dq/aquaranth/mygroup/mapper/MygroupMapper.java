@@ -1,5 +1,6 @@
 package com.dq.aquaranth.mygroup.mapper;
 
+import com.dq.aquaranth.mygroup.dto.mygroup.MygroupInformationDTO;
 import com.dq.aquaranth.mygroup.dto.mygroup.MygroupListDTO;
 import com.dq.aquaranth.mygroup.dto.mygroup.MygroupUpdateDTO;
 
@@ -11,6 +12,11 @@ public interface MygroupMapper {
      * 로그인한 사원의 마이그룹 전체 조회
      */
     List<MygroupListDTO> findAllMygroup(String username);
+
+    /**
+     * 해당 마이그룹 조회
+     */
+    MygroupInformationDTO findByMygroupNo(Long mygroupNo);
 
     /**
      * 로그인한 사원의 마이그룹 생성

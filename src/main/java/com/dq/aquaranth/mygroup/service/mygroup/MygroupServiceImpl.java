@@ -1,5 +1,6 @@
 package com.dq.aquaranth.mygroup.service.mygroup;
 
+import com.dq.aquaranth.mygroup.dto.mygroup.MygroupInformationDTO;
 import com.dq.aquaranth.mygroup.dto.mygroup.MygroupListDTO;
 import com.dq.aquaranth.mygroup.dto.mygroup.MygroupUpdateDTO;
 import com.dq.aquaranth.mygroup.mapper.MygroupMapper;
@@ -23,6 +24,12 @@ public class MygroupServiceImpl implements MygroupService {
     public List<MygroupListDTO> findAllMygroup(String username) {
         log.info("로그인한 사원의 마이그룹 전체 조회");
         return mygroupMapper.findAllMygroup(username);
+    }
+
+    @Override
+    public MygroupInformationDTO findByMygroupNo(Long mygroupNo) {
+        log.info("해당 마이그룹 조회");
+        return mygroupMapper.findByMygroupNo(mygroupNo);
     }
 
     @Override

@@ -19,7 +19,7 @@ public class CompanyController {
     private final CompanyService companyService;
 
     /**
-     * 회사 일부정보(회사번호, 회사명, 대표자명, 사용여부만)가 포함된 전체 리스트 출력
+     * 회사코드, 회사명, 대표자명, 사용여부 리스트 출력
      */
     @GetMapping("/list")
     public List<CompanyListDTO> getCompanyList() {
@@ -51,8 +51,7 @@ public class CompanyController {
      */
     @PutMapping("/modify/{caompanyNo}")
     public Long modifyCompany(@RequestBody CompanyUpdateDTO companyUpdateDTO, Authentication authentication) {
-        CustomUser customUser = (CustomUser) authentication.getPrincipal();
-        String username = customUser.getUsername();
+        String username = authentication.getName();
         return companyService.update(companyUpdateDTO, username);
     }
 

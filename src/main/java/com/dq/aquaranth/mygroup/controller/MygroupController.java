@@ -1,5 +1,6 @@
 package com.dq.aquaranth.mygroup.controller;
 
+import com.dq.aquaranth.mygroup.dto.mygroup.MygroupInformationDTO;
 import com.dq.aquaranth.mygroup.dto.mygroup.MygroupListDTO;
 import com.dq.aquaranth.mygroup.dto.mygroup.MygroupUpdateDTO;
 import com.dq.aquaranth.mygroup.service.mygroup.MygroupService;
@@ -27,6 +28,12 @@ public class MygroupController {
         String username = authentication.getName();
         log.info(username);
         return mygroupService.findAllMygroup(username);
+    }
+
+    @GetMapping("/information/{mygroupNo}")
+    public MygroupInformationDTO getMygroupInformation(@PathVariable Long mygroupNo) {
+        log.info("해당 마이그룹 조회");
+        return mygroupService.findByMygroupNo(mygroupNo);
     }
 
     @PostMapping("/register")
