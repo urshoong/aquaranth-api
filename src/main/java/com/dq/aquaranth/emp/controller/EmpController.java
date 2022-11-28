@@ -31,6 +31,7 @@ import java.util.List;
 @MenuCode(MenuCodes.ORGA0030)
 public class EmpController {
     private final EmpService empService;
+    private final UserSessionService userSessionService;
 
     private final UserSessionService userSessionService;
 
