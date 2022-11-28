@@ -28,6 +28,7 @@ import java.util.List;
 @RequestMapping("/api/emp")
 public class EmpController {
     private final EmpService empService;
+    private final UserSessionService userSessionService;
 
     @GetMapping("/information")
     public List<EmpDTO> getEmpList() {

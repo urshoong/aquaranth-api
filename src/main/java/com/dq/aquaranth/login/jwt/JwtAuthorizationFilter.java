@@ -4,6 +4,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import io.jsonwebtoken.JwtException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.jetbrains.annotations.NotNull;
@@ -65,7 +66,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                     // ex) Security 야! 사용자이름과, 역할(role) 등등이 여기있으니 들고가서 access 할 수 있는 자원도 결정해주고 뭐 알아서 하렴 !
                     SecurityContextHolder.getContext().setAuthentication(authenticationToken);
                     filterChain.doFilter(request, response);
-                } catch (Exception exception) {
+                } catch (JwtException exception) {
                     log.error("token 이 유효하지 않습니다. (token 을 확인할 수 없거나, 유효기간이 지났을 경우) {}", exception.getMessage());
                     response.sendError(UNAUTHORIZED.value(), "[access_token]" + exception.getMessage());
                 }

@@ -3,6 +3,7 @@ package com.dq.aquaranth.company.controller;
 import com.dq.aquaranth.company.dto.*;
 import com.dq.aquaranth.company.service.CompanyService;
 import com.dq.aquaranth.login.domain.CustomUser;
+import com.dq.aquaranth.menu.annotation.MenuCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.core.Authentication;
