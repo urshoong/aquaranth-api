@@ -3,6 +3,9 @@ package com.dq.aquaranth.emp.service;
 import com.dq.aquaranth.emp.dto.*;
 import com.dq.aquaranth.emp.mapper.EmpMapper;
 import com.dq.aquaranth.emp.mapper.EmpMappingMapper;
+import com.dq.aquaranth.objectstorage.dto.request.MultipartFileDTO;
+import com.dq.aquaranth.objectstorage.dto.request.ObjectPostRequestDTO;
+import com.dq.aquaranth.objectstorage.service.ObjectStorageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -10,6 +13,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.management.openmbean.KeyAlreadyExistsException;
+import java.net.Inet4Address;
+import java.net.UnknownHostException;
 import java.util.*;
 
 @Service
@@ -19,6 +24,8 @@ public class EmpServiceImpl implements EmpService {
     private final EmpMapper empMapper;
     private final EmpMappingMapper empMappingMapper;
     private final PasswordEncoder passwordEncoder;
+
+    private final ObjectStorageService objectStorageService;
 
     @Override
     public List<EmpDTO> findAll() {
@@ -92,40 +99,49 @@ public class EmpServiceImpl implements EmpService {
 
 
     @Override
+    @Transactional
     public List<EmpSelectOrga> findAllOrga(Long empNo) {
         return empMapper.orgaFindById(empNo);
     }
 
     @Override
-    public Long updateFile(EmpFileDTO empFileDTO) {
-        return empMapper.updateFile(empFileDTO);
+    @Transactional
+    public Long updateFile(MultipartFileDTO multipartFileDTO) throws Exception {
+        String uuid = UUID.randomUUID().toString();
+        String filename = multipartFileDTO.getMultipartFile().getOriginalFilename();
+
+        ObjectPostRequestDTO objectPostRequestDTO = ObjectPostRequestDTO.builder().filename(uuid + filename).multipartFile(multipartFileDTO.getMultipartFile()).build();
+
+        EmpFileDTO empFileDTO = EmpFileDTO.builder().uuid(uuid).fileName(filename).build();
+
+        empMapper.updateProfile(empFileDTO);
+        objectStorageService.postObject(objectPostRequestDTO);
+
+        return empMapper.updateProfile(empFileDTO);
     }
 
-
-
-    @Override
-    public Long insertEmp(EmpDTO empDTO) {
-        empDTO.setPassword(passwordEncoder.encode(empDTO.getPassword()));
-
-        return empMapper.insertEmp(empDTO);
-    }
 
     /**
      * 로그인한 회원 가져오기
      */
     @Override
     public List<EmpLoginEmpDTO> findLoginUser(String username) {
-        return empMapper.findLoginUser(username);
+        String ip = null;
+
+        try {
+            ip = Inet4Address.getLocalHost().getHostAddress();
+        } catch (UnknownHostException e) {
+            throw new RuntimeException(e);
+        }
+
+        List<EmpLoginEmpDTO> result = empMapper.findLoginUser(username);
+
+        String finalIp = ip;
+        result.forEach(emp -> {
+            emp.setLoginIp(finalIp);
+        });
+
+        return result;
     }
 
-    @Override
-    public List<OrgaTreeDTO> selectDeptPath() {
-        List<OrgaTreeDTO> list = empMapper.selectDeptPath();
-//
-//        for (int i = 0; i < list.size(); i++) {
-//            StringTokenizer st = new StringTokenizer(list);
-//        }
-
-        return null;
-    }
 }

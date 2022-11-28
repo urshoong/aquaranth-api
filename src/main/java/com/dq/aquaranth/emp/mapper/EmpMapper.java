@@ -67,24 +67,14 @@ public interface EmpMapper {
      *
      * @param empFileDTO : 프로필로 지정할 파일 정보
      */
-    Long updateFile(EmpFileDTO empFileDTO);
+    Long updateProfile(EmpFileDTO empFileDTO);
 
+
+    List<EmpLoginDTO> findLoginInformationByUsername(String username);
     /**
      * 로그인한 username 받아서 보여줄 정보를 조회합니다.
      * @param username : 로그인한 회원의 아이디
      */
-    List<EmpLoginDTO> findLoginInformationByUsername(String username);
-
-    /////////
-
-    /**
-     * 임시. security 적용된 emp 만들기 위한 임시 생성 mapper
-     */
-    Long insertEmp(EmpDTO empDTO);
-
-    ////////////
-
-    List<OrgaTreeDTO> selectDeptPath();
 
     List<EmpLoginEmpDTO> findLoginUser(String username);
 

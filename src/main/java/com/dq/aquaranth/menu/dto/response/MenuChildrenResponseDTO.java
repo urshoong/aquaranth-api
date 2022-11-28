@@ -5,19 +5,23 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AllMenuResponse {
+public class MenuChildrenResponseDTO {
     private Long menuNo;
     private Long upperMenuNo;
-    private Integer menuSort;
-    private String menuCode;
-    private String url;
-    private String defaultMenuCode;
     private String menuName;
+    private boolean mainFlag;
+    private String menuCode;
+    private String menuPath;
+    private Long menuOrder;
+    private String uuid;
+    private String filename;
+    private Long depth;
     private String iconUrl;
-    private boolean menuUse;
-    private Integer depth;
+    private List<MenuChildrenResponseDTO> children;
 }

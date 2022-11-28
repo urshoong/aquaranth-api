@@ -1,5 +1,7 @@
 package com.dq.aquaranth.userrole.controller;
 
+import com.dq.aquaranth.menu.annotation.MenuCode;
+import com.dq.aquaranth.menu.constant.MenuCodes;
 import com.dq.aquaranth.userrole.dto.*;
 import com.dq.aquaranth.userrole.service.UserRoleService;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +14,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Log4j2
 @RequestMapping("/api/userrole")
+@MenuCode(MenuCodes.ROLE0010)
 public class UserRoleController {
 
     private final UserRoleService userRoleService;
