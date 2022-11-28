@@ -42,18 +42,13 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
 
         String username = request.getUserPrincipal()
                 .getName();
-        log.info(username);
 
         List<RoleGroup> loginUserInfo = userSessionService.findUserInfoInRedis(username)
                 .getRoleGroups();
 
-        loginUserInfo.forEach(log::info);
 
-        List<RoleGroup> menuRoles = objectMapper.readValue(redisTemplate.opsForValue().
-                get(menuCode)
-                .toString(), new TypeReference<>(){});
+        List<RoleGroup> menuRoles = objectMapper.readValue(redisTemplate.opsForValue().get(menuCode).toString(), new TypeReference<>(){});
 
-        menuRoles.forEach(log::info);
 
         loginUserInfo.stream()
                 .filter(loginUser -> menuRoles.stream().anyMatch(menuRole -> loginUser.getRoleGroupNo().equals(menuRole.getRoleGroupNo())))
