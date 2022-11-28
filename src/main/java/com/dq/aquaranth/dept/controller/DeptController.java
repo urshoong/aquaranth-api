@@ -69,10 +69,10 @@ public class DeptController {
     }
 
 
-    @GetMapping("/list/{gno}")
-    public List<DeptDTO> listDept (@PathVariable int gno) {
+    @GetMapping("/list/{companyNo}")
+    public List<DeptDTO> listDept (@PathVariable Long companyNo) {
 
-        return deptService.listDept(gno);
+        return deptService.listDept(companyNo);
     }
     //에로사항 : /api/dept2/{gno} 는 /api/dept2/{dept_no}와 곂쳐서 에러 뜸 => 앞에 list붙여서 출력함
 

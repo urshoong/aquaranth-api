@@ -25,6 +25,7 @@ public class CompanyController {
      * 회사코드, 회사명, 대표자명, 사용여부 리스트 출력
      */
     @GetMapping("/list")
+
     public List<CompanyListDTO> getCompanyList(Authentication authentication) {
 //        log.info("authentication : {}", authentication.getPrincipal());
         return companyService.findAll();

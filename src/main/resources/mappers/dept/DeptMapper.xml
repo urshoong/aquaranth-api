@@ -87,7 +87,7 @@
 
 <!--    회사별 리스트 조회-->
     <select id="getGnoList" resultType="com.dq.aquaranth.dept.dto.DeptDTO">
-        select * from tbl_dept where gno = #{gno} order by ord asc
+        select * from tbl_dept where company_no = #{companyNo} order by ord asc
     </select>
 
 
@@ -113,10 +113,13 @@
         select last_insert_id()
     </select>
 
+
+<!--    수연-->
     <select id="findByCompanyNo" resultType="com.dq.aquaranth.dept.dto.DepartmentDTO">
         SELECT * FROM tbl_dept WHERE company_no = #{companyNo};
     </select>
 
+<!--    종현-->
     <select id="findByUsername" resultType="com.dq.aquaranth.dept.dto.DeptDTO">
         select t.*
         from (with recursive findDept as (select to1.orga_no, to1.upper_orga_no, to1.orga_type
