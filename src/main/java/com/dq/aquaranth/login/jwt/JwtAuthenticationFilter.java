@@ -1,7 +1,9 @@
 package com.dq.aquaranth.login.jwt;
 
 import com.dq.aquaranth.commons.utils.JWTUtil;
+import com.dq.aquaranth.commons.utils.ResponseUtil;
 import com.dq.aquaranth.login.dto.LoginReqDTO;
+import com.dq.aquaranth.menu.constant.ErrorCodes;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -16,6 +18,8 @@ import javax.servlet.FilterChain;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Date;
+import java.util.Map;
 import java.util.Objects;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -86,6 +90,6 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException {
         log.warn(failed.getMessage());
-        response.sendError(499, failed.getMessage());
+        ResponseUtil.sendError(response, ErrorCodes.INVALID_USER);
     }
 }

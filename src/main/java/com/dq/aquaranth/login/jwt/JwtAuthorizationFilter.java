@@ -4,6 +4,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.dq.aquaranth.commons.utils.ResponseUtil;
 import com.dq.aquaranth.menu.constant.ErrorCodes;
 import com.dq.aquaranth.menu.exception.MenuException;
 import io.jsonwebtoken.JwtException;
@@ -70,12 +71,11 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                     filterChain.doFilter(request, response);
                 } catch (JwtException jwtException) {
                     log.error("token 이 유효하지 않습니다. (token 을 확인할 수 없거나, 유효기간이 지났을 경우) {}", jwtException.getMessage());
-//                    throw new MenuException(ErrorCodes.TOKEN_EXPIRED);
-                    response.sendError(UNAUTHORIZED.value(), "[access_token]" + jwtException.getMessage());
+                    ResponseUtil.sendError(response, ErrorCodes.TOKEN_EXPIRED);
                 }
             } else {
                 log.error("토큰을 찾을 수 없습니다.");
-                response.sendError(UNAUTHORIZED.value(), "[access_token] token is missing");
+                ResponseUtil.sendError(response, ErrorCodes.TOKEN_MISSING);
             }
         }
     }

@@ -12,7 +12,7 @@ Content-Type: application/json
 POST /api/emp/registerLoginUser HTTP/1.1
 Host: localhost:8080
 Content-Type: application/json
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTY3MDYwOTY0Mn0.PaGZ677xrc-8LZVBPHEETKsRGEXtD-9UkfxzFN0FnVw
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTY3MDYxNjE2M30.y_eKVs2xCzsya-vYSHcvZXbXvHCzi8MyqfHGcHME2kw
 
 {
   "username": "admin",
