@@ -1,6 +1,7 @@
 package com.dq.aquaranth.menu.controller;
 
 
+import com.dq.aquaranth.menu.annotation.MenuCode;
 import com.dq.aquaranth.menu.dto.request.MenuInsertDTO;
 import com.dq.aquaranth.menu.dto.request.MenuRequestDTO;
 import com.dq.aquaranth.menu.dto.request.MenuUpdateDTO;
@@ -24,6 +25,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/menu")
 @RequiredArgsConstructor
+@MenuCode("MAIL")
 public class MenuApiController {
 
     private final MenuService menuService;

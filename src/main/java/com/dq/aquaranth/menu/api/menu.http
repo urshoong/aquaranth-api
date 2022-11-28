@@ -1,0 +1,15 @@
+### 로그인
+POST /api/login HTTP/1.1
+Host: localhost:8080
+Content-Type: application/json
+
+{
+  "username" : "admin",
+  "password" : "admin"
+}
+
+###
+GET /api/menu?menuCode=ORGA0020&good=123123
+Host: localhost:8080
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTY3MDU1MTI3Nn0.cm-IIA5zh6MCFH80jDn7z4QDUbDmFdcx1mcVuhsCl98
+Content-Type: application/json
