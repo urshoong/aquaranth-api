@@ -4,9 +4,11 @@ import com.dq.aquaranth.emp.dto.*;
 import com.dq.aquaranth.emp.service.EmpService;
 import com.dq.aquaranth.login.domain.LoginUser;
 import com.dq.aquaranth.login.service.UserSessionService;
+import com.dq.aquaranth.objectstorage.dto.request.MultipartFileDTO;
 import com.dq.aquaranth.objectstorage.service.ObjectStorageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -183,6 +185,11 @@ public class EmpController {
 //    public Long modifyProfile(@RequestBody EmpFileDTO empFileDTO){
 //        return null;
 //    }
+@PutMapping(value = "/updateprofile", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+public Long updateEmpProfile(MultipartFileDTO fileDto) throws Exception {
+    return empService.updateFile(fileDto);
+}
+
 
 
     /**

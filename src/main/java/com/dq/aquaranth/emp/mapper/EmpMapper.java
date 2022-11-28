@@ -67,7 +67,7 @@ public interface EmpMapper {
      *
      * @param empFileDTO : 프로필로 지정할 파일 정보
      */
-    Long updateFile(EmpFileDTO empFileDTO);
+    Long updateProfile(EmpFileDTO empFileDTO);
 
 
     List<EmpLoginDTO> findLoginInformationByUsername(String username);

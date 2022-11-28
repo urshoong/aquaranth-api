@@ -89,7 +89,7 @@
         WHERE username = #{username}
     </select>
 
-    <update id="updateFile" parameterType="com.dq.aquaranth.emp.dto.EmpFileDTO">
+    <update id="updateProfile">
         UPDATE tbl_emp
         SET uuid = #{uuid}, file_name = #{fileName}
         WHERE emp_no = #{empNo};
@@ -147,4 +147,5 @@
     </select>
 
     <!--    resultMap 끝-->
+
 </mapper>

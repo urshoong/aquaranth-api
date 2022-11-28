@@ -1,6 +1,7 @@
 package com.dq.aquaranth.emp.service;
 
 import com.dq.aquaranth.emp.dto.*;
+import com.dq.aquaranth.objectstorage.dto.request.MultipartFileDTO;
 
 import java.util.List;
 
@@ -23,7 +24,7 @@ public interface EmpService {
 
     //List<EmpLoginDTO> findByLoginUsername(String username);
 
-    Long updateFile(EmpFileDTO empFileDTO);
+    Long updateFile(MultipartFileDTO fileDto) throws Exception;
 
 
     List<EmpLoginEmpDTO> findLoginUser(String username);
