@@ -1,5 +1,6 @@
 package com.dq.aquaranth.mygroup.controller;
 
+import com.dq.aquaranth.menu.annotation.MenuCode;
 import com.dq.aquaranth.mygroup.dto.mygroup.MygroupInformationDTO;
 import com.dq.aquaranth.mygroup.dto.mygroup.MygroupListDTO;
 import com.dq.aquaranth.mygroup.dto.mygroup.MygroupUpdateDTO;
@@ -15,6 +16,7 @@ import java.util.List;
 @Log4j2
 @RequiredArgsConstructor
 @RequestMapping("/api/mygroup")
+@MenuCode
 public class MygroupController {
     private final MygroupService mygroupService;
 

@@ -45,7 +45,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull FilterChain filterChain) throws ServletException, IOException  {
         // 1. 로그인 경로인지 확인 (login 은 여기에서 작업할 필요가 없기 때문.) == 아무일도 하지않을거임.
         if (request.getServletPath().equals("/api/login") || request.getServletPath().equals("/api/token/refresh")
-                || request.getServletPath().contains("/api/file")) {
+                || request.getServletPath().contains("/api/file") || request.getServletPath().contains("/swagger-ui/")) {
             log.info("=============== login 요청받음 ========================");
             filterChain.doFilter(request, response);
         } else {

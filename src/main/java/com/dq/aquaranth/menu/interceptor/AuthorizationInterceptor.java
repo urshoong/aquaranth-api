@@ -4,6 +4,7 @@ import com.dq.aquaranth.login.service.RedisService;
 import com.dq.aquaranth.login.service.UserSessionService;
 import com.dq.aquaranth.menu.annotation.MenuCode;
 import com.dq.aquaranth.menu.constant.ErrorCodes;
+import com.dq.aquaranth.menu.constant.MenuCodes;
 import com.dq.aquaranth.menu.exception.MenuException;
 import com.dq.aquaranth.rolegroup.domain.RoleGroup;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -44,8 +45,11 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
 
         String menuCode = handlerMethod.getBean().getClass().getDeclaredAnnotation(MenuCode.class).value().getCode();
 
-        String username = request.getUserPrincipal()
-                .getName();
+        if (menuCode.equals(MenuCodes.ROOT.getCode())){
+            return true;
+        }
+
+        String username = request.getUserPrincipal().getName();
 
         List<RoleGroup> loginUserInfo = userSessionService.findUserInfoInRedis(username)
                 .getRoleGroups();

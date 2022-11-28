@@ -5,6 +5,7 @@ import com.dq.aquaranth.company.dto.CompanyInformationDTO;
 import com.dq.aquaranth.login.dto.LoginUserInfo;
 import com.dq.aquaranth.login.service.UserSessionService;
 import com.dq.aquaranth.menu.constant.ErrorCodes;
+import com.dq.aquaranth.menu.annotation.MenuCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
@@ -25,6 +26,7 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 @Log4j2
 @RequiredArgsConstructor
 @RequestMapping("/api")
+@MenuCode
 public class UserApiController {
     private final UserSessionService userSessionService;
 

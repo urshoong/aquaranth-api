@@ -8,5 +8,5 @@ import java.lang.annotation.*;
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface MenuCode {
-    MenuCodes value();
+    MenuCodes value() default MenuCodes.ROOT;
 }

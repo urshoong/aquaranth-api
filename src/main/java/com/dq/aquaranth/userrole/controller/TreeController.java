@@ -1,5 +1,7 @@
 package com.dq.aquaranth.userrole.controller;
 
+import com.dq.aquaranth.menu.annotation.MenuCode;
+import com.dq.aquaranth.menu.constant.MenuCodes;
 import com.dq.aquaranth.userrole.dto.tree.TreeOrgaListDTO;
 import com.dq.aquaranth.userrole.dto.tree.TreeReqOrgaListDTO;
 import com.dq.aquaranth.userrole.service.TreeService;
@@ -18,6 +20,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Log4j2
 @RequestMapping("/api/orgaTree")
+@MenuCode(MenuCodes.ROLE0020)
 public class TreeController {
 
     private final TreeService treeService;

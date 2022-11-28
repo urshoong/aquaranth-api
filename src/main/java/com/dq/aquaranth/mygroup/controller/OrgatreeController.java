@@ -1,5 +1,6 @@
 package com.dq.aquaranth.mygroup.controller;
 
+import com.dq.aquaranth.menu.annotation.MenuCode;
 import com.dq.aquaranth.mygroup.dto.orgatree.OrgaTreeDTO;
 import com.dq.aquaranth.mygroup.dto.orgatree.OrgaTreeEmpListDTO;
 import com.dq.aquaranth.mygroup.dto.orgatree.OrgatreeEmpInformationDTO;
@@ -17,6 +18,7 @@ import java.util.List;
 @Log4j2
 @RequiredArgsConstructor
 @RequestMapping("/api/orgatree")
+@MenuCode
 public class OrgatreeController {
 
     private final OrgatreeService orgatreeService;
