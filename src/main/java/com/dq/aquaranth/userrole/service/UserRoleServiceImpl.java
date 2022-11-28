@@ -26,8 +26,8 @@ public class UserRoleServiceImpl implements UserRoleService {
     private final UserRoleMapper userRoleMapper;
 
     @Override
-    public List<UserRoleCompanyDTO> findCompanyByOrgaNo(Long orgaNo) {
-        return userRoleMapper.findCompanyByOrgaNo(orgaNo);
+    public List<UserRoleCompanyDTO> findCompanyAll() {
+        return userRoleMapper.findCompanyAll();
     }
 
     @Override

@@ -4,10 +4,10 @@
 
 <mapper namespace="com.dq.aquaranth.userrole.mapper.UserRoleMapper">
 
-    <select id="findCompanyByOrgaNo" resultType="com.dq.aquaranth.userrole.dto.response.UserRoleCompanyDTO">
+    <select id="findCompanyAll" resultType="com.dq.aquaranth.userrole.dto.response.UserRoleCompanyDTO">
         select company_no, company_name, orga_no
           from tbl_company
-         where orga_no = #{orgaNo}
+         where company_use = true
     </select>
 
     <select id="findCompany" resultType="com.dq.aquaranth.userrole.dto.response.UserRoleCompanyDTO">
@@ -145,6 +145,7 @@
 <!--  TODO : insertUserRole 쿼리에서 사용자 정보 강제로 입력한 부분 수정해야됨  -->
     <insert id="insertUserRole">
         insert into tbl_orga_role (role_group_no, orga_no, reg_user)
+        <if test="orgaNoList != null and orgaNoList.size != 0">
         select #{roleGroupNo}, t.orga_no, #{username}
           from tbl_emp te
           left join tbl_emp_mapping tem on te.emp_no = tem.emp_no
@@ -153,7 +154,7 @@
                                    from tbl_orga_role tor
                                    left join tbl_orga tog on tor.orga_no = tog.orga_no
                                   where role_group_no = #{roleGroupNo})
-        <if test="orgaNoList != null and orgaNoList.size != 0">
+
            and t.orga_no in
             <foreach collection="orgaNoList" item="item" index="index" separator="," open="(" close=")">
                 #{item}

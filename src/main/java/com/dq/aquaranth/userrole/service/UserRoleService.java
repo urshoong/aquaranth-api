@@ -11,7 +11,7 @@ public interface UserRoleService {
 
     /** GroupList **/
 
-    List<UserRoleCompanyDTO> findCompanyByOrgaNo(Long orgaNo);
+    List<UserRoleCompanyDTO> findCompanyAll();
 
     List<UserRoleCompanyDTO> findCompany(String username);
 

@@ -10,7 +10,7 @@ public interface UserRoleMapper {
 
     /** GroupList **/
 
-    List<UserRoleCompanyDTO> findCompanyByOrgaNo(Long orgaNo);
+    List<UserRoleCompanyDTO> findCompanyAll();
     List<UserRoleCompanyDTO> findCompany(String username);
 
     List<UserRoleRoleGroupBasedListDTO> findRoleGroupByOrgaNo(PageRequestDTO pageRequestDTO);

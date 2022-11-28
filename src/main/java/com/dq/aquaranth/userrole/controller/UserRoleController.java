@@ -24,10 +24,10 @@ public class UserRoleController {
     /** GroupList **/
 
     // TODO : 차후에 안쓰면 삭제처리
-    @Operation(summary = "회사 정보 조회", description = "로그인한 사용자의 회사의 orgaNo를 전달받아 해당 회사 정보를 조회합니다.")
-    @GetMapping("/companyList/{orgaNo}")
-    public List<UserRoleCompanyDTO> findCompanyByOrgaNo(@PathVariable Long orgaNo) {
-        return userRoleService.findCompanyByOrgaNo(orgaNo);
+    @Operation(summary = "모든 회사 정보 조회", description = "사용 가능한 모든 회사 정보를 조회합니다.")
+    @GetMapping("/companyListAll")
+    public List<UserRoleCompanyDTO> findCompanyAll() {
+        return userRoleService.findCompanyAll();
     }
 
     @Operation(summary = "회사 정보 조회", description = "로그인한 사용자의 계정 정보를 사용하여 회사 정보를 조회합니다.")
@@ -57,6 +57,8 @@ public class UserRoleController {
     @Operation(summary = "부여된 권한그룹 제거", description = "선택한 조직(회사/부서/사원)에 부여된 권한그룹을 제거합니다.")
     @PostMapping("/removeOrgaRole")
     public Integer removeOrgaRole(@RequestBody UserRoleReqRemoveOrgaRoleDTO userRoleReqRemoveOrgaRoleDTO) {
+        log.info("removeOrgaRole");
+        log.info(userRoleReqRemoveOrgaRoleDTO);
         return userRoleService.removeOrgaRole(userRoleReqRemoveOrgaRoleDTO);
     }
 
