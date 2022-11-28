@@ -53,6 +53,7 @@ public class DeptController {
     //수정
     @PutMapping("/{dept_no}")
     public DeptDTO modify(@PathVariable("dept_no") Long dept_no , @RequestBody DeptDTO deptDTO) {
+        log.info("controller modify : " + deptDTO);
         DeptDTO modifyDTO = deptService.modify(deptDTO);
 
         log.info("modifyDTO : " + modifyDTO);
