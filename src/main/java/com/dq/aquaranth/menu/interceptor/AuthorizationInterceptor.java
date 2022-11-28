@@ -49,9 +49,7 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
 
         loginUserInfo.forEach(log::info);
 
-        List<RoleGroup> menuRoles = objectMapper.readValue(redisTemplate.opsForValue().
-                get(menuCode)
-                .toString(), new TypeReference<>(){});
+        List<RoleGroup> menuRoles = objectMapper.readValue(redisTemplate.opsForValue().get(menuCode).toString(), new TypeReference<>(){});
 
         menuRoles.forEach(log::info);
 
