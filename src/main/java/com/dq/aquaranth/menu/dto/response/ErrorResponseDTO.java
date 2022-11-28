@@ -1,6 +1,6 @@
 package com.dq.aquaranth.menu.dto.response;
 
-import com.dq.aquaranth.menu.constant.ErrorCode;
+import com.dq.aquaranth.menu.constant.ErrorCodes;
 import lombok.Builder;
 import lombok.Getter;
 import org.springframework.http.ResponseEntity;
@@ -17,15 +17,15 @@ public class ErrorResponseDTO {
     private final String message;
     private final Long detailErrorCode;
 
-    public static ResponseEntity<ErrorResponseDTO> toResponseEntity(ErrorCode errorCode) {
+    public static ResponseEntity<ErrorResponseDTO> toResponseEntity(ErrorCodes errorCodes) {
         return ResponseEntity
-                .status(errorCode.getHttpStatus())
+                .status(errorCodes.getHttpStatus())
                 .body(ErrorResponseDTO.builder()
-                        .status(errorCode.getHttpStatus().value())
-                        .error(errorCode.getHttpStatus().name())
-                        .code(errorCode.name())
-                        .message(errorCode.getDetail())
-                        .detailErrorCode(errorCode.getDetailErrorCode())
+                        .status(errorCodes.getHttpStatus().value())
+                        .error(errorCodes.getHttpStatus().name())
+                        .code(errorCodes.name())
+                        .message(errorCodes.getDetail())
+                        .detailErrorCode(errorCodes.getDetailErrorCode())
                         .build());
 
     }

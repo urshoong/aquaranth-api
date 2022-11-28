@@ -4,6 +4,8 @@ import com.dq.aquaranth.emp.dto.*;
 import com.dq.aquaranth.emp.service.EmpService;
 import com.dq.aquaranth.login.domain.LoginUser;
 import com.dq.aquaranth.login.service.UserSessionService;
+import com.dq.aquaranth.menu.annotation.MenuCode;
+import com.dq.aquaranth.menu.constant.MenuCodes;
 import com.dq.aquaranth.objectstorage.dto.request.MultipartFileDTO;
 import com.dq.aquaranth.objectstorage.service.ObjectStorageService;
 import lombok.RequiredArgsConstructor;
@@ -26,8 +28,11 @@ import java.util.List;
 @Log4j2
 @RequiredArgsConstructor
 @RequestMapping("/api/emp")
+@MenuCode(MenuCodes.ORGA0030)
 public class EmpController {
     private final EmpService empService;
+
+    private final UserSessionService userSessionService;
 
     @GetMapping("/information")
     public List<EmpDTO> getEmpList() {

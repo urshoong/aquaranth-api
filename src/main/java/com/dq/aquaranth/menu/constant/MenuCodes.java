@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum MenuCode {
+public enum MenuCodes {
     SYS("SYS"),
     ORGA("ORGA"),
     ORGA0010("ORGA0010"),

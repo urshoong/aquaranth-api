@@ -3,7 +3,7 @@ package com.dq.aquaranth.menu.interceptor;
 import com.dq.aquaranth.login.service.RedisService;
 import com.dq.aquaranth.login.service.UserSessionService;
 import com.dq.aquaranth.menu.annotation.MenuCode;
-import com.dq.aquaranth.menu.constant.ErrorCode;
+import com.dq.aquaranth.menu.constant.ErrorCodes;
 import com.dq.aquaranth.menu.exception.MenuException;
 import com.dq.aquaranth.rolegroup.domain.RoleGroup;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -18,7 +18,6 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
-import java.util.Objects;
 
 @Log4j2
 @Component
@@ -39,22 +38,27 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
         HandlerMethod handlerMethod = (HandlerMethod) handler;
 
 
-        String menuCode = handlerMethod.getBean().getClass().getDeclaredAnnotation(MenuCode.class).value();
+        String menuCode = handlerMethod.getBean().getClass().getDeclaredAnnotation(MenuCode.class).value().getCode();
 
         String username = request.getUserPrincipal()
                 .getName();
+        log.info(username);
 
         List<RoleGroup> loginUserInfo = userSessionService.findUserInfoInRedis(username)
                 .getRoleGroups();
+
+        loginUserInfo.forEach(log::info);
 
         List<RoleGroup> menuRoles = objectMapper.readValue(redisTemplate.opsForValue().
                 get(menuCode)
                 .toString(), new TypeReference<>(){});
 
+        menuRoles.forEach(log::info);
+
         loginUserInfo.stream()
                 .filter(loginUser -> menuRoles.stream().anyMatch(menuRole -> loginUser.getRoleGroupNo().equals(menuRole.getRoleGroupNo())))
                 .findAny()
-                .orElseThrow(() -> new MenuException(ErrorCode.UNAUTHORIZED_MEMBER));
+                .orElseThrow(() -> new MenuException(ErrorCodes.UNAUTHORIZED_MEMBER));
 
         return true;
     }

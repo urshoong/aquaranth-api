@@ -14,8 +14,8 @@ public class MenuControllerAdvice {
 
     @ExceptionHandler({MenuException.class})
     protected ResponseEntity<ErrorResponseDTO> handleMenuException(MenuException menuException) {
-        log.error("메뉴 에러 : {}", menuException.getErrorCode());
-        return ErrorResponseDTO.toResponseEntity(menuException.getErrorCode());
+        log.error("메뉴 에러 : {}", menuException.getErrorCodes());
+        return ErrorResponseDTO.toResponseEntity(menuException.getErrorCodes());
     }
 }
 

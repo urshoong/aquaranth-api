@@ -1,6 +1,8 @@
 package com.dq.aquaranth.rolegroup.controller;
 
 import com.dq.aquaranth.login.domain.CustomUser;
+import com.dq.aquaranth.menu.annotation.MenuCode;
+import com.dq.aquaranth.menu.constant.MenuCodes;
 import com.dq.aquaranth.rolegroup.domain.MenuRole;
 import com.dq.aquaranth.rolegroup.dto.MenuRoleInsertReqDTO;
 import com.dq.aquaranth.rolegroup.dto.MenuRoleLnbDTO;
@@ -18,6 +20,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/api/menu-role")
 @Log4j2
+@MenuCode(MenuCodes.ROLE0020)
 public class MenuRoleApiController {
     private final MenuRoleService menuRoleService;
 

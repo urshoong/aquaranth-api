@@ -1,6 +1,6 @@
 package com.dq.aquaranth.menu.service;
 
-import com.dq.aquaranth.menu.constant.ErrorCode;
+import com.dq.aquaranth.menu.constant.ErrorCodes;
 import com.dq.aquaranth.menu.dto.request.MenuIconUpdateDTO;
 import com.dq.aquaranth.menu.dto.request.MenuInsertDTO;
 import com.dq.aquaranth.menu.dto.request.MenuRequestDTO;
@@ -32,7 +32,7 @@ public class DefaultMenuService implements MenuService {
 
     @Override
     public MenuResponseDTO findBy(MenuRequestDTO menuRequestDTO) {
-        MenuResponseDTO menuResponseDTO = menuMapper.findBy(menuRequestDTO).orElseThrow(() -> new MenuException(ErrorCode.MENU_NOT_FOUND));
+        MenuResponseDTO menuResponseDTO = menuMapper.findBy(menuRequestDTO).orElseThrow(() -> new MenuException(ErrorCodes.MENU_NOT_FOUND));
         ObjectGetRequestDTO objectRequestDTO = ObjectGetRequestDTO.builder().filename(menuResponseDTO.getUuid() + menuResponseDTO.getFilename()).build();
 
         try {
@@ -47,7 +47,7 @@ public class DefaultMenuService implements MenuService {
     public List<MenuResponseDTO> findAllBy(MenuRequestDTO menuRequestDTO) {
         List<MenuResponseDTO> menuResponseDTOList = menuMapper.findAllBy(menuRequestDTO);
         if (menuResponseDTOList.isEmpty()) {
-            throw new MenuException(ErrorCode.MENU_NOT_FOUND);
+            throw new MenuException(ErrorCodes.MENU_NOT_FOUND);
         }
         menuResponseDTOList.forEach(menuResponseDTO -> {
             ObjectGetRequestDTO objectRequestDTO = ObjectGetRequestDTO.builder().filename(menuResponseDTO.getUuid() + menuResponseDTO.getFilename()).build();
@@ -63,7 +63,7 @@ public class DefaultMenuService implements MenuService {
 
     @Override
     public MenuResponseDTO findUpperMenuBy(MenuRequestDTO menuRequestDTO) {
-        MenuResponseDTO upperMenuResponseDTO = menuMapper.findUpperMenuBy(menuRequestDTO).orElseThrow(() -> new MenuException(ErrorCode.MENU_NOT_FOUND));
+        MenuResponseDTO upperMenuResponseDTO = menuMapper.findUpperMenuBy(menuRequestDTO).orElseThrow(() -> new MenuException(ErrorCodes.MENU_NOT_FOUND));
 
         ObjectGetRequestDTO objectRequestDTO = ObjectGetRequestDTO.builder().filename(upperMenuResponseDTO.getUuid() + upperMenuResponseDTO.getFilename()).build();
 
