@@ -6,16 +6,15 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.io.Serializable;
 import java.time.LocalDate;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CompanyDTO {
+public class CompanyInformationDTO {
     private Long companyNo, orgaNo;
-    private String companyName, companyAddress, companyTel, ownerName, businessNumber, regUser;
+    private String companyName, companyAddress, companyTel, ownerName, businessNumber, username;
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate foundingDate;
     private Boolean companyUse;

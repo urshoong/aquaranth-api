@@ -1,6 +1,6 @@
 package com.dq.aquaranth.login.service;
 
-import com.dq.aquaranth.company.dto.CompanyDTO;
+import com.dq.aquaranth.company.dto.CompanyInformationDTO;
 import com.dq.aquaranth.login.domain.LoginUser;
 import com.dq.aquaranth.login.dto.LoginUserInfo;
 
@@ -42,5 +42,5 @@ public interface UserSessionService {
      * @param username - 접속한 사원의 id
      * @return - 회사정보
      */
-    CompanyDTO findLoginUserCompany(String username);
+    CompanyInformationDTO findLoginUserCompany(String username);
 }
