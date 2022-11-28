@@ -19,7 +19,8 @@ public enum MenuCodes {
     MAIL("MAIL"),
     BOARD("BOARD"),
     DRIVE("DRIVE"),
-    CALENDER("CALENDER");
+    CALENDER("CALENDER"),
+    ROOT("ROOT");
 
     private final String code;
 }

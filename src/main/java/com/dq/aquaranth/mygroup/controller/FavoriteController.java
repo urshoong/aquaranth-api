@@ -1,5 +1,7 @@
 package com.dq.aquaranth.mygroup.controller;
 
+import com.dq.aquaranth.menu.annotation.MenuCode;
+import com.dq.aquaranth.menu.constant.MenuCodes;
 import com.dq.aquaranth.mygroup.dto.favorite.FavoriteEmpListDTO;
 import com.dq.aquaranth.mygroup.dto.favorite.FavoriteInsertDTO;
 import com.dq.aquaranth.mygroup.service.favorite.FavoriteService;
@@ -14,6 +16,7 @@ import java.util.List;
 @Log4j2
 @RequiredArgsConstructor
 @RequestMapping("/api/favorite")
+@MenuCode
 public class FavoriteController {
 
     private final FavoriteService favoriteService;
