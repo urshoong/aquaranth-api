@@ -1,5 +1,6 @@
 package com.dq.aquaranth.emp.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,10 +15,12 @@ import java.util.List;
 @Data
 public class EmpLoginEmpDTO {
     private String empName;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime lastLoginTime;
     private String lastLoginIp;
     private String username;
     private Long empNo;
+    private String loginIp;
 
     private List<EmpLoginCompanyDTO> companyList;
 }

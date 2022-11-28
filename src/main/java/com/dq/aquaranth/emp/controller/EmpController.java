@@ -2,7 +2,14 @@ package com.dq.aquaranth.emp.controller;
 
 import com.dq.aquaranth.emp.dto.*;
 import com.dq.aquaranth.emp.service.EmpService;
+import com.dq.aquaranth.login.domain.LoginUser;
 import com.dq.aquaranth.login.service.UserSessionService;
+import com.dq.aquaranth.objectstorage.dto.request.MultipartFileDTO;
+import com.dq.aquaranth.objectstorage.service.ObjectStorageService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
+import org.springframework.http.MediaType;
+import org.springframework.security.core.Authentication;
 import com.dq.aquaranth.objectstorage.service.ObjectStorageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -177,39 +184,39 @@ public class EmpController {
      * 사원 프로필 업데이트
      */
     private final ObjectStorageService objectStorageService;
-    @PutMapping("/upload/{empNo}")
 //    public Long modifyProfile(@RequestBody EmpFileDTO empFileDTO){
 //        return null;
 //    }
-//    public ResponseEntity<ObjectResponseDTO> modifyProfile(@RequestParam("file") MultipartFile multipartFile) throws Exception {
-//        return ResponseEntity.status(HttpStatus.OK)
-//                .contentType(MediaType.APPLICATION_JSON)
-//                .body(objectStorageService.postObject(multipartFile));
-//    }
+
+@PutMapping(value = "/updateprofile", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+public Long updateEmpProfile(MultipartFileDTO fileDto) throws Exception {
+    return empService.updateFile(fileDto);
+}
+
 
     /**
      * 로그인한 회원 정보
      */
     @GetMapping("/loginlist")
-    public List<EmpLoginEmpDTO> findLoginUser(){
-        return empService.findLoginUser("emp01");
+    public List<EmpLoginEmpDTO> findLoginUser(Authentication authentication){
+        String username = authentication.getName();
+        return empService.findLoginUser(username);
     }
 
-//    @PostMapping("/registerLoginUser")
-//    public LoginUser registerLoginUser(@RequestBody LoginUser loginUser, Authentication authentication) {
-//        log.info("---------지금이니~---------");
-//        log.error(loginUser);
-//        String username = authentication.getName();
-//        loginUser.setUsername(username);
-//
-//        userSessionService.loadUserInfoByLoginUser(loginUser);
-////            String username = customUser.getEmpDTO().getUsername();
-////
-////            loginUser.setUsername(username);
-////
-////            log.info(loginUser);
-//        return null;
-//    }
+    /**
+     * 로그인한 회원 정보 보내서 redis에 올리기
+     */
+    @PostMapping("/registerLoginUser")
+    public LoginUser registerLoginUser(@RequestBody LoginUser loginUser, Authentication authentication) {
+        log.error(loginUser);
+        String username = authentication.getName();
+        loginUser.setUsername(username);
+
+        log.info(loginUser);
+
+        userSessionService.loadUserInfoByLoginUser(loginUser);
+        return null;
+    }
 
 
 
