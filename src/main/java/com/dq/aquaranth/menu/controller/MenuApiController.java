@@ -1,6 +1,7 @@
 package com.dq.aquaranth.menu.controller;
 
 
+import com.dq.aquaranth.menu.annotation.MenuCode;
 import com.dq.aquaranth.menu.dto.request.MenuInsertDTO;
 import com.dq.aquaranth.menu.dto.request.MenuRequestDTO;
 import com.dq.aquaranth.menu.dto.request.MenuUpdateDTO;
@@ -24,6 +25,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/menu")
 @RequiredArgsConstructor
+@MenuCode("MAIL")
 public class MenuApiController {
 
     private final MenuService menuService;
@@ -55,8 +57,8 @@ public class MenuApiController {
     }
 
     @PutMapping(value = "/updateicon", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public MenuResponseDTO updateByMenuIcon(MultipartFileDTO fileDto) throws Exception {
-        return menuService.updateIcon(fileDto);
+    public MenuResponseDTO updateByMenuIcon(MultipartFileDTO multipartFileDTO) throws Exception {
+        return menuService.updateIcon(multipartFileDTO);
     }
 
     @GetMapping("/lnb")

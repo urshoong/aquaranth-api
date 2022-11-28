@@ -7,6 +7,11 @@ import com.dq.aquaranth.rolegroup.dto.RoleGroupUpdateDTO;
 
 import java.util.List;
 
+/**
+ * 권한그룹 DB 접근을 위한 Mapper.
+ *
+ * @author 임종현
+ */
 public interface RoleGroupMapper {
 
     /**
@@ -43,5 +48,8 @@ public interface RoleGroupMapper {
 
     void hideById(Long roleGroupNo);
 
+    //33
     List<RoleGroup> findRoleGroupsByLoginUser(LoginUser loginUser);
+
+    List<RoleGroup> findByMenuCode(String menuCode);
 }

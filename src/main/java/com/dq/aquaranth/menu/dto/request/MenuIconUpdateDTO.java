@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class MenuIconUpdateDTO {
     private String menuCode;
+    private String menuNo;
     private String uuid;
     private String filename;
 }

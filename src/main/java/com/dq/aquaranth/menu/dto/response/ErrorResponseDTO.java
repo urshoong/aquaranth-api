@@ -9,20 +9,24 @@ import java.time.LocalDateTime;
 
 @Getter
 @Builder
-public class MenuErrorResponseDTO {
+public class ErrorResponseDTO {
     private final LocalDateTime timestamp = LocalDateTime.now();
     private final int status;
     private final String error;
     private final String code;
     private final String message;
+    private final Long detailErrorCode;
 
-    public static ResponseEntity<MenuErrorResponseDTO> toResponseEntity(ErrorCode errorCode) {
+    public static ResponseEntity<ErrorResponseDTO> toResponseEntity(ErrorCode errorCode) {
         return ResponseEntity
                 .status(errorCode.getHttpStatus())
-                .body(MenuErrorResponseDTO.builder()
+                .body(ErrorResponseDTO.builder()
                         .status(errorCode.getHttpStatus().value())
                         .error(errorCode.getHttpStatus().name())
                         .code(errorCode.name())
-                        .message(errorCode.getDetail()).build());
+                        .message(errorCode.getDetail())
+                        .detailErrorCode(errorCode.getDetailErrorCode())
+                        .build());
+
     }
 }

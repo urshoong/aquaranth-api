@@ -23,17 +23,26 @@ import static com.dq.aquaranth.login.jwt.JwtProperties.TOKEN_PREFIX;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
-// 요청 필터당 하나만 존재하는 필터이기 때문에 application 으로 들어오는 모든 요청을 여기에서 가로챕니다.
-// 그리고, 사용자가 application 자원에 access 권한이 있는지를 논리적으로 처리해주면 된다.
+/**
+ * 요청 필터당 하나만 존재하는 필터이기 때문에 application 으로 들어오는 모든 요청을 여기에서 가로챕니다.
+ * 사용자가 application 자원에 access 권한이 있는지를 논리적으로 처리해줍니다.
+ *
+ * @author 임종현
+ */
 @Log4j2
 @RequiredArgsConstructor
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
+    /**
+     * access token 의 유효성 검증을 처리합니다.
+     * 시큐리티 컨텍스트에 인증시도한 유저정보를 저장합니다.
+     */
     @Override
     protected void doFilterInternal(HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull FilterChain filterChain) throws ServletException, IOException  {
         // 1. 로그인 경로인지 확인 (login 은 여기에서 작업할 필요가 없기 때문.) == 아무일도 하지않을거임.
         if (request.getServletPath().equals("/api/login") || request.getServletPath().equals("/api/token/refresh")
                 || request.getServletPath().contains("/api/file")) {
+            log.info("=============== login 요청받음 ========================");
             filterChain.doFilter(request, response);
         } else {
             String authorizationHeader = request.getHeader(AUTHORIZATION);

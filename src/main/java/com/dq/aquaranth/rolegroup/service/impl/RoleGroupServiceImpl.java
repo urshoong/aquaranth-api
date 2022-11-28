@@ -31,6 +31,11 @@ public class RoleGroupServiceImpl implements RoleGroupService {
     }
 
     @Override
+    public List<RoleGroup> findByMenuCode(String menuCode) {
+        return roleGroupMapper.findByMenuCode(menuCode);
+    }
+
+    @Override
     public void update(RoleGroupUpdateDTO updateDTO) {
         log.info("{} 번째 권한그룹을 수정합니다.", updateDTO.getRoleGroupNo());
         roleGroupMapper.update(updateDTO);

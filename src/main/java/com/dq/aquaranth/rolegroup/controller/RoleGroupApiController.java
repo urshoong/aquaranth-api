@@ -1,7 +1,5 @@
 package com.dq.aquaranth.rolegroup.controller;
 
-import com.dq.aquaranth.login.domain.CustomUser;
-import com.dq.aquaranth.login.dto.LoginUserInfo;
 import com.dq.aquaranth.login.service.UserSessionService;
 import com.dq.aquaranth.rolegroup.domain.RoleGroup;
 import com.dq.aquaranth.rolegroup.dto.RoleGroupInsertReqDTO;
@@ -37,7 +35,6 @@ public class RoleGroupApiController {
 
     @PostMapping("")
     public RoleGroup register(@RequestBody RoleGroupInsertReqDTO reqDTO, Authentication authentication) {
-//      TODO:  mockup data 로그인 세션처리 완성되면 레디스에서 들고와야함.
         RoleGroup insertRoleGroup = RoleGroup.builder()
                 .companyNo(reqDTO.getCompanyNo())
                 .roleGroupName(reqDTO.getRoleGroupName())
@@ -51,15 +48,12 @@ public class RoleGroupApiController {
 
     @PutMapping("")
     public void modify(@RequestBody RoleGroupUpdateReqDTO reqDTO, Authentication authentication) {
-        //      TODO:  mockup data 로그인 세션처리 완성되면 레디스에서 들고와야함.
-        String username = "admin";
-
         RoleGroupUpdateDTO updateDTO = RoleGroupUpdateDTO.builder()
                 .roleGroupNo(reqDTO.getRoleGroupNo())
                 .roleGroupName(reqDTO.getRoleGroupName())
                 .roleGroupUse(reqDTO.isRoleGroupUse())
                 .companyNo(reqDTO.getCompanyNo())
-                .modUser(username)
+                .modUser(authentication.getName())
                 .modDate(LocalDateTime.now())
                 .build();
 

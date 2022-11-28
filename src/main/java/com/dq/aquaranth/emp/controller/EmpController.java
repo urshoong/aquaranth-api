@@ -10,6 +10,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
+import com.dq.aquaranth.objectstorage.service.ObjectStorageService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -25,7 +28,6 @@ import java.util.List;
 @RequestMapping("/api/emp")
 public class EmpController {
     private final EmpService empService;
-    private final UserSessionService userSessionService;
 
     @GetMapping("/information")
     public List<EmpDTO> getEmpList() {
@@ -185,11 +187,11 @@ public class EmpController {
 //    public Long modifyProfile(@RequestBody EmpFileDTO empFileDTO){
 //        return null;
 //    }
+
 @PutMapping(value = "/updateprofile", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
 public Long updateEmpProfile(MultipartFileDTO fileDto) throws Exception {
     return empService.updateFile(fileDto);
 }
-
 
 
     /**
