@@ -33,8 +33,6 @@ public class EmpController {
     private final EmpService empService;
     private final UserSessionService userSessionService;
 
-    private final UserSessionService userSessionService;
-
     @GetMapping("/information")
     public List<EmpDTO> getEmpList() {
         return empService.findAll();
