@@ -39,7 +39,6 @@ public class InitRunner implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
         initRedis();
-        mock();
     }
 
     /**
@@ -72,15 +71,4 @@ public class InitRunner implements ApplicationRunner {
             }
         });
     }
-
-    public void mock(){
-        LoginUser loginUser = LoginUser.builder()
-                .username("user")
-                .loginCompanyNo(1L)
-                .loginDeptNo(1L)
-                .build();
-        userSessionService.loadUserInfoByLoginUser(loginUser);
-    }
-
-
 }
