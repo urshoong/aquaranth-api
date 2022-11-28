@@ -43,7 +43,7 @@ class DefaultMenuServiceTest {
                 .mainFlag(false)
                 .menuOrder(99L)
                 .build();
-        Optional<MenuResponseDTO> expectedMenuResponseDto = menuService.update(menuUpdateDTO);
+        Optional<MenuResponseDTO> expectedMenuResponseDto = Optional.ofNullable(menuService.update(menuUpdateDTO));
         assertThat(Objects.requireNonNull(expectedMenuResponseDto.orElseGet(() -> null)).getMenuName()).isEqualTo(menuName);
     }
 }

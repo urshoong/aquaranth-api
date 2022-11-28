@@ -3,6 +3,7 @@ package com.dq.aquaranth.menu.service;
 import com.dq.aquaranth.menu.dto.request.MenuInsertDTO;
 import com.dq.aquaranth.menu.dto.request.MenuRequestDTO;
 import com.dq.aquaranth.menu.dto.request.MenuUpdateDTO;
+import com.dq.aquaranth.menu.dto.response.MenuChildrenResponseDTO;
 import com.dq.aquaranth.menu.dto.response.MenuResponseDTO;
 import com.dq.aquaranth.objectstorage.dto.request.MultipartFileDTO;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,7 +20,7 @@ public interface MenuService {
 
     MenuResponseDTO update(MenuUpdateDTO menuUpdateDTO);
 
-    MenuResponseDTO updateIcon(MultipartFileDTO fileDto) throws Exception;
+    MenuResponseDTO updateIcon(MultipartFileDTO multipartFileDTO) throws Exception;
 
     List<MenuResponseDTO> findMenusByLoginUsername(String username);
 

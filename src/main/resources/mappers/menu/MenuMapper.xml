@@ -15,6 +15,10 @@
             <if test="keyword eq 'gnb'">
                 OR upper_menu_no IS NULL
             </if>
+            <if test="keyword eq 'lnb'">
+                OR MATCH (menu_path) AGAINST ( '%/'#{menuCode}'/%' )
+            </if>
+
         </where>
     </sql>
 
@@ -46,15 +50,14 @@
     <select id="findBy" resultType="com.dq.aquaranth.menu.dto.response.MenuResponseDTO">
         SELECT *
         FROM tbl_menu m
-        <include refid="find_one" />
+        <include refid="find_one"/>
     </select>
 
     <select id="findAllBy" resultType="com.dq.aquaranth.menu.dto.response.MenuResponseDTO">
         SELECT *
         FROM tbl_menu
-        <include refid="find_all" />
+        <include refid="find_all"/>
     </select>
-
 
     <insert id="insert" parameterType="com.dq.aquaranth.menu.dto.request.MenuInsertDTO">
         insert into tbl_menu (upper_menu_no, menu_name, main_flag, menu_code, menu_path, menu_required,
@@ -81,29 +84,29 @@
         UPDATE tbl_menu
         SET uuid = #{uuid},
         filename = #{filename}
-        <include refid="menu" />
+        <include refid="menu"/>
     </update>
 
 
     <select id="findUpperMenuBy" resultType="com.dq.aquaranth.menu.dto.response.MenuResponseDTO">
         SELECT um.*
         FROM tbl_menu m
-                 JOIN tbl_menu um on um.menu_no = m.upper_menu_no
-        <include refid="menu" />
+        JOIN tbl_menu um on um.menu_no = m.upper_menu_no
+        <include refid="menu"/>
     </select>
 
     <delete id="delete">
         DELETE
         FROM tbl_menu
-        <include refid="menu" />
+        <include refid="menu"/>
     </delete>
 
     <update id="update">
         UPDATE tbl_menu
-        SET menu_name  = #{menuName},
-            menu_order = #{menuOrder},
-            main_flag  = #{mainFlag}
-        <include refid="menu" />
+        SET menu_name = #{menuName},
+        menu_order = #{menuOrder},
+        main_flag = #{mainFlag}
+        <include refid="menu"/>
     </update>
 
 
@@ -134,4 +137,9 @@
         order by f.orga_type
     </select>
 
+    <select id="findByMenuCodeUnderRecursive" resultType="com.dq.aquaranth.menu.dto.response.MenuResponseDTO">
+        select *
+        from tbl_menu
+        where menu_path like CONCAT('/',#{menuCode},'%')
+    </select>
 </mapper>

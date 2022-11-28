@@ -1,6 +1,6 @@
 package com.dq.aquaranth.login.controller;
 
-import com.dq.aquaranth.company.dto.CompanyDTO;
+import com.dq.aquaranth.company.dto.CompanyInformationDTO;
 import com.dq.aquaranth.login.dto.LoginUserInfo;
 import com.dq.aquaranth.login.service.UserSessionService;
 import lombok.RequiredArgsConstructor;
@@ -41,7 +41,7 @@ public class UserApiController {
     }
 
     @GetMapping("/login/company")
-    public CompanyDTO getLoginUserCompany(Authentication authentication) {
+    public CompanyInformationDTO getLoginUserCompany(Authentication authentication) {
         return userSessionService.findLoginUserCompany(authentication.getName());
     }
 

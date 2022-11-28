@@ -5,6 +5,7 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.dq.aquaranth.commons.utils.JWTUtil;
+import com.dq.aquaranth.company.dto.CompanyInformationDTO;
 import com.dq.aquaranth.company.mapper.CompanyMapper;
 import com.dq.aquaranth.dept.mapper.DeptMapper;
 import com.dq.aquaranth.emp.mapper.EmpMapper;
@@ -86,9 +87,10 @@ public class UserSessionServiceImpl implements UserSessionService {
      */
     @Override
     public LoginUserInfo loadUserInfoByLoginUser(LoginUser loginUser) {
-        // TODO : 부서정보 넣어야함 mapper 안만들어져 있음
         LoginUserInfo redisDTO = LoginUserInfo.builder()
                 .emp(empMapper.findByUsername(loginUser.getUsername()))
+                .company(companyMapper.findByCompanyNo(loginUser.getLoginCompanyNo()))
+                .dept(deptMapper.select(loginUser.getLoginDeptNo()))
                 .company(companyMapper.findByCompanyNo(loginUser.getLoginCompanyNo()))
                 .roleGroups(roleGroupMapper.findRoleGroupsByLoginUser(loginUser))
                 .build();
@@ -115,7 +117,7 @@ public class UserSessionServiceImpl implements UserSessionService {
     }
 
     @Override
-    public CompanyDTO findLoginUserCompany(String username) {
+    public CompanyInformationDTO findLoginUserCompany(String username) {
         return findUserInfoInRedis(username).getCompany();
     }
 }

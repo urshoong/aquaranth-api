@@ -15,7 +15,7 @@ import java.util.List;
 @Builder
 @ToString
 public class LoginUserInfo {
-    private CompanyDTO company;
+    private CompanyInformationDTO company;
     private DeptDTO dept;
     private EmpDTO emp;
     private List<RoleGroup> roleGroups;
