@@ -1,0 +1,27 @@
+### 로그인
+POST /api/login HTTP/1.1
+Host: localhost:8080
+Content-Type: application/json
+
+{
+  "username" : "admin",
+  "password" : "admin"
+}
+
+### 회사 부서 선택
+POST /api/emp/registerLoginUser HTTP/1.1
+Host: localhost:8080
+Content-Type: application/json
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTY3MDYwOTY0Mn0.PaGZ677xrc-8LZVBPHEETKsRGEXtD-9UkfxzFN0FnVw
+
+{
+  "username": "admin",
+  "loginCompanyNo" : 1,
+  "loginDeptNo" : 13
+}
+
+###
+GET /api/menu?menuCode=ORGA0020
+Host: localhost:8080
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTY3MDYwOTY0Mn0.PaGZ677xrc-8LZVBPHEETKsRGEXtD-9UkfxzFN0FnVw
+Content-Type: application/json

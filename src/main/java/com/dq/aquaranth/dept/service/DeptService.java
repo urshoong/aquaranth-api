@@ -3,6 +3,7 @@ package com.dq.aquaranth.dept.service;
 import com.dq.aquaranth.dept.dto.DepartmentDTO;
 import com.dq.aquaranth.dept.dto.DeptDTO;
 import com.dq.aquaranth.dept.dto.DeptTreeDTO;
+import com.dq.aquaranth.dept.dto.GetSubDeptDTO;
 import com.dq.aquaranth.dept.mapper.DeptMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -93,7 +94,12 @@ public class DeptService {
         //5. deptNo가 상위부서번호와 일치하는 곳의 lastDno에 추가한 deptNo번호 업데이트
 
         log.info("--------------------------------------------------------5");
-
+        log.info("newDeptNo" + newDeptNo);
+        log.info("newGno" + company);
+        log.info("newParent" + parent);
+        log.info("ord" + ord);
+        log.info("lastDno" + lastDno);
+        log.info("parentDeptNo" + parentDeptNo);
 
         return Map.of(
                 "newDeptNo", newDeptNo,
@@ -103,7 +109,6 @@ public class DeptService {
                 "lastDno", lastDno,
                 "parentDeptNo", parentDeptNo
         );
-//        return null;
     }
 
 //    public Map<Object, Object> register(DeptDTO2 deptDTO2) {
@@ -122,11 +127,11 @@ public class DeptService {
 
         log.info("no : " + no);
 
-        DeptDTO modiftDTO = deptMapper.select(no);
+        DeptDTO modifyDTO = deptMapper.select(no);
 
-        log.info("modify : " + modiftDTO);
+        log.info("modify : " + modifyDTO);
 
-        return modiftDTO;
+        return modifyDTO;
     }
 
     public Long remove(Long deptNo) {
@@ -154,9 +159,16 @@ public class DeptService {
         return deptMapper.getFromParent(upperDeptNo, depth);
     }
 
+
+    //트리 구조 조회
     public List<DeptTreeDTO> getTree(Long company){
 
         return deptMapper.getTree(company);
+    }
+
+    //맨처음 회사 나오고 버튼 누르면 바로 밑 하위 부서 조회(준성이형)
+    public List<DeptDTO> getSubDepth(GetSubDeptDTO getSubDeptDTO) {
+        return deptMapper.getSubDepth(getSubDeptDTO);
     }
 
 
@@ -164,5 +176,6 @@ public class DeptService {
     public List<DepartmentDTO> findByCompanyNo(Long companyNo)
     {
         return deptMapper.findByCompanyNo(companyNo);
+
     }
 }

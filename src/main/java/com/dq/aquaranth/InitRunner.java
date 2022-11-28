@@ -1,25 +1,22 @@
 package com.dq.aquaranth;
 
+import com.dq.aquaranth.login.domain.LoginUser;
 import com.dq.aquaranth.login.service.RedisService;
+import com.dq.aquaranth.login.service.UserSessionService;
 import com.dq.aquaranth.menu.dto.request.MenuRequestDTO;
 import com.dq.aquaranth.menu.dto.response.MenuResponseDTO;
 import com.dq.aquaranth.menu.service.MenuService;
 import com.dq.aquaranth.rolegroup.domain.RoleGroup;
 import com.dq.aquaranth.rolegroup.service.RoleGroupService;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * application 실행시 처리되는 로직입니다
@@ -33,6 +30,8 @@ public class InitRunner implements ApplicationRunner {
     private final RedisService redisService;
     private final MenuService menuService;
     private final RoleGroupService roleGroupService;
+
+    private final UserSessionService userSessionService;
 
     /**
      * springboot load 시 실행됩니다.
@@ -57,12 +56,19 @@ public class InitRunner implements ApplicationRunner {
         }
 
         // 메뉴코드에 매핑된 권한그룹들을 전부 가져와서, menuCode, roleGroupNo 형태로 저장합니다.
-        for (String menuCode : menuCodes) {
-            List<Long> value = new ArrayList<>();
-            roleGroupService.findByMenuCode(menuCode).forEach(roleGroup -> value.add(roleGroup.getRoleGroupNo()));
-            redisService.setCacheObject(menuCode, value);
-        }
+//        for (String menuCode : menuCodes) {
+//            List<Long> value = new ArrayList<>();
+//            roleGroupService.findByMenuCode(menuCode).forEach(roleGroup -> value.add(roleGroup.getRoleGroupNo()));
+//            redisService.setCacheObject(menuCode, value);
+//        }
+
+        menuCodes.forEach(menuCode -> {
+            List<RoleGroup> roleGroups = new ArrayList<>(roleGroupService.findByMenuCode(menuCode));
+            try {
+                redisService.setCacheObject(menuCode, roleGroups);
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
-
-
 }

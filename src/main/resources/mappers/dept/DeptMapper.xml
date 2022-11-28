@@ -12,7 +12,18 @@
     </select>
 
 
-<!--    등록-->
+<!--    =================================등록 트랜잭션 ========================================-->
+<!--    조직 추가-->
+    <insert id="insertOrga">
+        insert into tbl_orga (upper_orga_no, orga_type, reg_user)
+        values (#{orga}, 'dept' , #{regUser})
+    </insert>
+
+<!--    조직 매핑 테이블 추가-->
+    <insert id="insertOrgaMapping">
+        insert into tbl_dept_mapping (dept_no, orga_no, dept_main, reg_user)
+        values (#{deptNo}, #{orgaNo}, '0', #{regUser})
+    </insert>
 
 <!--    임의의 부서를 직접 추가-->
     <insert id="insert">
@@ -47,7 +58,7 @@
 
 <!--    삭제-->
     <delete id="delete">
-        delete from tbl_dept where dept_no = #{dept_no}
+        delete from tbl_dept where dept_no = #{deptNo}
     </delete>
 
 
@@ -55,16 +66,18 @@
     <update id="update">
             update tbl_dept
             set
-            upper_dept_no = #{upper_dept_no},
-            dept_name = #{dept_name},
-            del_flag = #{del_flag},
-            main_flag = #{main_flag},
-            deptSort = #{deptSort},
-            dept_desc = #{dept_desc},
+            upper_dept_no = #{upperDeptNo},
+            dept_name = #{deptName},
+            del_flag = #{delFlag},
+            main_flag = #{mainFlag},
+            dept_desc = #{deptDesc},
             mod_date = now()
-            where dept_no = #{dept_no}
+            where dept_no = #{deptNo}
     </update>
 
+
+
+<!--    ===========================================-->
 
 <!--    전체 리스트 조회-->
     <select id="getList" resultType="com.dq.aquaranth.dept.dto.DeptDTO">
@@ -79,7 +92,6 @@
 
 
 
-
     <select id="getFromParent" resultType="com.dq.aquaranth.dept.dto.DeptDTO">
         select *
         from tbl_dept
@@ -87,6 +99,7 @@
     </select>
 
 
+<!--    트리 구조 조회-->
     <select id="getTree" resultType="com.dq.aquaranth.dept.dto.DeptTreeDTO">
         select
         dept_no, orga_no, dept_name, upper_dept_no, ord, depth, company_no, last_dno
@@ -95,16 +108,6 @@
 
         where company_no = #{company} order by ord
     </select>
-
-    <insert id="insertOrga">
-        insert into tbl_orga (upper_orga_no, orga_type, reg_user)
-        values (#{orga}, 'dept' , #{regUser})
-    </insert>
-
-    <insert id="insertOrgaMapping">
-        insert into tbl_dept_mapping (dept_no, orga_no, dept_main, reg_user)
-        values (#{deptNo}, #{orgaNo}, '0', #{regUser})
-    </insert>
 
     <select id="getLast" resultType="Long">
         select last_insert_id()
@@ -132,5 +135,33 @@
         join tbl_dept_mapping td on td.orga_no = x.orga_no
         join tbl_dept t on t.dept_no = td.dept_no
     </select>
+
+
+
+
+
+
+
+
+
+    <select id="getSubDepth" resultType="com.dq.aquaranth.dept.dto.DeptDTO">
+        <if test="depth eq 0">
+            select 0 dept_no,
+            null upper_dept_no,
+            company_name dept_name,
+            0 ord,
+            0 depth,
+            null last_dno,
+            company_no
+            from tbl_company
+            where company_no = #{companyNo}
+            union all
+        </if>
+        select dept_no, upper_dept_no, dept_name, ord, depth, last_dno, company_no
+        from tbl_dept
+        where (upper_dept_no = #{upperDeptNo} OR upper_dept_no is null )and depth = #{depth}
+        and company_no = #{companyNo}
+    </select>
+
 
 </mapper>
