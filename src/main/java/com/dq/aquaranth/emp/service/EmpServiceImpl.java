@@ -4,6 +4,7 @@ import com.dq.aquaranth.emp.dto.*;
 import com.dq.aquaranth.emp.mapper.EmpMapper;
 import com.dq.aquaranth.emp.mapper.EmpMappingMapper;
 import com.dq.aquaranth.objectstorage.dto.request.MultipartFileDTO;
+import com.dq.aquaranth.objectstorage.dto.request.ObjectGetRequestDTO;
 import com.dq.aquaranth.objectstorage.dto.request.ObjectPostRequestDTO;
 import com.dq.aquaranth.objectstorage.service.ObjectStorageService;
 import lombok.RequiredArgsConstructor;
@@ -24,17 +25,41 @@ public class EmpServiceImpl implements EmpService {
     private final EmpMapper empMapper;
     private final EmpMappingMapper empMappingMapper;
     private final PasswordEncoder passwordEncoder;
-
     private final ObjectStorageService objectStorageService;
 
     @Override
     public List<EmpDTO> findAll() {
-        return empMapper.findAll();
+        List<EmpDTO> empDTOList = empMapper.findAll();
+
+        empDTOList.forEach(empDTO -> {
+            ObjectGetRequestDTO objectRequestDTO = ObjectGetRequestDTO.builder()
+                    .filename(empDTO.getUuid() + empDTO.getFilename())
+                    .build();
+
+            try {
+                empDTO.setProfileUrl(objectStorageService.getObject(objectRequestDTO).getUrl());
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        });
+
+        return empDTOList;
     }
 
     @Override
     public EmpDTO findById(Long empNo) {
-        return empMapper.findById(empNo);
+        EmpDTO empDTO = empMapper.findById(empNo);
+
+        ObjectGetRequestDTO objectRequestDTO = ObjectGetRequestDTO.builder()
+                .filename(empDTO.getUuid() + empDTO.getFilename())
+                .build();
+
+        try {
+            empDTO.setProfileUrl(objectStorageService.getObject(objectRequestDTO).getUrl());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return empDTO;
     }
 
     @Override
@@ -112,14 +137,13 @@ public class EmpServiceImpl implements EmpService {
 
         ObjectPostRequestDTO objectPostRequestDTO = ObjectPostRequestDTO.builder().filename(uuid + filename).multipartFile(multipartFileDTO.getMultipartFile()).build();
 
-        EmpFileDTO empFileDTO = EmpFileDTO.builder().uuid(uuid).fileName(filename).build();
+        EmpFileDTO empFileDTO = EmpFileDTO.builder().empNo(Long.valueOf(multipartFileDTO.getKey())).uuid(uuid).filename(filename).build();
 
         empMapper.updateProfile(empFileDTO);
         objectStorageService.postObject(objectPostRequestDTO);
 
         return empMapper.updateProfile(empFileDTO);
     }
-
 
     /**
      * 로그인한 회원 가져오기

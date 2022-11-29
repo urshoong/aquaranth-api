@@ -7,14 +7,10 @@ import com.dq.aquaranth.login.service.UserSessionService;
 import com.dq.aquaranth.menu.annotation.MenuCode;
 import com.dq.aquaranth.menu.constant.MenuCodes;
 import com.dq.aquaranth.objectstorage.dto.request.MultipartFileDTO;
-import com.dq.aquaranth.objectstorage.service.ObjectStorageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
-import com.dq.aquaranth.objectstorage.service.ObjectStorageService;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -48,8 +44,6 @@ public class EmpController {
         return empService.findAllOrga(empNo);
     }
 
-
-    ////////////////////////////////////////////
     public String getRemoteIp(HttpServletRequest request) {
 
         String ip = request.getHeader("X-Forwarded-For");
@@ -77,7 +71,7 @@ public class EmpController {
         //사용할 곳에서 , HttpServletRequest request 쓰고 getRemoteIp(request)
         //0:0:0:0:0:0:0:1 로, 이는 IPv6 형식의 값. 추후 로그아웃 때 사용하기로 한다.
     }
-    ////////////////////////////////////////////
+
     @PostMapping("/register")
     public EmpDTO registerEmp (@Valid @RequestBody  EmpInsertInformationDTO reqDTO) throws IllegalAccessException{
         log.info(reqDTO);
@@ -150,7 +144,7 @@ public class EmpController {
     }
 
     @PutMapping(value = "/modify/{empNo}")
-    public Long modifyEmp(@Valid @RequestBody EmpUpdateDTO empUpdateDTO, HttpServletRequest request) {
+    public Long modifyEmp(@Valid @RequestBody EmpUpdateDTO empUpdateDTO) {
         String ip = null;
         try {
             ip = Inet4Address.getLocalHost().getHostAddress();
@@ -187,16 +181,11 @@ public class EmpController {
     /**
      * 사원 프로필 업데이트
      */
-    private final ObjectStorageService objectStorageService;
-//    public Long modifyProfile(@RequestBody EmpFileDTO empFileDTO){
-//        return null;
-//    }
 
 @PutMapping(value = "/updateprofile", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
 public Long updateEmpProfile(MultipartFileDTO fileDto) throws Exception {
     return empService.updateFile(fileDto);
 }
-
 
     /**
      * 로그인한 회원 정보
@@ -221,25 +210,4 @@ public Long updateEmpProfile(MultipartFileDTO fileDto) throws Exception {
         userSessionService.loadUserInfoByLoginUser(loginUser);
         return null;
     }
-
-
-
-//    @PostMapping("/upload")
-//    public String upload(@RequestBody MultipartFile[] uploadfile, Model model) throws IllegalAccessException, IOException{
-//        List<EmpFileDTO> list = new ArrayList<>();
-//
-//        for (MultipartFile file : uploadfile){
-//            if(!file.isEmpty()){
-//                EmpFileDTO fileDTO = new EmpFileDTO(UUID.randomUUID().toString(),
-//                                                    file.getOriginalFilename(),
-//                                                    file.getContentType());
-//                list.add(fileDTO);
-//
-//                File newFileName = new File(fileDTO.getUuid()+"_"+fileDTO.getFileName());
-//                file.transferTo(newFileName);
-//            }
-//        }
-//        model.addAttribute("files", list);
-//        return "result";
-//    }
 }
