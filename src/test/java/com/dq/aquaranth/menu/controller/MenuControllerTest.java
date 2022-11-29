@@ -18,7 +18,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Log4j2
 @SpringBootTest
 @AutoConfigureMockMvc
-class MenuApiControllerTest {
+class MenuControllerTest {
 
     private static final String API_URL = "/api/menu";
     @Autowired
