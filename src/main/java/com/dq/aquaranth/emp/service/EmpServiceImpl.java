@@ -3,6 +3,7 @@ package com.dq.aquaranth.emp.service;
 import com.dq.aquaranth.emp.dto.*;
 import com.dq.aquaranth.emp.mapper.EmpMapper;
 import com.dq.aquaranth.emp.mapper.EmpMappingMapper;
+import com.dq.aquaranth.login.service.UserSessionService;
 import com.dq.aquaranth.objectstorage.dto.request.MultipartFileDTO;
 import com.dq.aquaranth.objectstorage.dto.request.ObjectGetRequestDTO;
 import com.dq.aquaranth.objectstorage.dto.request.ObjectPostRequestDTO;
@@ -26,6 +27,8 @@ public class EmpServiceImpl implements EmpService {
     private final EmpMappingMapper empMappingMapper;
     private final PasswordEncoder passwordEncoder;
     private final ObjectStorageService objectStorageService;
+
+    private final UserSessionService userSessionService;
 
     @Override
     public List<EmpDTO> findAll() {
@@ -160,9 +163,14 @@ public class EmpServiceImpl implements EmpService {
 
         List<EmpLoginEmpDTO> result = empMapper.findLoginUser(username);
 
+        Long dept = userSessionService.findUserInfoInRedis(username).getDept().getDeptNo();
+        Long company = userSessionService.findUserInfoInRedis(username).getCompany().getCompanyNo();
+
         String finalIp = ip;
         result.forEach(emp -> {
             emp.setLoginIp(finalIp);
+            emp.setLoginDept(dept);
+            emp.setLoginCompany(company);
         });
 
         return result;
