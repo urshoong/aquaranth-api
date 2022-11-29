@@ -1,6 +1,8 @@
 package com.dq.aquaranth.rolegroup.service;
 
 import com.dq.aquaranth.rolegroup.domain.RoleGroup;
+import com.dq.aquaranth.rolegroup.dto.PageRequestDTO;
+import com.dq.aquaranth.rolegroup.dto.PageResponseDTO;
 import com.dq.aquaranth.rolegroup.dto.RoleGroupResponseDTO;
 import com.dq.aquaranth.rolegroup.dto.RoleGroupUpdateDTO;
 
@@ -59,4 +61,6 @@ public interface RoleGroupService {
      * @param roleGroupNo - 권한그룹번호 (pk)
      */
     void hideById(Long roleGroupNo);
+
+    PageResponseDTO<RoleGroupResponseDTO> getList(PageRequestDTO pageRequestDTO);
 }
