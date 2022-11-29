@@ -1,5 +1,6 @@
 package com.dq.aquaranth.rolegroup.service.impl;
 
+import com.dq.aquaranth.login.annotation.RedisUpdate;
 import com.dq.aquaranth.rolegroup.domain.RoleGroup;
 import com.dq.aquaranth.rolegroup.dto.PageRequestDTO;
 import com.dq.aquaranth.rolegroup.dto.PageResponseDTO;
@@ -90,6 +91,7 @@ public class RoleGroupServiceImpl implements RoleGroupService {
 
     @Override
     public PageResponseDTO<RoleGroupResponseDTO> getList(PageRequestDTO pageRequestDTO) {
+        log.info("권한그룹 리스트를 가져옵니다.");
         List<RoleGroupResponseDTO> result = roleGroupMapper.getList(pageRequestDTO);
         int total = roleGroupMapper.getTotal();
         return new PageResponseDTO<>(pageRequestDTO, total, result);
