@@ -75,9 +75,9 @@ public class UserSessionServiceImpl implements UserSessionService {
             log.info("refresh token 검증이 완료되었습니다.");
 
             return jwtUtil.generateToken(username);
-        } else {
-            throw new RuntimeException("Refresh token is missing");
         }
+
+        return null;
     }
 
     /**
