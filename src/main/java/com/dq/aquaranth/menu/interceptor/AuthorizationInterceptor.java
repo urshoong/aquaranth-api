@@ -31,6 +31,10 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
     private final ObjectMapper objectMapper;
     private final RedisTemplate<String, Object> redisTemplate;
 
+    /**
+     * 컨트롤러에 붙어있는 어노테이션을 읽어서 안에 키값을 들고와서
+     *
+     */
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         if (!(handler instanceof HandlerMethod)) {
