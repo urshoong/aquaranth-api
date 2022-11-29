@@ -24,7 +24,7 @@
              , e.emp_name
              , em.emp_rank
              , e.username
-             ,FN_GET_HIERARCHY_ORGA(fa.favorite_emp_no) as path
+             , FN_GET_HIERARCHY_ORGA(fa.favorite_emp_no) as path
              , e.emp_phone
              , fa.mygroup_no
         from tbl_favorite fa
