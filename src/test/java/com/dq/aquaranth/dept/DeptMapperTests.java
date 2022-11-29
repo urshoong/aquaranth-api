@@ -57,7 +57,6 @@ public class DeptMapperTests {
                 .deptName("철강 1팀 업데이트")
                 .delFlag(false)
                 .mainFlag(false)
-                .deptSort(1)
                 .deptDesc("철강 1팀 업데이트")
                 .build();
 
@@ -82,7 +81,6 @@ public class DeptMapperTests {
         DeptDTO deptDTO2 = DeptDTO.builder()
                 .deptName("개발1-1팀")
                 .deptDesc("개발1-1팀")
-                .deptSort(1)
                 .regUser("admin")
                 .upperDeptNo(6L)
                 .companyNo(1)
@@ -165,15 +163,14 @@ public class DeptMapperTests {
     public void testInsertAll() {
 
         DeptDTO deptDTO2 = DeptDTO.builder()
-                .deptName("개발2-1팀")
-                .deptDesc("개발2-1팀")
-                .upperDeptNo(7L)
+                .deptName("인사부")
+                .deptDesc("인사부")
+                .upperDeptNo(null)
                 .companyNo(1)
-                .depth(3)
+                .depth(1)
                 .regUser("admin")
                 .mainFlag(true)
                 .delFlag(true)
-                .deptSort(1)
                 .build();
 
         Long orga = null;
