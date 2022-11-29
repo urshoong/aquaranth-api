@@ -53,6 +53,7 @@
 
     <select id="findOrgaByRoleGroupNo" resultType="com.dq.aquaranth.userrole.dto.response.UserRoleGroupBasedUserListDTO">
         SELECT SQL_CALC_FOUND_ROWS
+               FN_GET_HIERARCHY_ORGA(rg.orga_no) orga_info
              , tem.emp_rank
              , te.emp_name
              , te.username
@@ -184,7 +185,6 @@
         join tbl_orga_role tor on tor.orga_no = o.orga_no
         join tbl_role_group trg on trg.role_group_no = tor.role_group_no and trg.role_group_use = true
         left join tbl_company tc on trg.company_no = tc.company_no
-        where tc.company_no = ${companyNo}
         order by trg.role_group_no
         limit #{skip}, #{size}
     </select>
