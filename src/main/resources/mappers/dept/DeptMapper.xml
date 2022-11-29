@@ -91,7 +91,7 @@
     </select>
 
 
-
+<!--모든 회사 통틀어서 하위 부서 뽑기 사실상 안씀-->
     <select id="getFromParent" resultType="com.dq.aquaranth.dept.dto.DeptDTO">
         select *
         from tbl_dept
@@ -141,12 +141,7 @@
 
 
 
-
-
-
-
-
-
+<!--    준성이형-->
     <select id="getSubDepth" resultType="com.dq.aquaranth.dept.dto.DeptDTO">
         <if test="depth eq 0">
             select 0 dept_no,
@@ -165,6 +160,4 @@
         where (upper_dept_no = #{upperDeptNo} OR upper_dept_no is null )and depth = #{depth}
         and company_no = #{companyNo}
     </select>
-
-
 </mapper>

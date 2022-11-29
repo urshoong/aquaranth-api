@@ -3,6 +3,8 @@ package com.dq.aquaranth.login.service;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.JWTDecodeException;
+import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.dq.aquaranth.commons.utils.JWTUtil;
 import com.dq.aquaranth.company.dto.CompanyInformationDTO;
@@ -11,11 +13,14 @@ import com.dq.aquaranth.dept.mapper.DeptMapper;
 import com.dq.aquaranth.emp.mapper.EmpMapper;
 import com.dq.aquaranth.login.domain.LoginUser;
 import com.dq.aquaranth.login.dto.LoginUserInfo;
+import com.dq.aquaranth.menu.constant.ErrorCodes;
+import com.dq.aquaranth.menu.exception.MenuException;
 import com.dq.aquaranth.rolegroup.mapper.RoleGroupMapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import io.jsonwebtoken.JwtException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -42,7 +47,7 @@ public class UserSessionServiceImpl implements UserSessionService {
     public LoginUserInfo findUserInfoInRedis(String username) {
         String value = (String) redisTemplate.opsForValue().get(username);
         if (Objects.isNull(value)) {
-            return null;
+            throw new MenuException(ErrorCodes.REDIS_USER_NOT_FOUND);
         }
 
         ObjectMapper mapper = new ObjectMapper()
@@ -67,17 +72,18 @@ public class UserSessionServiceImpl implements UserSessionService {
             String refreshToken = authorizationHeader.substring(TOKEN_PREFIX.length());
             Algorithm algorithm = Algorithm.HMAC256(SECRET.getBytes()); // 토큰 생성할 때와 같은 알고리즘으로 풀어야함.
             JWTVerifier verifier = JWT.require(algorithm).build();
-            DecodedJWT decodedJWT = verifier.verify(refreshToken);
-
+            DecodedJWT decodedJWT = null;
+            try {
+                decodedJWT = verifier.verify(refreshToken);
+            } catch (TokenExpiredException | JWTDecodeException verificationException) {
+                throw new MenuException(ErrorCodes.REFRESH_TOKEN_EXPIRED);
+            }
             // 토큰이 유효한지 확인되면, 사용자의 이름을 가져올 수 있습니다.
             String username = decodedJWT.getSubject(); // token 과 함께 제공되는 사용자 이름을 줍니다.
-
             log.info("refresh token 검증이 완료되었습니다.");
-
             return jwtUtil.generateToken(username);
-        } else {
-            throw new RuntimeException("Refresh token is missing");
         }
+        throw new MenuException(ErrorCodes.TOKEN_MISSING);
     }
 
     /**

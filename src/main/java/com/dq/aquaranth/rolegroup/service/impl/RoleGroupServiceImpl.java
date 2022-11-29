@@ -1,10 +1,14 @@
 package com.dq.aquaranth.rolegroup.service.impl;
 
+import com.dq.aquaranth.login.annotation.RedisUpdate;
 import com.dq.aquaranth.rolegroup.domain.RoleGroup;
+import com.dq.aquaranth.rolegroup.dto.PageRequestDTO;
+import com.dq.aquaranth.rolegroup.dto.PageResponseDTO;
 import com.dq.aquaranth.rolegroup.dto.RoleGroupResponseDTO;
 import com.dq.aquaranth.rolegroup.dto.RoleGroupUpdateDTO;
 import com.dq.aquaranth.rolegroup.mapper.RoleGroupMapper;
 import com.dq.aquaranth.rolegroup.service.RoleGroupService;
+import com.dq.aquaranth.userrole.dto.response.UserRoleRoleGroupBasedListDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
@@ -83,5 +87,13 @@ public class RoleGroupServiceImpl implements RoleGroupService {
 
         roleGroupMapper.hideById(roleGroupNo);
         log.info("{}번 권한그룹이 숨김처리 되었습니다.", findDTO.getRoleGroupNo());
+    }
+
+    @Override
+    public PageResponseDTO<RoleGroupResponseDTO> getList(PageRequestDTO pageRequestDTO) {
+        log.info("권한그룹 리스트를 가져옵니다.");
+        List<RoleGroupResponseDTO> result = roleGroupMapper.getList(pageRequestDTO);
+        int total = roleGroupMapper.getTotal();
+        return new PageResponseDTO<>(pageRequestDTO, total, result);
     }
 }

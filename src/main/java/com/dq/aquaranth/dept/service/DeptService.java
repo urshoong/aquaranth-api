@@ -37,7 +37,7 @@ public class DeptService {
 
         Long orga = null;
 
-        if(deptDTO2.getUpperDeptNo() == null){
+        if(deptDTO2.getUpperDeptNo() == null || deptDTO2.getUpperDeptNo() == 0L){
             deptMapper.insertOrga(Long.valueOf(deptDTO2.getCompanyNo()), deptDTO2.getRegUser());
         }else {
             deptMapper.insertOrga(Long.valueOf(deptDTO2.getUpperDeptNo()), deptDTO2.getRegUser());

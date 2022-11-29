@@ -4,24 +4,43 @@ Host: localhost:8080
 Content-Type: application/json
 
 {
-  "username" : "admin",
-  "password" : "admin"
+  "username": "admin",
+  "password": "admin"
 }
+
+### 레디스에 토큰을 이용하여 회사정보 찾기
+GET /api/login/userinfo HTTP/1.1
+Host: localhost:8080
+Content-Type: application/json
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTY3MDY4OTU2NH0.mpZkjIYIBrlLizaxK-pBeouFnFzJjaOesdPYoVVe-c4
+
+### 토큰을 이용하여 사용자가 들어갈 수 있는 회사 및 부서정보 찾기
+GET /api/emp/loginlist HTTP/1.1
+Host: localhost:8080
+Content-Type: application/json
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTY3MDY4OTczM30.9PjhXrpUzekornO1ltSJtEf5hHdoWZHRGYC3jp0reMY
 
 ### 회사 부서 선택
 POST /api/emp/registerLoginUser HTTP/1.1
 Host: localhost:8080
 Content-Type: application/json
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTY3MDYwOTY0Mn0.PaGZ677xrc-8LZVBPHEETKsRGEXtD-9UkfxzFN0FnVw
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTY3MDYzMzI5NX0.DwwWsGJN1VVn1IngA4B0y_YBl6mbD1qkY-eYo5u1mSE
 
 {
   "username": "admin",
-  "loginCompanyNo" : 1,
-  "loginDeptNo" : 13
+  "loginCompanyNo": 1,
+  "loginDeptNo": 13
 }
 
-###
+### 리프레쉬 토큰 요청
+GET /api/token/refresh HTTP/1.1
+Host: localhost:8080
+Content-Type: application/json
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTY2OTYzOTAzMX0.DIvMNGPLmEbPlBDWFsiarl70-gSi9gsT-oPWKzCczEM
+
+### 메뉴 요청
 GET /api/menu?menuCode=ORGA0020
 Host: localhost:8080
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTY3MDYwOTY0Mn0.PaGZ677xrc-8LZVBPHEETKsRGEXtD-9UkfxzFN0FnVw
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTY2OTY1MDU1M30.fJqgz1zaDeIjFayTxnddrLP2lziid-2obc8tuUc1LrA
 Content-Type: application/json
+

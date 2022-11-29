@@ -1,13 +1,9 @@
 package com.dq.aquaranth.rolegroup.controller;
 
-import com.dq.aquaranth.login.service.UserSessionService;
 import com.dq.aquaranth.menu.annotation.MenuCode;
 import com.dq.aquaranth.menu.constant.MenuCodes;
 import com.dq.aquaranth.rolegroup.domain.RoleGroup;
-import com.dq.aquaranth.rolegroup.dto.RoleGroupInsertReqDTO;
-import com.dq.aquaranth.rolegroup.dto.RoleGroupResponseDTO;
-import com.dq.aquaranth.rolegroup.dto.RoleGroupUpdateDTO;
-import com.dq.aquaranth.rolegroup.dto.RoleGroupUpdateReqDTO;
+import com.dq.aquaranth.rolegroup.dto.*;
 import com.dq.aquaranth.rolegroup.service.RoleGroupService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -15,7 +11,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -24,11 +19,10 @@ import java.util.List;
 @MenuCode(MenuCodes.ROLE0020)
 public class RoleGroupApiController {
     private final RoleGroupService roleGroupService;
-    private final UserSessionService userSessionService;
 
     @GetMapping("")
-    public List<RoleGroupResponseDTO> getRoleGroupList() {
-        return roleGroupService.findAll();
+    public PageResponseDTO<RoleGroupResponseDTO> getRoleGroupList(PageRequestDTO pageRequestDTO) {
+        return roleGroupService.getList(pageRequestDTO);
     }
 
     @GetMapping("/{roleGroupNo}")
