@@ -27,6 +27,7 @@ import java.util.List;
 @RequestMapping("/api/menu")
 @RequiredArgsConstructor
 @MenuCode(MenuCodes.ROLE0030)
+
 public class MenuApiController {
 
     private final MenuService menuService;
