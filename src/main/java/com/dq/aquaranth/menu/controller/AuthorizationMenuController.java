@@ -24,7 +24,7 @@ import java.util.List;
  */
 @Log4j2
 @RestController
-@RequestMapping("/api/auth/menu")
+@RequestMapping("/api/menu")
 @RequiredArgsConstructor
 @MenuCode(MenuCodes.ROLE0030)
 public class AuthorizationMenuController {
