@@ -37,7 +37,6 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
         }
         HandlerMethod handlerMethod = (HandlerMethod) handler;
 
-
         String menuCode = handlerMethod.getBean().getClass().getDeclaredAnnotation(MenuCode.class).value().getCode();
 
         if (menuCode.equals(MenuCodes.ROOT.getCode())){
@@ -46,8 +45,7 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
 
         String username = request.getUserPrincipal().getName();
 
-        List<RoleGroup> loginUserInfo = userSessionService.findUserInfoInRedis(username)
-                .getRoleGroups();
+        List<RoleGroup> loginUserInfo = userSessionService.findUserInfoInRedis(username).getRoleGroups();
 
 
         List<RoleGroup> menuRoles = objectMapper.readValue(redisTemplate.opsForValue().get(menuCode).toString(), new TypeReference<>(){});
