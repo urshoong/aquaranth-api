@@ -49,8 +49,7 @@
 
     <!--해당 부서에 소속된 사원 중 한 사원의 정보 조회-->
     <select id="findByEmpNo" resultType="com.dq.aquaranth.mygroup.dto.orgatree.OrgatreeEmpInformationDTO">
-        select e.emp_no
-             , em.orga_no
+        select em.orga_no
              , e.emp_name
              , e.username
              , em.emp_rank
