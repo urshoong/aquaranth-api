@@ -84,6 +84,13 @@ public class UserRoleController {
     @Operation(summary = "부여된 권한그룹 제거", description = "선택한 사용자에 부여된 권한그룹 중 본인에게 부여된 권한그룹만 제거 가능합니다.")
     @PostMapping("/removeOrgaRoleByAllRole")
     public UserRoleResponseDTO removeUserRole(@RequestBody List<UserRoleReqRemoveUserRoleDTO> removeData){
-        return userRoleService.removeOrgaRole(removeData);
+        UserRoleResponseDTO result = UserRoleResponseDTO.builder().build();
+        try {
+            result = userRoleService.removeOrgaRole(removeData);
+        }catch (RuntimeException re){
+            result.setState("error");
+            result.setMessage(re.getMessage());
+        }
+        return result;
     }
 }
