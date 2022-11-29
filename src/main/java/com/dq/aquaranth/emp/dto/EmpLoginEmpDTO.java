@@ -21,8 +21,8 @@ public class EmpLoginEmpDTO {
     private String username;
     private Long empNo;
     private String loginIp;
-    private Long loginDept;
-    private Long loginCompany;
+//    private Long loginDept;
+//    private Long loginCompany;
 
     private List<EmpLoginCompanyDTO> companyList;
 }

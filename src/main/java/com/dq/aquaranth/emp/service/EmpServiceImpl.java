@@ -28,7 +28,7 @@ public class EmpServiceImpl implements EmpService {
     private final PasswordEncoder passwordEncoder;
     private final ObjectStorageService objectStorageService;
 
-    private final UserSessionService userSessionService;
+//    private final UserSessionService userSessionService;
 
     @Override
     public List<EmpDTO> findAll() {
@@ -163,14 +163,14 @@ public class EmpServiceImpl implements EmpService {
 
         List<EmpLoginEmpDTO> result = empMapper.findLoginUser(username);
 
-        Long dept = userSessionService.findUserInfoInRedis(username).getDept().getDeptNo();
-        Long company = userSessionService.findUserInfoInRedis(username).getCompany().getCompanyNo();
+//        Long dept = userSessionService.findUserInfoInRedis(username).getDept().getDeptNo();
+//        Long company = userSessionService.findUserInfoInRedis(username).getCompany().getCompanyNo();
 
         String finalIp = ip;
         result.forEach(emp -> {
             emp.setLoginIp(finalIp);
-            emp.setLoginDept(dept);
-            emp.setLoginCompany(company);
+//            emp.setLoginDept(dept);
+//            emp.setLoginCompany(company);
         });
 
         return result;
