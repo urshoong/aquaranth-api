@@ -7,8 +7,7 @@ import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Rollback;
-import org.springframework.transaction.annotation.Transactional;
+
 
 import java.util.List;
 
@@ -57,8 +56,7 @@ public class DeptMapperTests {
                 .deptName("철강 1팀 업데이트")
                 .delFlag(false)
                 .mainFlag(false)
-                .deptSort(1)
-                .deptDesc("철강 1팀 업데이트")
+                 .deptDesc("철강 1팀 업데이트")
                 .build();
 
         int result = deptMapper.update(deptDTO2);
@@ -82,7 +80,6 @@ public class DeptMapperTests {
         DeptDTO deptDTO2 = DeptDTO.builder()
                 .deptName("개발1-1팀")
                 .deptDesc("개발1-1팀")
-                .deptSort(1)
                 .regUser("admin")
                 .upperDeptNo(6L)
                 .companyNo(1)
@@ -173,7 +170,6 @@ public class DeptMapperTests {
                 .regUser("admin")
                 .mainFlag(true)
                 .delFlag(true)
-                .deptSort(1)
                 .build();
 
         Long orga = null;
