@@ -21,6 +21,7 @@
     <!--해당 마이그룹에 즐겨찾기 된 모든 사원 정보 출력-->
     <select id="findAll" resultType="com.dq.aquaranth.mygroup.dto.favorite.FavoriteEmpListDTO">
         select fa.favorite_emp_no as orga_no
+             , e.emp_no
              , e.emp_name
              , em.emp_rank
              , e.username
