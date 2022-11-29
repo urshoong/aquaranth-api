@@ -1,6 +1,5 @@
 package com.dq.aquaranth.menu.controller;
 
-
 import com.dq.aquaranth.menu.annotation.MenuCode;
 import com.dq.aquaranth.menu.constant.MenuCodes;
 import com.dq.aquaranth.menu.dto.request.MenuInsertDTO;
@@ -19,16 +18,16 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 /**
+ * 권한이 부여된 유저만 사용할 수 있는
  * 메뉴 컨트롤러 입니다.
- * 권한 여부와 관계없이 조회합니다.
+ * 권한 여부와 관계없이 모두 조회합니다.
  */
 @Log4j2
 @RestController
-@RequestMapping("/api/menu")
+@RequestMapping("/api/auth/menu")
 @RequiredArgsConstructor
 @MenuCode(MenuCodes.ROLE0030)
-
-public class MenuApiController {
+public class AuthorizationMenuController {
 
     private final MenuService menuService;
     private final MenuMapper menuMapper;

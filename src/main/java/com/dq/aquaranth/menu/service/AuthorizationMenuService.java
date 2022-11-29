@@ -22,24 +22,12 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-@Log4j2
-@RequiredArgsConstructor
-@Service
-public class DefaultMenuService implements MenuService {
+public interface AuthorizationMenuService {
 
-    // TODO : 프록시 패턴으로 구현해보기
-
-    private final MenuMapper menuMapper;
-    private final ObjectStorageService objectStorageService;
-
-
-    @Override
-    public MenuResponseDTO findBy(MenuRequestDTO menuRequestDTO) {
-        return null;
-    }
-
-    @Override
-    public List<MenuResponseDTO> findAllBy(MenuRequestDTO menuRequestDTO) {
-        return null;
-    }
+    MenuResponseDTO findBy(MenuRequestDTO menuRequestDTO);
+    List<MenuResponseDTO> findAllBy(MenuRequestDTO menuRequestDTO);
 }
+
+
+
+

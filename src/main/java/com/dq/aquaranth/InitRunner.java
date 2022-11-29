@@ -71,4 +71,8 @@ public class InitRunner implements ApplicationRunner {
             }
         });
     }
+
+    public void setMenuIcon(){
+
+    }
 }
