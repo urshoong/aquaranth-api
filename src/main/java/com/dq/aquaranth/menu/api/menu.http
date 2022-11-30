@@ -28,8 +28,8 @@ Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsI
 
 {
   "username": "admin",
-  "loginCompanyNo": 1,
-  "loginDeptNo": 13
+  "loginCompanyNo": 3,
+  "loginDeptNo": 3
 }
 
 ### 리프레쉬 토큰 요청
@@ -42,5 +42,12 @@ Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsI
 GET /api/menu?menuCode=ORGA0020
 Host: localhost:8080
 Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTY2OTY1MDU1M30.fJqgz1zaDeIjFayTxnddrLP2lziid-2obc8tuUc1LrA
+Content-Type: application/json
+
+
+### 메뉴 요청
+GET /api/menu?menuCode=ORGA0030
+Host: localhost:8080
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTY3MDcyNTMwM30.tg_zLyGeRZMyr2cUY-kQk7T886w3EZo3PmTvLGUhDiU
 Content-Type: application/json
 

@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -21,7 +20,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 class DefaultMenuServiceTest {
 
     @Autowired
-    MenuService menuService;
+    AuthorizationMenuService menuService;
 
     @Test
     @DisplayName(value = "전체 메뉴를 조회")
