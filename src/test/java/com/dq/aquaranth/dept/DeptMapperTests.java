@@ -57,7 +57,7 @@
 //                .deptName("철강 1팀 업데이트")
 //                .delFlag(false)
 //                .mainFlag(false)
-////                .deptSort(1)
+//                .deptSort(1)
 //                .deptDesc("철강 1팀 업데이트")
 //                .build();
 //

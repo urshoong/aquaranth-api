@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dq.aquaranth.menu.mapper.AuthorizationMenuMapper">
+
+    <sql id="find_all">
+        <where>
+            <if test="menuCode != null">
+                OR menu_code = #{menuCode}
+            </if>
+            <if test="menuNo != null">
+                OR menu_no = #{menuNo}
+            </if>
+            <if test="keyword eq 'gnb'">
+                OR upper_menu_no IS NULL
+            </if>
+            <if test="keyword eq 'lnb'">
+                OR MATCH (menu_path) AGAINST ( '%/'#{menuCode}'/%' )
+            </if>
+
+        </where>
+    </sql>
+
+    <sql id="find_one">
+        <where>
+            <if test="menuCode != null">
+                AND menu_code = #{menuCode}
+            </if>
+            <if test="menuNo != null">
+                AND menu_no = #{menuNo}
+            </if>
+        </where>
+    </sql>
+
+    <sql id="menu">
+        <where>
+            <if test="menuCode != null">
+                AND menu_code = #{menuCode}
+            </if>
+            <if test="menuNo != null">
+                AND menu_no = #{menuNo}
+            </if>
+        </where>
+    </sql>
+
+    <select id="findBy" resultType="com.dq.aquaranth.menu.dto.response.MenuResponseDTO">
+        SELECT *
+        FROM tbl_menu m
+        <include refid="find_one"/>
+    </select>
+
+    <select id="findAllBy" resultType="com.dq.aquaranth.menu.dto.response.MenuResponseDTO">
+        SELECT *
+        FROM tbl_menu m
+        <include refid="find_all"/>
+    </select>
+
+    <insert id="insert" parameterType="com.dq.aquaranth.menu.dto.request.MenuInsertDTO">
+        insert into tbl_menu (upper_menu_no, menu_name, main_flag, menu_code, menu_path, menu_required,
+        menu_admin, menu_order, menu_default, uuid, filename, reg_user, reg_date)
+        VALUE (#{upperMenuNo},
+        #{menuName},
+        #{mainFlag},
+        #{menuCode},
+        #{menuPath},
+        #{menuRequired},
+        #{menuAdmin},
+        #{menuOrder},
+        #{menuDefault},
+        #{uuid},
+        #{filename},
+        #{regUser},
+        #{regDate})
+        <selectKey keyProperty="menuNo" resultType="long" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+    </insert>
+
+    <update id="updateIcon">
+        UPDATE tbl_menu
+        SET uuid = #{uuid},
+        filename = #{filename}
+        <include refid="menu"/>
+    </update>
+
+
+    <select id="findUpperMenuBy" resultType="com.dq.aquaranth.menu.dto.response.MenuResponseDTO">
+        SELECT um.*
+        FROM tbl_menu m
+        JOIN tbl_menu um on um.menu_no = m.upper_menu_no
+        <include refid="menu"/>
+    </select>
+
+    <delete id="delete">
+        DELETE
+        FROM tbl_menu
+        <include refid="menu"/>
+    </delete>
+
+    <update id="update">
+        UPDATE tbl_menu
+        SET menu_name = #{menuName},
+        menu_order = #{menuOrder},
+        main_flag = #{mainFlag}
+        <include refid="menu"/>
+    </update>
+
+
+    <select id="findMenusByLoginUsername" resultType="com.dq.aquaranth.menu.dto.response.MenuResponseDTO">
+        select distinct m.*
+        from (WITH RECURSIVE etc AS
+                                 (select tbl_orga.orga_no,
+                                         tbl_orga.upper_orga_no,
+                                         tbl_orga.orga_type
+                                  from tbl_orga
+                                           inner join tbl_emp_mapping eM on tbl_orga.orga_no = eM.orga_no
+                                           inner join tbl_emp e on eM.emp_no = e.emp_no
+                                           join tbl_dept_mapping d on tbl_orga.upper_orga_no = d.orga_no
+                                  where username = #{username}
+#                                     and d.dept_main = true
+                                  UNION ALL
+                                  select o.orga_no,
+                                         o.upper_orga_no,
+                                         o.orga_type
+                                  from etc f
+                                           inner join tbl_orga o on f.upper_orga_no = o.orga_no)
+              select f.orga_no, f.orga_type
+              from etc f) as f
+                 inner join tbl_orga_role o on o.orga_no = f.orga_no
+                 inner join tbl_role_group rg on o.role_group_no = rg.role_group_no
+                 join tbl_menu_role mr on rg.role_group_no = mr.role_group_no
+                 join tbl_menu m on mr.menu_no = m.menu_no
+        order by f.orga_type
+    </select>
+
+    <select id="findByMenuCodeUnderRecursive" resultType="com.dq.aquaranth.menu.dto.response.MenuResponseDTO">
+        select *
+        from tbl_menu
+        where menu_path like CONCAT('/',#{menuCode},'%')
+    </select>
+</mapper>

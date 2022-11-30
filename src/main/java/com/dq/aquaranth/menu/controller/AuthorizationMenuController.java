@@ -6,8 +6,7 @@ import com.dq.aquaranth.menu.dto.request.MenuInsertDTO;
 import com.dq.aquaranth.menu.dto.request.MenuRequestDTO;
 import com.dq.aquaranth.menu.dto.request.MenuUpdateDTO;
 import com.dq.aquaranth.menu.dto.response.MenuResponseDTO;
-import com.dq.aquaranth.menu.mapper.MenuMapper;
-import com.dq.aquaranth.menu.service.MenuService;
+import com.dq.aquaranth.menu.service.AuthorizationMenuService;
 import com.dq.aquaranth.objectstorage.dto.request.MultipartFileDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -24,46 +23,40 @@ import java.util.List;
  */
 @Log4j2
 @RestController
-@RequestMapping("/api/menu")
+@RequestMapping("/api/auth/menu")
 @RequiredArgsConstructor
 @MenuCode(MenuCodes.ROLE0030)
 public class AuthorizationMenuController {
 
-    private final MenuService menuService;
-    private final MenuMapper menuMapper;
+    private final AuthorizationMenuService authorizationMenuService;
 
     @GetMapping
     public MenuResponseDTO findBy(MenuRequestDTO menuRequestDTO) {
-        return menuService.findBy(menuRequestDTO);
+        return authorizationMenuService.findBy(menuRequestDTO);
     }
 
     @GetMapping("/list")
     public List<MenuResponseDTO> findAllBy(MenuRequestDTO menuRequestDTO) {
-        return menuService.findAllBy(menuRequestDTO);
+        return authorizationMenuService.findAllBy(menuRequestDTO);
     }
 
     @GetMapping("/findusermenu/{username}")
     public List<MenuResponseDTO> findMenusByLoginUsername(@PathVariable(value = "username") String username) {
-        return menuService.findMenusByLoginUsername(username);
+        return authorizationMenuService.findMenusByLoginUsername(username);
     }
 
     @PutMapping("/update")
     public MenuResponseDTO update(@RequestBody MenuUpdateDTO menuUpdateDTO) {
-        return menuService.update(menuUpdateDTO);
+        return authorizationMenuService.update(menuUpdateDTO);
     }
 
     @PutMapping("/insert")
     public MenuResponseDTO insert(MenuInsertDTO menuInsertDTO, @RequestParam("file") MultipartFile multipartFile) throws Exception {
-        return menuService.insert(menuInsertDTO, multipartFile);
+        return authorizationMenuService.insert(menuInsertDTO, multipartFile);
     }
 
     @PutMapping(value = "/updateicon", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public MenuResponseDTO updateByMenuIcon(MultipartFileDTO multipartFileDTO) throws Exception {
-        return menuService.updateIcon(multipartFileDTO);
-    }
-
-    @GetMapping("/lnb")
-    public List<MenuResponseDTO> getLnbList(String menuCode) {
-        return menuMapper.findByMenuCodeUnderRecursive(menuCode);
+        return authorizationMenuService.updateIcon(multipartFileDTO);
     }
 }
