@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.management.openmbean.KeyAlreadyExistsException;
 import java.net.Inet4Address;
 import java.net.UnknownHostException;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -28,7 +29,7 @@ public class EmpServiceImpl implements EmpService {
     private final PasswordEncoder passwordEncoder;
     private final ObjectStorageService objectStorageService;
 
-//    private final UserSessionService userSessionService;
+    private final UserSessionService userSessionService;
 
     @Override
     public List<EmpDTO> findAll() {
@@ -163,17 +164,74 @@ public class EmpServiceImpl implements EmpService {
 
         List<EmpLoginEmpDTO> result = empMapper.findLoginUser(username);
 
-//        Long dept = userSessionService.findUserInfoInRedis(username).getDept().getDeptNo();
-//        Long company = userSessionService.findUserInfoInRedis(username).getCompany().getCompanyNo();
-
         String finalIp = ip;
-        result.forEach(emp -> {
-            emp.setLoginIp(finalIp);
-//            emp.setLoginDept(dept);
-//            emp.setLoginCompany(company);
-        });
+
+            result.forEach(emp -> {
+                emp.setLoginIp(finalIp);
+            });
 
         return result;
     }
+
+    /**
+     * 현재 로그인한 사원의 정보 companyNo, deptNo, empno 두 가지 redis가져옴.
+     */
+    @Override
+    public EmpLoggingDTO findLoggingInformation(String username) {
+
+        Long dept = userSessionService.findUserInfoInRedis(username).getDept().getDeptNo();
+        Long company = userSessionService.findUserInfoInRedis(username).getCompany().getCompanyNo();
+        String empRank = userSessionService.findUserInfoInRedis(username).getEmpMapping().getEmpRank();
+
+        EmpLoggingDTO empLoggingDTO = EmpLoggingDTO.builder()
+                .loginCompany(company)
+                .loginDept(dept)
+                .loginEmpRank(empRank)
+                .build();
+
+        //-------------------------------------------
+        String ip = null;
+
+        try {
+            ip = Inet4Address.getLocalHost().getHostAddress();
+        } catch (UnknownHostException e) {
+            throw new RuntimeException(e);
+        }
+
+        Long empNo = userSessionService.findUserInfoInRedis(username).getEmp().getEmpNo();
+
+        // 확인 버튼 클릭 시, emp 최근 접속 ip, 시간을 empno으로 찾아 업데이트.
+        EmpUpdateRecentAccessDTO updateDTO
+                = EmpUpdateRecentAccessDTO.builder()
+                .lastLoginIp(ip)
+                .lastLoginTime(LocalDateTime.now())
+                .empNo(empNo)
+                .build();
+
+         empMapper.updateRecentAccessInfo(updateDTO);
+
+        return empLoggingDTO;
+    }
+
+    //위에 같은거 있다. 뭐지? 뭔가 없어도 되는 것 같음.
+//    @Override
+//    public Long updateRecentAccessInfo() {
+//
+//        String ip = null;
+//
+//        try {
+//            ip = Inet4Address.getLocalHost().getHostAddress();
+//        } catch (UnknownHostException e) {
+//            throw new RuntimeException(e);
+//        }
+//
+//        EmpUpdateRecentAccessDTO updateDTO
+//                = EmpUpdateRecentAccessDTO.builder()
+//                .lastLoginIp(ip)
+//                .lastLoginTime(LocalDateTime.now())
+//                .build();
+//
+//        return empMapper.updateRecentAccessInfo(updateDTO);
+//    }
 
 }

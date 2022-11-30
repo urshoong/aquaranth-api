@@ -29,6 +29,10 @@ public class EmpController {
     private final EmpService empService;
     private final UserSessionService userSessionService;
 
+    /**
+     * 사원테이블에 있는 모든 정보를 요청합니다.
+     * @return 사원리스트
+     */
     @GetMapping("/information")
     public List<EmpDTO> getEmpList() {
         return empService.findAll();
@@ -196,6 +200,13 @@ public Long updateEmpProfile(MultipartFileDTO fileDto) throws Exception {
         return empService.findLoginUser(username);
     }
 
+    /* 로그인한 회원의 deptno, companyno, empRank 받기 */
+    @GetMapping("/loginRedisValue")
+    public EmpLoggingDTO findLoginRedisValue(Authentication authentication){
+        String username = authentication.getName();
+        return empService.findLoggingInformation(username);
+    }
+
     /**
      * 로그인한 회원 정보 보내서 redis에 올리기
      */
@@ -207,7 +218,10 @@ public Long updateEmpProfile(MultipartFileDTO fileDto) throws Exception {
 
         log.info(loginUser);
 
+        //레디스에 올린다.
         userSessionService.loadUserInfoByLoginUser(loginUser);
-        return null;
+
+        return loginUser;
     }
+
 }

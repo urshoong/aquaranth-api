@@ -29,4 +29,11 @@ public interface EmpService {
 
     List<EmpLoginEmpDTO> findLoginUser(String username);
 
+    // 레디스 녀석들 가져오기
+    EmpLoggingDTO findLoggingInformation(String username);
+
+    // 먼데?
+//    Long updateRecentAccessInfo();
+
+
 }

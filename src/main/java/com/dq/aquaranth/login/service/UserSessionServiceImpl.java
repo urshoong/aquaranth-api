@@ -11,6 +11,7 @@ import com.dq.aquaranth.company.dto.CompanyInformationDTO;
 import com.dq.aquaranth.company.mapper.CompanyMapper;
 import com.dq.aquaranth.dept.mapper.DeptMapper;
 import com.dq.aquaranth.emp.mapper.EmpMapper;
+import com.dq.aquaranth.emp.mapper.EmpMappingMapper;
 import com.dq.aquaranth.login.domain.LoginUser;
 import com.dq.aquaranth.login.dto.LoginUserInfo;
 import com.dq.aquaranth.menu.constant.ErrorCodes;
@@ -42,6 +43,7 @@ public class UserSessionServiceImpl implements UserSessionService {
     private final CompanyMapper companyMapper;
     private final EmpMapper empMapper;
     private final DeptMapper deptMapper;
+    private final EmpMappingMapper empMappingMapper;
 
     @Override
     public LoginUserInfo findUserInfoInRedis(String username) {
@@ -95,6 +97,7 @@ public class UserSessionServiceImpl implements UserSessionService {
     public LoginUserInfo loadUserInfoByLoginUser(LoginUser loginUser) {
         LoginUserInfo redisDTO = LoginUserInfo.builder()
                 .emp(empMapper.findByUsername(loginUser.getUsername()))
+                .empMapping(empMappingMapper.findByUsernameAndDeptNo(loginUser.getUsername(), loginUser.getLoginDeptNo()))
                 .company(companyMapper.findByCompanyNo(loginUser.getLoginCompanyNo()))
                 .dept(deptMapper.select(loginUser.getLoginDeptNo()))
                 .company(companyMapper.findByCompanyNo(loginUser.getLoginCompanyNo()))
