@@ -32,7 +32,6 @@ import java.util.List;
 public class CustomSecurityConfig {
     private final UserDetailsService userDetailsService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
-    private final RedisTemplate<String, Object> redisTemplate;
     private final JWTUtil jwtUtil;
 
     @Bean
@@ -47,7 +46,7 @@ public class CustomSecurityConfig {
          *  다른 주소로 해주고 싶으면 이런방식을 사용할 수 있습니다.
          *  해당 개체를 사용하여 URL 을 변경할 수 있으며, 사용자를 지정할 수 있는 몇가지 다른 항목도 있습니다.
          */
-        JwtAuthenticationFilter authenticationFilter = new JwtAuthenticationFilter(authenticationManager, redisTemplate, jwtUtil);
+        JwtAuthenticationFilter authenticationFilter = new JwtAuthenticationFilter(authenticationManager, jwtUtil);
         authenticationFilter.setFilterProcessesUrl("/api/login");
 
         http

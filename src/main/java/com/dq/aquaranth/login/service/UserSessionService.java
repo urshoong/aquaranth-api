@@ -2,7 +2,7 @@ package com.dq.aquaranth.login.service;
 
 import com.dq.aquaranth.company.dto.CompanyInformationDTO;
 import com.dq.aquaranth.login.domain.LoginUser;
-import com.dq.aquaranth.login.dto.LoginUserInfo;
+import com.dq.aquaranth.login.dto.LoginUserInfoDTO;
 
 import java.util.Map;
 
@@ -19,7 +19,7 @@ public interface UserSessionService {
      * @param username - 로그인된 사원의 id
      * @return - 접속한 사원의 조직,권한 정보가 담긴 객체
      */
-    LoginUserInfo findUserInfoInRedis(String username);
+    LoginUserInfoDTO findUserInfoInRedis(String username);
 
     /**
      * refresh token 을 검증합니다.
@@ -34,7 +34,7 @@ public interface UserSessionService {
      * @param loginUser : 접속한 사원이 소속된 조직정보가 담긴 객체입니다.
      * @return redis에 저장된 dto 객체입니다.
      */
-    LoginUserInfo loadUserInfoByLoginUser(LoginUser loginUser);
+    LoginUserInfoDTO loadUserInfoByLoginUser(LoginUser loginUser);
 
     /**
      * 접속한 사원의 회사정보를 요청합니다.

@@ -1,5 +1,6 @@
 package com.dq.aquaranth.rolegroup.service.impl;
 
+import com.dq.aquaranth.login.annotation.RedisUpdate;
 import com.dq.aquaranth.menu.dto.request.MenuRequestDTO;
 import com.dq.aquaranth.menu.mapper.MenuMapper;
 import com.dq.aquaranth.rolegroup.domain.MenuRole;

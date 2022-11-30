@@ -14,7 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @ToString
-public class LoginUserInfo {
+public class LoginUserInfoDTO {
     private CompanyInformationDTO company;
     private DeptDTO dept;
     private EmpDTO emp;

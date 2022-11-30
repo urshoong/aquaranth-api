@@ -1,7 +1,6 @@
 package com.dq.aquaranth.login.controller;
 
-import com.dq.aquaranth.company.dto.CompanyInformationDTO;
-import com.dq.aquaranth.login.dto.LoginUserInfo;
+import com.dq.aquaranth.login.dto.LoginUserInfoDTO;
 import com.dq.aquaranth.login.service.UserSessionService;
 import com.dq.aquaranth.menu.annotation.MenuCode;
 import lombok.RequiredArgsConstructor;
@@ -30,13 +29,8 @@ public class UserApiController {
         return userSessionService.checkRefresh(authorizationHeader);
     }
 
-    @GetMapping("/login/company")
-    public CompanyInformationDTO getLoginUserCompany(Authentication authentication) {
-        return userSessionService.findLoginUserCompany(authentication.getName());
-    }
-
     @GetMapping("/login/userinfo")
-    public LoginUserInfo getLoginUserInfo(Authentication authentication) {
+    public LoginUserInfoDTO getLoginUserInfo(Authentication authentication) {
         return userSessionService.findUserInfoInRedis(authentication.getName());
     }
 }

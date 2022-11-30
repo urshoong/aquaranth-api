@@ -62,5 +62,11 @@ public interface RoleGroupService {
      */
     void hideById(Long roleGroupNo);
 
+    /**
+     * 선택된 페이지번호와 사이즈 만큼 권한그룹 리스트를 보여줍니다.
+     *
+     * @param pageRequestDTO 페이징 정보와, 검색할 키워드가 담긴 객체
+     * @return 페이징 정보가 담긴 객체
+     */
     PageResponseDTO<RoleGroupResponseDTO> getList(PageRequestDTO pageRequestDTO);
 }
