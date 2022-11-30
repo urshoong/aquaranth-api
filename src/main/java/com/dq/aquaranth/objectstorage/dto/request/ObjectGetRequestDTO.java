@@ -12,4 +12,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ObjectGetRequestDTO {
     private String filename;
+    private Integer time;
 }

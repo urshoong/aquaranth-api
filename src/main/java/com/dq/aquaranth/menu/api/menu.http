@@ -45,9 +45,14 @@ Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsI
 Content-Type: application/json
 
 
-### 메뉴 요청
-GET /api/menu?menuCode=ORGA0030
+### 권한을 가진 메뉴 요청
+GET /api/auth/menu?menuCode=ORGA0030
 Host: localhost:8080
 Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTY3MDcyNTMwM30.tg_zLyGeRZMyr2cUY-kQk7T886w3EZo3PmTvLGUhDiU
 Content-Type: application/json
 
+### 레디스에 있는 메뉴 요청
+GET /api/menu/cache/list
+Host: localhost:8080
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTY3MDc4OTY0MX0.yJAVqFi1zoFVIkWzhcORDBCWFo4PXXCbTYrH-9-RlDc
+Content-Type: application/json

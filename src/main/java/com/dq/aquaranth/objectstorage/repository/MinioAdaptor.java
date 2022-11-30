@@ -1,8 +1,6 @@
 package com.dq.aquaranth.objectstorage.repository;
 
-import io.minio.GetPresignedObjectUrlArgs;
-import io.minio.MinioClient;
-import io.minio.PutObjectArgs;
+import io.minio.*;
 import io.minio.http.Method;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -58,7 +56,16 @@ public class MinioAdaptor {
                 .method(Method.GET)
                 .bucket(bucketName)
                 .object(filename)
-                .expiry(2, TimeUnit.HOURS)
+//                .expiry(2, TimeUnit.HOURS)
+                .build());
+    }
+
+    public String getPresignedObjectUrl(String filename, Integer time) throws Exception {
+        return minioClient.getPresignedObjectUrl(GetPresignedObjectUrlArgs.builder()
+                .method(Method.GET)
+                .bucket(bucketName)
+                .object(filename)
+                .expiry(time, TimeUnit.HOURS)
                 .build());
     }
 }

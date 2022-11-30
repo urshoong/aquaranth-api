@@ -1,7 +1,7 @@
 package com.dq.aquaranth.rolegroup.controller;
 
 import com.dq.aquaranth.menu.annotation.MenuCode;
-import com.dq.aquaranth.menu.constant.MenuCodes;
+import com.dq.aquaranth.menu.constant.Menu;
 import com.dq.aquaranth.rolegroup.domain.RoleGroup;
 import com.dq.aquaranth.rolegroup.dto.*;
 import com.dq.aquaranth.rolegroup.service.RoleGroupService;
@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 @RequestMapping("/api/role-group")
 @Log4j2
-@MenuCode(MenuCodes.ROLE0020)
+@MenuCode(Menu.ROLE0020)
 public class RoleGroupApiController {
     private final RoleGroupService roleGroupService;
 

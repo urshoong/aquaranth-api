@@ -1,7 +1,7 @@
 package com.dq.aquaranth.menu.controller;
 
 import com.dq.aquaranth.menu.annotation.MenuCode;
-import com.dq.aquaranth.menu.constant.MenuCodes;
+import com.dq.aquaranth.menu.constant.Menu;
 import com.dq.aquaranth.menu.dto.request.MenuInsertDTO;
 import com.dq.aquaranth.menu.dto.request.MenuRequestDTO;
 import com.dq.aquaranth.menu.dto.request.MenuUpdateDTO;
@@ -25,7 +25,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/auth/menu")
 @RequiredArgsConstructor
-@MenuCode(MenuCodes.ROLE0030)
+@MenuCode(Menu.ROLE0030)
 public class AuthorizationMenuController {
 
     private final AuthorizationMenuService authorizationMenuService;

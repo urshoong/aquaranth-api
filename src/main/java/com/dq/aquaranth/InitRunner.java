@@ -16,6 +16,8 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.dq.aquaranth.menu.util.RedisUtil.getMenuKey;
+
 /**
  * application 실행시 처리되는 로직입니다
  *
@@ -36,6 +38,7 @@ public class InitRunner implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) {
         initRedis();
+        initMenuList();
     }
 
     /**
@@ -63,7 +66,14 @@ public class InitRunner implements ApplicationRunner {
         });
     }
 
-    public void setMenuIcon(){
-
+    public void initMenuList(){
+        List<MenuResponseDTO> menuResponseDTOList = authorizationMenuService.findAllBy(MenuRequestDTO.builder().build());
+        menuResponseDTOList.forEach(menuResponseDTO -> {
+            try {
+                redisService.setCacheObject(getMenuKey(menuResponseDTO), menuResponseDTO);
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 }

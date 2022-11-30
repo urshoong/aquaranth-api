@@ -10,21 +10,21 @@ import com.dq.aquaranth.menu.exception.MenuException;
 import com.dq.aquaranth.menu.mapper.MenuMapper;
 import com.dq.aquaranth.objectstorage.dto.request.ObjectGetRequestDTO;
 import com.dq.aquaranth.objectstorage.service.ObjectStorageService;
-import com.dq.aquaranth.rolegroup.domain.RoleGroup;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
-import static com.dq.aquaranth.menu.service.util.ObjectStorageUtil.getObjectGetRequestDTO;
+import static com.dq.aquaranth.menu.constant.Menu.REDIS_KEYS;
+import static com.dq.aquaranth.menu.util.ObjectStorageUtil.getObjectGetRequestDTO;
 
 @Log4j2
 @Service
@@ -37,39 +37,98 @@ public class DefaultMenuService implements MenuService {
     private final ObjectMapper objectMapper;
     private final ObjectStorageService objectStorageService;
     private final RedisTemplate<String, Object> redisTemplate;
+    private final RedisService redisService;
 
     @Override
     public MenuResponseDTO findBy(MenuRequestDTO menuRequestDTO, String username) {
         LoginUserInfo loginUserInfo = getLoginUserInfo(username);
-
-        MenuResponseDTO menuResponseDTO = menuMapper.findBy(menuRequestDTO, UserDTO.builder()
-                .companyNo(loginUserInfo.getCompany().getCompanyNo())
-                .deptNo(loginUserInfo.getDept().getDeptNo())
-                .username(loginUserInfo.getEmp().getUsername())
-                .build())
+        MenuResponseDTO menuResponseDTO = menuMapper
+                .findBy(menuRequestDTO, UserDTO.builder()
+                        .companyNo(loginUserInfo.getCompany().getCompanyNo())
+                        .deptNo(loginUserInfo.getDept().getDeptNo())
+                        .username(loginUserInfo.getEmp().getUsername()).build())
                 .orElseThrow(() -> new MenuException(ErrorCodes.MENU_NOT_FOUND));
-        setMenuIcon(menuResponseDTO);
+        setMenuIconUrl(menuResponseDTO);
         return menuResponseDTO;
     }
 
     @Override
     public List<MenuResponseDTO> findAllBy(MenuRequestDTO menuRequestDTO, String username) {
         LoginUserInfo loginUserInfo = getLoginUserInfo(username);
-        List<MenuResponseDTO> menuResponseDTOList =
-                menuMapper.findAllBy(menuRequestDTO,UserDTO.builder()
-                        .companyNo(loginUserInfo.getCompany().getCompanyNo())
-                        .deptNo(loginUserInfo.getDept().getDeptNo())
-                        .username(loginUserInfo.getEmp().getUsername())
-                        .build());
-        if (menuResponseDTOList.isEmpty()){
+        List<MenuResponseDTO> menuResponseDTOList = menuMapper.findAllBy(menuRequestDTO, UserDTO.builder()
+                .companyNo(loginUserInfo.getCompany().getCompanyNo())
+                .deptNo(loginUserInfo.getDept().getDeptNo())
+                .username(loginUserInfo.getEmp().getUsername()).build());
+
+        if (menuResponseDTOList.isEmpty()) {
             throw new MenuException(ErrorCodes.MENU_NOT_FOUND);
         }
-        menuResponseDTOList.forEach(this::setMenuIcon);
+        menuResponseDTOList.forEach(this::setMenuIconUrl);
         return menuResponseDTOList;
     }
 
-    private void setMenuIcon(MenuResponseDTO menuResponseDTO) {
-        ObjectGetRequestDTO objectRequestDTO = getObjectGetRequestDTO(menuResponseDTO);
+    /**
+     * Redis에 캐싱된 메뉴를 조회합니다.
+     * @param menuRequestDTO
+     * @param username
+     * @return
+     */
+    @Override
+    public List<MenuResponseDTO> findAllInCache(MenuRequestDTO menuRequestDTO, String username) {
+        LoginUserInfo loginUserInfo = getLoginUserInfo(username);
+        List<MenuResponseDTO> menuResponseDTOList = new ArrayList<>();
+
+        redisService.keys(REDIS_KEYS.getCode() + "*").forEach(menu -> {
+            try {
+                menuResponseDTOList.add(objectMapper.readValue(redisTemplate.opsForValue().get(menu).toString(), MenuResponseDTO.class));
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
+        });
+
+        if (menuResponseDTOList.isEmpty()) {
+            throw new MenuException(ErrorCodes.MENU_NOT_FOUND);
+        }
+        /**
+         * FIXME : Stream -> For Loop
+         */
+        return menuResponseDTOList.stream()
+                .filter(menuResponseDTO ->
+                        menuResponseDTO.getMenuCode().equals(menuRequestDTO.getMenuCode()))
+
+                .collect(Collectors.toList());
+
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    private void setMenuIconUrl(MenuResponseDTO menuResponseDTO) {
+        ObjectGetRequestDTO objectRequestDTO = getObjectGetRequestDTO(menuResponseDTO, (int) TimeUnit.DAYS.toHours(7));
         try {
             menuResponseDTO.setIconUrl(objectStorageService.getObject(objectRequestDTO).getUrl());
         } catch (Exception e) {

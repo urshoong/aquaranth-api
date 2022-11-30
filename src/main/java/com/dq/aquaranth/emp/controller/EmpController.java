@@ -5,16 +5,13 @@ import com.dq.aquaranth.emp.service.EmpService;
 import com.dq.aquaranth.login.domain.LoginUser;
 import com.dq.aquaranth.login.service.UserSessionService;
 import com.dq.aquaranth.menu.annotation.MenuCode;
-import com.dq.aquaranth.menu.constant.MenuCodes;
+import com.dq.aquaranth.menu.constant.Menu;
 import com.dq.aquaranth.objectstorage.dto.request.MultipartFileDTO;
 import com.dq.aquaranth.objectstorage.service.ObjectStorageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
-import com.dq.aquaranth.objectstorage.service.ObjectStorageService;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -28,7 +25,7 @@ import java.util.List;
 @Log4j2
 @RequiredArgsConstructor
 @RequestMapping("/api/emp")
-@MenuCode(MenuCodes.ORGA0030)
+@MenuCode(Menu.ORGA0030)
 public class EmpController {
     private final EmpService empService;
     private final UserSessionService userSessionService;

@@ -1,7 +1,7 @@
 package com.dq.aquaranth.userrole.controller;
 
 import com.dq.aquaranth.menu.annotation.MenuCode;
-import com.dq.aquaranth.menu.constant.MenuCodes;
+import com.dq.aquaranth.menu.constant.Menu;
 import com.dq.aquaranth.userrole.dto.paging.PageRequestDTO;
 import com.dq.aquaranth.userrole.dto.paging.PageResponseDTO;
 import com.dq.aquaranth.userrole.dto.request.UserRoleReqInsertOrgaRoleDTO;
@@ -21,7 +21,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Log4j2
 @RequestMapping("/api/userrole")
-@MenuCode(MenuCodes.ROLE0010)
+@MenuCode(Menu.ROLE0010)
 public class UserRoleController {
 
     private final UserRoleService userRoleService;

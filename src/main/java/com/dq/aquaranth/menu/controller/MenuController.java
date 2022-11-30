@@ -34,4 +34,9 @@ public class MenuController {
     public List<MenuResponseDTO> findAllBy(MenuRequestDTO menuRequestDTO, HttpServletRequest httpServletRequest) {
         return menuService.findAllBy(menuRequestDTO, httpServletRequest.getUserPrincipal().getName());
     }
+
+    @GetMapping("/cache/list")
+    public List<MenuResponseDTO> findAllInCache(MenuRequestDTO menuRequestDTO, HttpServletRequest httpServletRequest) {
+        return menuService.findAllInCache(menuRequestDTO, httpServletRequest.getUserPrincipal().getName());
+    }
 }

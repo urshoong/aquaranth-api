@@ -7,6 +7,8 @@ import com.dq.aquaranth.objectstorage.repository.MinioAdaptor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
+
 @Service
 @RequiredArgsConstructor
 public class MinioObjectStorageService implements ObjectStorageService {
@@ -21,6 +23,15 @@ public class MinioObjectStorageService implements ObjectStorageService {
 
     @Override
     public ObjectResponseDTO getObject(ObjectGetRequestDTO objectGetRequestDTO) throws Exception {
+        ObjectResponseDTO.builder()
+                .url(minioAdaptor.getPresignedObjectUrl(objectGetRequestDTO.getFilename()))
+                .build();
+
+        if (Objects.nonNull(objectGetRequestDTO.getTime())){
+            return ObjectResponseDTO.builder()
+                    .url(minioAdaptor.getPresignedObjectUrl(objectGetRequestDTO.getFilename(), objectGetRequestDTO.getTime()))
+                    .build();
+        }
         return ObjectResponseDTO.builder()
                 .url(minioAdaptor.getPresignedObjectUrl(objectGetRequestDTO.getFilename()))
                 .build();

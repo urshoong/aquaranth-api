@@ -1,10 +1,9 @@
 package com.dq.aquaranth.menu.interceptor;
 
-import com.dq.aquaranth.login.service.RedisService;
 import com.dq.aquaranth.login.service.UserSessionService;
 import com.dq.aquaranth.menu.annotation.MenuCode;
 import com.dq.aquaranth.menu.constant.ErrorCodes;
-import com.dq.aquaranth.menu.constant.MenuCodes;
+import com.dq.aquaranth.menu.constant.Menu;
 import com.dq.aquaranth.menu.exception.MenuException;
 import com.dq.aquaranth.rolegroup.domain.RoleGroup;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -12,7 +11,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -40,7 +38,7 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
 
         String menuCode = handlerMethod.getBean().getClass().getDeclaredAnnotation(MenuCode.class).value().getCode();
 
-        if (menuCode.equals(MenuCodes.ROOT.getCode())){
+        if (menuCode.equals(Menu.ROOT.getCode())){
             return true;
         }
 

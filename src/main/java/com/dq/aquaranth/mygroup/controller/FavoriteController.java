@@ -1,7 +1,6 @@
 package com.dq.aquaranth.mygroup.controller;
 
 import com.dq.aquaranth.menu.annotation.MenuCode;
-import com.dq.aquaranth.menu.constant.MenuCodes;
 import com.dq.aquaranth.mygroup.dto.favorite.FavoriteEmpListDTO;
 import com.dq.aquaranth.mygroup.dto.favorite.FavoriteInsertDTO;
 import com.dq.aquaranth.mygroup.service.favorite.FavoriteService;

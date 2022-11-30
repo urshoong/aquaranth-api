@@ -9,6 +9,8 @@ public interface MenuService {
 
     MenuResponseDTO findBy(MenuRequestDTO menuRequestDTO, String username);
     List<MenuResponseDTO> findAllBy(MenuRequestDTO menuRequestDTO, String username);
+
+    List<MenuResponseDTO> findAllInCache(MenuRequestDTO menuRequestDTO, String username);
 }
 
 
