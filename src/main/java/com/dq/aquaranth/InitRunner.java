@@ -1,7 +1,6 @@
 package com.dq.aquaranth;
 
 import com.dq.aquaranth.login.service.RedisService;
-import com.dq.aquaranth.login.service.UserSessionService;
 import com.dq.aquaranth.menu.dto.request.MenuRequestDTO;
 import com.dq.aquaranth.menu.dto.response.MenuResponseDTO;
 import com.dq.aquaranth.menu.service.AuthorizationMenuService;
@@ -30,13 +29,12 @@ public class InitRunner implements ApplicationRunner {
     private final AuthorizationMenuService authorizationMenuService;
     private final RoleGroupService roleGroupService;
 
-    private final UserSessionService userSessionService;
 
     /**
      * springboot load 시 실행됩니다.
      */
     @Override
-    public void run(ApplicationArguments args) throws Exception {
+    public void run(ApplicationArguments args) {
         initRedis();
     }
 
@@ -44,7 +42,7 @@ public class InitRunner implements ApplicationRunner {
      * redis 에 기존에 저장된 데이터를 전부 삭제합니다.
      * 메뉴코드에 매핑되어있는 권한그룹들을 저장합니다.
      */
-    public void initRedis() throws JsonProcessingException {
+    public void initRedis() {
         log.info("Redis init");
         redisService.deleteObject(redisService.keys("*")); // 기존 데이터 삭제
 
@@ -55,12 +53,6 @@ public class InitRunner implements ApplicationRunner {
         }
 
         // 메뉴코드에 매핑된 권한그룹들을 전부 가져와서, menuCode, roleGroupNo 형태로 저장합니다.
-//        for (String menuCode : menuCodes) {
-//            List<Long> value = new ArrayList<>();
-//            roleGroupService.findByMenuCode(menuCode).forEach(roleGroup -> value.add(roleGroup.getRoleGroupNo()));
-//            redisService.setCacheObject(menuCode, value);
-//        }
-
         menuCodes.forEach(menuCode -> {
             List<RoleGroup> roleGroups = new ArrayList<>(roleGroupService.findByMenuCode(menuCode));
             try {

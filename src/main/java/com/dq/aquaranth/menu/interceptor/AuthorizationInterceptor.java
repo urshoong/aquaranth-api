@@ -46,8 +46,7 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
 
         String username = request.getUserPrincipal().getName();
 
-        List<RoleGroup> loginUserInfo = userSessionService.findUserInfoInRedis(username)
-                .getRoleGroups();
+        List<RoleGroup> loginUserInfo = userSessionService.findUserInfoInRedis(username).getRoleGroups();
 
 
         List<RoleGroup> menuRoles = objectMapper.readValue(redisTemplate.opsForValue().get(menuCode).toString(), new TypeReference<>(){});
