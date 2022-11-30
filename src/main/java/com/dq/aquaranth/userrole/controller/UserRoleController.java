@@ -28,7 +28,6 @@ public class UserRoleController {
 
     /** GroupList **/
 
-    // TODO : 차후에 안쓰면 삭제처리
     @Operation(summary = "모든 회사 정보 조회", description = "사용 가능한 모든 회사 정보를 조회합니다.")
     @GetMapping("/companyListAll")
     public List<UserRoleCompanyDTO> findCompanyAll() {
