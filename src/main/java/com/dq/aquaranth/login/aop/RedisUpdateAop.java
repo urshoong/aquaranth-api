@@ -2,7 +2,7 @@ package com.dq.aquaranth.login.aop;
 
 import com.dq.aquaranth.login.annotation.RedisUpdate;
 import com.dq.aquaranth.login.domain.LoginUser;
-import com.dq.aquaranth.login.dto.LoginUserInfoDTO;
+import com.dq.aquaranth.login.dto.LoginUserInfo;
 import com.dq.aquaranth.login.service.UserSessionService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -39,14 +39,14 @@ public class RedisUpdateAop {
     public void after(RedisUpdate redisUpdate) {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
         String username = request.getUserPrincipal().getName();
-        LoginUserInfoDTO loginUserInfoDTO = userSessionService.findUserInfoInRedis(username);
+        LoginUserInfo loginUserInfo = userSessionService.findUserInfoInRedis(username);
 
-        LoginUserInfoDTO savedLoginUserInfoDTO = userSessionService.loadUserInfoByLoginUser(LoginUser.builder()
-                .loginDeptNo(loginUserInfoDTO.getDept().getDeptNo())
-                .loginCompanyNo(loginUserInfoDTO.getCompany().getCompanyNo())
+        LoginUserInfo savedLoginUserInfo = userSessionService.loadUserInfoByLoginUser(LoginUser.builder()
+                .loginDeptNo(loginUserInfo.getDept().getDeptNo())
+                .loginCompanyNo(loginUserInfo.getCompany().getCompanyNo())
                 .username(username)
                 .build());
 
-        log.info("Redis 에 {}님의 정보가 업데이트 되었습니다. => {}", username, savedLoginUserInfoDTO);
+        log.info("Redis 에 {}님의 정보가 업데이트 되었습니다. => {}", username, savedLoginUserInfo);
     }
 }

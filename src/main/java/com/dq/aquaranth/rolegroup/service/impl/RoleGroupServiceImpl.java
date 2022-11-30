@@ -6,9 +6,10 @@ import com.dq.aquaranth.rolegroup.dto.PageRequestDTO;
 import com.dq.aquaranth.rolegroup.dto.PageResponseDTO;
 import com.dq.aquaranth.rolegroup.dto.RoleGroupResponseDTO;
 import com.dq.aquaranth.rolegroup.dto.RoleGroupUpdateDTO;
+import com.dq.aquaranth.rolegroup.mapper.MenuRoleMapper;
 import com.dq.aquaranth.rolegroup.mapper.RoleGroupMapper;
 import com.dq.aquaranth.rolegroup.service.RoleGroupService;
-import com.dq.aquaranth.userrole.dto.response.UserRoleRoleGroupBasedListDTO;
+import com.dq.aquaranth.userrole.mapper.UserRoleMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,8 @@ import java.util.Objects;
 @Log4j2
 public class RoleGroupServiceImpl implements RoleGroupService {
     private final RoleGroupMapper roleGroupMapper;
+    private final UserRoleMapper userRoleMapper;
+    private final MenuRoleMapper menuRoleMapper;
     @Override
     public List<RoleGroupResponseDTO> findAll() {
         log.info("권한그룹을 조회합니다");
@@ -60,6 +63,7 @@ public class RoleGroupServiceImpl implements RoleGroupService {
 //    TODO : 트랜잭션 처리
     @Transactional
     @Override
+    @RedisUpdate
     public void deleteById(Long roleGroupNo) {
         log.info("{} 번째 권한그룹을 삭제합니다.", roleGroupNo);
 
@@ -69,6 +73,10 @@ public class RoleGroupServiceImpl implements RoleGroupService {
             log.error("삭제하려는 권한그룹은 존재하지 않습니다");
             throw new RuntimeException("삭제하려는 권한그룹은 존재하지 않습니다");
         }
+
+        // 연관 테이블 선행 삭제
+        userRoleMapper.deleteAllByRoleGroupNo(roleGroupNo);
+        menuRoleMapper.deleteAllByRoleGroupNo(roleGroupNo);
 
         roleGroupMapper.deleteById(roleGroupNo);
         log.info("권한그룹을 삭제가 완료되었습니다.");

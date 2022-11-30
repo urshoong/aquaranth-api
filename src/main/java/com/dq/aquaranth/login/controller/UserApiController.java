@@ -1,6 +1,6 @@
 package com.dq.aquaranth.login.controller;
 
-import com.dq.aquaranth.login.dto.LoginUserInfoDTO;
+import com.dq.aquaranth.login.dto.LoginUserInfo;
 import com.dq.aquaranth.login.service.UserSessionService;
 import com.dq.aquaranth.menu.annotation.MenuCode;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +30,7 @@ public class UserApiController {
     }
 
     @GetMapping("/login/userinfo")
-    public LoginUserInfoDTO getLoginUserInfo(Authentication authentication) {
+    public LoginUserInfo getLoginUserInfo(Authentication authentication) {
         return userSessionService.findUserInfoInRedis(authentication.getName());
     }
 }

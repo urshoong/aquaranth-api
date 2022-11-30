@@ -19,7 +19,8 @@ public interface MenuRoleMapper {
 
     void insert(MenuRole menuRole);
 
-    void deleteAllByRoleGroupNo(Long roleGroupNo);
+    Integer deleteAllByRoleGroupNo(Long roleGroupNo);
 
     void deleteByRoleGroupNoAndModuleCode(@Param("roleGroupNo") Long roleGroupNo, @Param("moduleCode") String moduleCode);
+
 }

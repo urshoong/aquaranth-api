@@ -1,6 +1,6 @@
 package com.dq.aquaranth.login.service;
 
-import com.dq.aquaranth.login.dto.LoginUserInfoDTO;
+import com.dq.aquaranth.login.dto.LoginUserInfo;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +19,7 @@ class UserSessionServiceImplTest {
     @Test
     void findUserInfoInRedis() {
 
-        LoginUserInfoDTO result = userSessionService.findUserInfoInRedis("user");
+        LoginUserInfo result = userSessionService.findUserInfoInRedis("user");
 
         log.info(result);
     }

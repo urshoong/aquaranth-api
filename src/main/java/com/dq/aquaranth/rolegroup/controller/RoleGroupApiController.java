@@ -22,6 +22,7 @@ public class RoleGroupApiController {
 
     @GetMapping("")
     public PageResponseDTO<RoleGroupResponseDTO> getRoleGroupList(PageRequestDTO pageRequestDTO) {
+        log.error(pageRequestDTO);
         return roleGroupService.getList(pageRequestDTO);
     }
 

@@ -12,7 +12,7 @@ import com.dq.aquaranth.company.mapper.CompanyMapper;
 import com.dq.aquaranth.dept.mapper.DeptMapper;
 import com.dq.aquaranth.emp.mapper.EmpMapper;
 import com.dq.aquaranth.login.domain.LoginUser;
-import com.dq.aquaranth.login.dto.LoginUserInfoDTO;
+import com.dq.aquaranth.login.dto.LoginUserInfo;
 import com.dq.aquaranth.menu.constant.ErrorCodes;
 import com.dq.aquaranth.menu.exception.MenuException;
 import com.dq.aquaranth.rolegroup.mapper.RoleGroupMapper;
@@ -43,7 +43,7 @@ public class UserSessionServiceImpl implements UserSessionService {
     private final DeptMapper deptMapper;
 
     @Override
-    public LoginUserInfoDTO findUserInfoInRedis(String username) {
+    public LoginUserInfo findUserInfoInRedis(String username) {
         String value = (String) redisTemplate.opsForValue().get(username);
         if (Objects.isNull(value)) {
             throw new MenuException(ErrorCodes.REDIS_USER_NOT_FOUND);
@@ -53,10 +53,10 @@ public class UserSessionServiceImpl implements UserSessionService {
                 .registerModule(new JavaTimeModule())
                 .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 
-        LoginUserInfoDTO userInfo;
+        LoginUserInfo userInfo;
 
         try {
-            userInfo = mapper.readValue(value, LoginUserInfoDTO.class);
+            userInfo = mapper.readValue(value, LoginUserInfo.class);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
@@ -93,8 +93,8 @@ public class UserSessionServiceImpl implements UserSessionService {
      * @return redis에 저장된 dto 객체입니다.
      */
     @Override
-    public LoginUserInfoDTO loadUserInfoByLoginUser(LoginUser loginUser) {
-        LoginUserInfoDTO redisDTO = LoginUserInfoDTO.builder()
+    public LoginUserInfo loadUserInfoByLoginUser(LoginUser loginUser) {
+        LoginUserInfo redisDTO = LoginUserInfo.builder()
                 .emp(empMapper.findByUsername(loginUser.getUsername()))
                 .company(companyMapper.findByCompanyNo(loginUser.getLoginCompanyNo()))
                 .dept(deptMapper.select(loginUser.getLoginDeptNo()))
