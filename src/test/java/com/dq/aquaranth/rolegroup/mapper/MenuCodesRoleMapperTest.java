@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
 @Log4j2
-class MenuRoleMapperTest {
+class MenuCodesRoleMapperTest {
     @Autowired(required = false)
     private MenuRoleMapper menuRoleMapper;
 

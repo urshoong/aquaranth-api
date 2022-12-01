@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class MenuRequestDTO {
+public class MenuQueryDTO {
     private Long menuNo;
     private String menuCode;
     private String keyword;

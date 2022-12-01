@@ -2,7 +2,7 @@ package com.dq.aquaranth.menu.util;
 
 import com.dq.aquaranth.menu.dto.response.MenuResponseDTO;
 
-import static com.dq.aquaranth.menu.constant.Menu.REDIS_KEYS;
+import static com.dq.aquaranth.menu.constant.RedisKeys.MENU_KEYS;
 
 
 public class RedisUtil {
@@ -10,6 +10,6 @@ public class RedisUtil {
     private RedisUtil(){}
 
     public static String getMenuKey(MenuResponseDTO menuResponseDTO){
-        return REDIS_KEYS.getCode() + menuResponseDTO.getMenuCode();
+        return MENU_KEYS.getKeys() + menuResponseDTO.getMenuCode();
     }
 }

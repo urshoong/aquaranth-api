@@ -1,8 +1,5 @@
 package com.dq.aquaranth.menu.service;
 
-import com.dq.aquaranth.menu.dto.request.MenuRequestDTO;
-import com.dq.aquaranth.menu.dto.request.MenuUpdateDTO;
-import com.dq.aquaranth.menu.dto.response.MenuResponseDTO;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -11,15 +8,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Objects;
-import java.util.Optional;
-
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 
 @Log4j2
 @SpringBootTest
-class DefaultMenuServiceTest {
+class DefaultMenuServiceTestCodes {
 
     @Autowired
     MenuService menuService;

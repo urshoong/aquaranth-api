@@ -109,4 +109,7 @@
         <include refid="find_all"/>
         order by menu_path
     </select>
+    <select id="initializeAppImport" resultType="com.dq.aquaranth.menu.dto.response.MenuImportResponseDTO">
+        SELECT menu_path, menu_no FROM tbl_menu;
+    </select>
 </mapper>

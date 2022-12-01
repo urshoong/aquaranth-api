@@ -3,7 +3,7 @@ package com.dq.aquaranth.dept.controller;
 import com.dq.aquaranth.dept.dto.*;
 import com.dq.aquaranth.dept.service.DeptService;
 import com.dq.aquaranth.menu.annotation.MenuCode;
-import com.dq.aquaranth.menu.constant.Menu;
+import com.dq.aquaranth.menu.constant.MenuCodes;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.web.bind.annotation.*;
@@ -15,7 +15,7 @@ import java.util.Map;
 @Log4j2
 @RequestMapping("/api/dept2")
 @RequiredArgsConstructor
-@MenuCode(Menu.ORGA0020)
+@MenuCode(MenuCodes.ORGA0020)
 public class DeptController {
 
     private final DeptService deptService;

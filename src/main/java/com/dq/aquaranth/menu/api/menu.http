@@ -56,3 +56,16 @@ GET /api/menu/cache/list
 Host: localhost:8080
 Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTY3MDc4OTY0MX0.yJAVqFi1zoFVIkWzhcORDBCWFo4PXXCbTYrH-9-RlDc
 Content-Type: application/json
+
+
+### 트리구조 메뉴 요청
+GET http://localhost:8080/api/menu/auth/tree/list?gnb=false
+Host: localhost:8080
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTY3MDc4OTY0MX0.yJAVqFi1zoFVIkWzhcORDBCWFo4PXXCbTYrH-9-RlDc
+Content-Type: application/json
+
+### 트리구조 메뉴 요청
+GET http://localhost:8080/api/menu/auth/tree/list?menuNo=2
+Host: localhost:8080
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTY3MDc4OTY0MX0.yJAVqFi1zoFVIkWzhcORDBCWFo4PXXCbTYrH-9-RlDc
+Content-Type: application/json

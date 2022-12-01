@@ -14,7 +14,7 @@ import java.util.List;
 
 @SpringBootTest
 @Log4j2
-class MenuRoleServiceImplTest {
+class MenuCodesRoleServiceImplTest {
     @Autowired
     private MenuRoleService menuRoleService;
 

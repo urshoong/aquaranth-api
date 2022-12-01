@@ -2,7 +2,8 @@ package com.dq.aquaranth.menu.controller;
 
 
 import com.dq.aquaranth.menu.annotation.MenuCode;
-import com.dq.aquaranth.menu.dto.request.MenuRequestDTO;
+import com.dq.aquaranth.menu.dto.request.MenuQueryDTO;
+import com.dq.aquaranth.menu.dto.response.MenuImportResponseDTO;
 import com.dq.aquaranth.menu.dto.response.MenuResponseDTO;
 import com.dq.aquaranth.menu.service.MenuService;
 import lombok.RequiredArgsConstructor;
@@ -26,17 +27,22 @@ public class MenuController {
     private final MenuService menuService;
 
     @GetMapping
-    public MenuResponseDTO findBy(MenuRequestDTO menuRequestDTO, HttpServletRequest httpServletRequest) {
-        return menuService.findBy(menuRequestDTO,httpServletRequest.getUserPrincipal().getName());
+    public MenuResponseDTO findBy(MenuQueryDTO menuQueryDTO, HttpServletRequest httpServletRequest) {
+        return menuService.findBy(menuQueryDTO,httpServletRequest.getUserPrincipal().getName());
     }
 
     @GetMapping("/list")
-    public List<MenuResponseDTO> findAllBy(MenuRequestDTO menuRequestDTO, HttpServletRequest httpServletRequest) {
-        return menuService.findAllBy(menuRequestDTO, httpServletRequest.getUserPrincipal().getName());
+    public List<MenuResponseDTO> findAllBy(MenuQueryDTO menuQueryDTO, HttpServletRequest httpServletRequest) {
+        return menuService.findAllBy(menuQueryDTO, httpServletRequest.getUserPrincipal().getName());
     }
 
     @GetMapping("/cache/list")
-    public List<MenuResponseDTO> findAllInCache(MenuRequestDTO menuRequestDTO, HttpServletRequest httpServletRequest) {
-        return menuService.findAllInCache(menuRequestDTO, httpServletRequest.getUserPrincipal().getName());
+    public List<MenuResponseDTO> findAllInCache() {
+        return menuService.findAllInCache();
+    }
+
+    @GetMapping("/init")
+    public List<MenuImportResponseDTO> initializeAppImport() {
+        return menuService.initializeAppImport();
     }
 }

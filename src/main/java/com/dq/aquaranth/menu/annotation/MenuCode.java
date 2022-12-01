@@ -1,12 +1,12 @@
 package com.dq.aquaranth.menu.annotation;
 
 
-import com.dq.aquaranth.menu.constant.Menu;
+import com.dq.aquaranth.menu.constant.MenuCodes;
 
 import java.lang.annotation.*;
 
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface MenuCode {
-    Menu value() default Menu.ROOT;
+    MenuCodes value() default MenuCodes.ROOT;
 }

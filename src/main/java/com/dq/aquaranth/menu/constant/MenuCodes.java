@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum Menu {
+public enum MenuCodes {
     SYS("SYS"),
     ORGA("ORGA"),
     ORGA0010("ORGA0010"),
@@ -20,8 +20,7 @@ public enum Menu {
     BOARD("BOARD"),
     DRIVE("DRIVE"),
     CALENDER("CALENDER"),
-    ROOT("ROOT"),
-    REDIS_KEYS("M_");
+    ROOT("ROOT");
 
     private final String code;
 }
