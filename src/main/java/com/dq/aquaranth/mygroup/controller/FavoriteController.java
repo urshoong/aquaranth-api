@@ -30,7 +30,7 @@ public class FavoriteController {
         // 로그인한 사원의 아이디
         String username = authentication.getName();
         favoriteInsertDTO.setUsername(username);
-        return favoriteService.insert(favoriteInsertDTO);
+        return favoriteService.insert(favoriteInsertDTO, username);
     }
 
     @GetMapping("/list/{mygroupNo}")
