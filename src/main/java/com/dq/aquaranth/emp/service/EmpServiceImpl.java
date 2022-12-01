@@ -28,7 +28,6 @@ public class EmpServiceImpl implements EmpService {
     private final EmpMappingMapper empMappingMapper;
     private final PasswordEncoder passwordEncoder;
     private final ObjectStorageService objectStorageService;
-
     private final UserSessionService userSessionService;
 
     @Override
@@ -36,14 +35,16 @@ public class EmpServiceImpl implements EmpService {
         List<EmpDTO> empDTOList = empMapper.findAll();
 
         empDTOList.forEach(empDTO -> {
-            ObjectGetRequestDTO objectRequestDTO = ObjectGetRequestDTO.builder()
-                    .filename(empDTO.getUuid() + empDTO.getFilename())
-                    .build();
+            if(empDTO.getUuid() != null && empDTO.getFilename() != null){
+                ObjectGetRequestDTO objectRequestDTO = ObjectGetRequestDTO.builder()
+                        .filename(empDTO.getUuid() + empDTO.getFilename())
+                        .build();
 
-            try {
-                empDTO.setProfileUrl(objectStorageService.getObject(objectRequestDTO).getUrl());
-            } catch (Exception e) {
-                throw new RuntimeException(e);
+                try {
+                    empDTO.setProfileUrl(objectStorageService.getObject(objectRequestDTO).getUrl());
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
 
@@ -54,15 +55,18 @@ public class EmpServiceImpl implements EmpService {
     public EmpDTO findById(Long empNo) {
         EmpDTO empDTO = empMapper.findById(empNo);
 
-        ObjectGetRequestDTO objectRequestDTO = ObjectGetRequestDTO.builder()
-                .filename(empDTO.getUuid() + empDTO.getFilename())
-                .build();
+        if(empDTO.getUuid() != null && empDTO.getFilename() != null) {
+            ObjectGetRequestDTO objectRequestDTO = ObjectGetRequestDTO.builder()
+                    .filename(empDTO.getUuid() + empDTO.getFilename())
+                    .build();
 
-        try {
-            empDTO.setProfileUrl(objectStorageService.getObject(objectRequestDTO).getUrl());
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+            try {
+                empDTO.setProfileUrl(objectStorageService.getObject(objectRequestDTO).getUrl());
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
         }
+
         return empDTO;
     }
 
