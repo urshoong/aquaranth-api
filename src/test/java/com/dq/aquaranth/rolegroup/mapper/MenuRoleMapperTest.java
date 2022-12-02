@@ -1,6 +1,7 @@
 package com.dq.aquaranth.rolegroup.mapper;
 
 import com.dq.aquaranth.rolegroup.domain.MenuRole;
+import com.dq.aquaranth.rolegroup.dto.MenuRoleLnbDTO;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -77,5 +78,21 @@ class MenuRoleMapperTest {
 
         // then
         assertNotNull(menuRoleMapper.findAllByRoleGroupNo(roleGroupNo));
+    }
+
+    @Test
+    @DisplayName("권한그룹과, 상위모듈에 대한 메뉴권한을 조회합니다.")
+    void findByRoleGroupNoAndModuleCode() {
+        // given
+        Long roleGroupNo = 2L;
+        String moduleCode = "SYS";
+
+        // when
+        List<MenuRoleLnbDTO> list = menuRoleMapper.findByRoleGroupNoAndModuleCode(roleGroupNo, moduleCode);
+
+        // then
+        for (MenuRoleLnbDTO param : list) {
+            log.info(param);
+        }
     }
 }

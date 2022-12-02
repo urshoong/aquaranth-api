@@ -2,6 +2,7 @@ package com.dq.aquaranth.commons.utils;
 
 import com.dq.aquaranth.menu.constant.ErrorCodes;
 import com.dq.aquaranth.menu.dto.response.ErrorResponseDTO;
+import com.dq.aquaranth.menu.service.util.ObjectStorageUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
@@ -22,3 +23,4 @@ public class ResponseUtil {
         new ObjectMapper().registerModule(new JavaTimeModule()).writeValue(response.getWriter(), ErrorResponseDTO.toResponseEntity(errorCodes));
     }
 }
+

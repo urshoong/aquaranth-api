@@ -32,5 +32,7 @@ public interface UserRoleMapper {
     Integer findRoleGroupTotalByUser(PageRequestDTO pageRequestDTO);
 
     Integer removeUserRole(UserRoleReqRemoveUserRoleDTO2 userRoleReqRemoveOrgaRoleDTO2);
+
+    Integer deleteAllByRoleGroupNo(Long roleGroupNo);
 }
 

@@ -5,7 +5,12 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Target({ElementType.METHOD}) // 1
-@Retention(RetentionPolicy.RUNTIME) // 2
+/**
+ * 레디스의 상태를 업데이트 시켜주는 커스텀 어노테이션 입니다.
+ *
+ * @author jonghyun
+ */
+@Target({ElementType.METHOD})
+@Retention(RetentionPolicy.RUNTIME)
 public @interface RedisUpdate {
 }

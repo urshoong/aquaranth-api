@@ -1,6 +1,5 @@
 package com.dq.aquaranth.login.controller;
 
-import com.dq.aquaranth.company.dto.CompanyInformationDTO;
 import com.dq.aquaranth.login.dto.LoginUserInfo;
 import com.dq.aquaranth.login.service.UserSessionService;
 import com.dq.aquaranth.menu.annotation.MenuCode;
@@ -28,11 +27,6 @@ public class UserApiController {
     public Map<String, String> refreshTokenCheck(HttpServletRequest request){
         String authorizationHeader = request.getHeader(AUTHORIZATION);
         return userSessionService.checkRefresh(authorizationHeader);
-    }
-
-    @GetMapping("/login/company")
-    public CompanyInformationDTO getLoginUserCompany(Authentication authentication) {
-        return userSessionService.findLoginUserCompany(authentication.getName());
     }
 
     @GetMapping("/login/userinfo")
