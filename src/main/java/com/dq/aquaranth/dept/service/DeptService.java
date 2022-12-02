@@ -1,9 +1,8 @@
 package com.dq.aquaranth.dept.service;
 
-import com.dq.aquaranth.dept.dto.DepartmentDTO;
-import com.dq.aquaranth.dept.dto.DeptDTO;
-import com.dq.aquaranth.dept.dto.DeptTreeDTO;
-import com.dq.aquaranth.dept.dto.GetSubDeptDTO;
+import com.dq.aquaranth.company.mapper.CompanyMapper;
+import com.dq.aquaranth.company.service.CompanyService;
+import com.dq.aquaranth.dept.dto.*;
 import com.dq.aquaranth.dept.mapper.DeptMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -21,6 +20,8 @@ public class DeptService {
 
     private final DeptMapper deptMapper;
 
+    private final CompanyMapper companyMapper;
+
     //조회
     public DeptDTO getOne(Long deptNo) {
         DeptDTO deptDTO2 = deptMapper.select(deptNo);
@@ -33,93 +34,120 @@ public class DeptService {
 
     //등록
     @Transactional
-    public Map<Object, Object> register(DeptDTO deptDTO2) {
+    public int insert(DeptRegisterDTO deptRegisterDTO) {
+        int result = 0, insertDept = 0, insertOrga = 0, insertDeptMapping = 0;
 
-        Long orga = null;
+        /** 1. 부서 추가 */
+        //      upperDeptNo가 0인 경우 최상위 부서다
+        log.info("deptRegisterDTO", deptRegisterDTO);
 
-        if(deptDTO2.getUpperDeptNo() == null || deptDTO2.getUpperDeptNo() == 0L){
-            deptMapper.insertOrga(Long.valueOf(deptDTO2.getCompanyNo()), deptDTO2.getRegUser());
-        }else {
-            deptMapper.insertOrga(Long.valueOf(deptDTO2.getUpperDeptNo()), deptDTO2.getRegUser());
+        log.info("before: ", deptRegisterDTO.getDeptNo());
+
+        // 부서테이블 추가
+        insertDept = deptMapper.insert(deptRegisterDTO);
+        Long lastDeptNo = deptRegisterDTO.getDeptNo();
+
+        log.info("after: ", deptRegisterDTO.getDeptNo());
+
+
+
+        /** 2. 조직 추가 */
+        // 회사면 회사 orgaNo 넣어야되고, 부서면 부서 orgaNo넣어야됨.
+        DeptDTO deptDTO = deptMapper.select(lastDeptNo);
+
+        DeptOrgaRegisterDTO deptOrgaRegisterDTO = DeptOrgaRegisterDTO
+                .builder()
+                .regUser(deptRegisterDTO.getUsername())
+                .build();
+
+        Long tempUpperOrgaNo = 0L;
+
+        if (deptDTO.getUpperDeptNo() == null || deptDTO.getUpperDeptNo() == 0L) {
+            // 상위 부서 번호가 0인 경우 > 최상위 부서
+            // 해당 회사의 조직번호 찾기
+            tempUpperOrgaNo = companyMapper.findByCompanyNo(deptDTO.getCompanyNo()).getOrgaNo();
+        } else {
+            // 상위 부서 번호가 있을 경우 > 하위 부서
+            // 해당 상위부서의 조직번호 찾기
+//            tempUpperOrgaNo = deptMapper.select(deptRegisterDTO.getUpperDeptNo()).getUpperDeptNo();
+            tempUpperOrgaNo = deptMapper.selectDeptOrgaNo(deptRegisterDTO.getUpperDeptNo());
         }
 
-        orga = deptMapper.getLast();
+        deptOrgaRegisterDTO.setUpperOrgaNo(tempUpperOrgaNo);
 
-        log.info("----------------------------------");
-        log.info("orga: " + orga);
-        log.info("----------------------------------");
+        insertOrga = deptMapper.insertOrga(deptOrgaRegisterDTO);
 
-        deptMapper.insert(deptDTO2);
+        Long lastOrgaNo = deptOrgaRegisterDTO.getOrgaNo();
+        log.info("lastOrgaNo: ", lastOrgaNo);
 
-        log.info("================================================");
-        log.info(deptDTO2);
+        /** 3. 부서 매핑 추가 */
+        DeptMappingRegisterDTO deptMappingRegisterDTO = DeptMappingRegisterDTO
+                .builder()
+                .deptNo(lastDeptNo)
+                .orgaNo(lastOrgaNo)
+                .regUser(deptRegisterDTO.getUsername())
+                .build();
+        insertDeptMapping = deptMapper.insertOrgaMapping(deptMappingRegisterDTO);
 
-        Long newDeptNo = deptDTO2.getDeptNo();
-        //1. 직접 부서 추가하고 추가한 데이터의 deptNo를 초기화
+        result = insertDept + insertOrga + insertDeptMapping;
 
-        log.info("newDeptNo " + newDeptNo);
+        log.info("insertDept : " + insertDept);
+        log.info("insertOrga : " + insertOrga);
+        log.info("insertDeptMapping : " + insertDeptMapping);
+        log.info("result : " + result);
 
-        log.info("--------------------------------------------------------1");
+        /*
+        log.info("before: ", deptRegisterDTO.getDeptNo());
+        Long beforeDeptNo = deptRegisterDTO.getDeptNo();
 
-        log.info("orga_dept_mapping");
+        // 부서테이블 추가
+        int insertDept = deptMapper.insert(deptRegisterDTO);
+        Long lastDeptNo = deptRegisterDTO.getDeptNo();
 
-        deptMapper.insertOrgaMapping(newDeptNo, orga, deptDTO2.getRegUser());
+        log.info("after: ", deptRegisterDTO.getDeptNo());
 
-        int company = deptDTO2.getCompanyNo(); // 그룹번호를 가져와서  gno에 초기화
-        Long parent = deptDTO2.getUpperDeptNo(); // 상위부서번호를 가져와서 parent에 초기화
 
-        int ord = deptMapper.getNextOrd(company, parent);
-        //2. gno와 parent 이용해서 나온 ord값 -> ord에 초기화
+        // 조직테이블 추가
+        DeptDTO deptDTO = deptMapper.select(lastDeptNo);
 
-        log.info("ORD " + ord);
 
-        log.info("--------------------------------------------------------2");
+        DeptOrgaRegisterDTO deptOrgaRegisterDTO = DeptOrgaRegisterDTO
+                .builder()
+                .regUser(deptDTO.getRegUser())
+                .build();
 
-        deptMapper.arrangeOrd(company, ord);
-        //3. gno가 같은 부서 중에 위에 나온 ord값보다 크거나 같은 ord 모두 +1씩 추가
+        // 해당 회사의 조직번호 찾기
+        Long companyOrgaNo = companyMapper.findByCompanyNo(deptDTO.getCompanyNo()).getOrgaNo();
 
-        log.info("--------------------------------------------------------3");
+        // 해당 상위부서의 조직번호 찾기
+        Long upperDeptOrgaNo = deptMapper.select(beforeDeptNo).getUpperDeptNo();
 
-        Long deptNo = newDeptNo; // 새로운 deptNo -> deptNo에 초기화
+        if (deptDTO.getUpperDeptNo() == null || deptDTO.getUpperDeptNo() == 0L) {
+            deptOrgaRegisterDTO.setOrgaNo(companyOrgaNo);
+        }
+        else {
+            deptOrgaRegisterDTO.setOrgaNo(upperDeptOrgaNo);
+        }
 
-        deptMapper.fixOrd(deptNo,ord);
-        //4. 직접 추가한 부서에 2번에서 추출한 ord값 업데이트
+        deptMapper.insertOrga(deptOrgaRegisterDTO);
 
-        log.info("--------------------------------------------------------4");
+        Long lastOrgaNo = deptOrgaRegisterDTO.getOrgaNo();
+        log.info("lastOrgaNo: ", lastOrgaNo);
 
-        Long lastDno = deptNo;  // 추가한 부서의 deptNo를 lastDno에 초기화
-        Long parentDeptNo = parent; // 추가한 부서의 상위부서번호를 parentDeptNo에 초기화
+        // 부서매핑테이블 추가
+        DeptMappingRegisterDTO deptMappingRegisterDTO = DeptMappingRegisterDTO
+                .builder()
+                .deptNo(deptDTO.getDeptNo())
+                .orgaNo(lastOrgaNo)
+                .regUser(deptDTO.getRegUser())
+                .build();
+        deptMapper.insertOrgaMapping(deptMappingRegisterDTO);
 
-        deptMapper.updateLastDno(parentDeptNo, lastDno);
-        //5. deptNo가 상위부서번호와 일치하는 곳의 lastDno에 추가한 deptNo번호 업데이트
-
-        log.info("--------------------------------------------------------5");
-        log.info("newDeptNo" + newDeptNo);
-        log.info("newGno" + company);
-        log.info("newParent" + parent);
-        log.info("ord" + ord);
-        log.info("lastDno" + lastDno);
-        log.info("parentDeptNo" + parentDeptNo);
-
-        return Map.of(
-                "newDeptNo", newDeptNo,
-                "newGno", company,
-                "newParent", parent,
-                "ord", ord,
-                "lastDno", lastDno,
-                "parentDeptNo", parentDeptNo
-        );
+        return insertDept;
+        */
+        return result;
     }
 
-//    public Map<Object, Object> register(DeptDTO2 deptDTO2) {
-//        deptMapper2.insert(deptDTO2);
-//
-//        Long newNo = deptDTO2.getDeptNo();
-//
-//        log.info(newNo);
-//
-//        return Map.of("result", newNo);
-//    }
 
     public DeptDTO modify(DeptDTO deptDTO2) {
         int result = deptMapper.update(deptDTO2);

@@ -7,12 +7,14 @@ import lombok.NoArgsConstructor;
 
 @Data
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
-public class DeptTreeDTO {
+@AllArgsConstructor
+public class DeptMappingRegisterDTO {
 
-    private Long deptNo, orgaNo, upperDeptNo, companyNo, lastDno;
-    private int ord, depth;
-    private String deptName;
+    /**
+     * 부서번호, 조직번호, 등록자
+     */
 
+    private Long deptNo, orgaNo;
+    private String regUser;
 }
