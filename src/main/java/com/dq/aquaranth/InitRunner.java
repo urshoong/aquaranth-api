@@ -44,16 +44,6 @@ public class InitRunner implements ApplicationRunner {
     public void run(ApplicationArguments args) {
         initRedis();
         initMenuList();
-        userSessionService.loadUserInfoByLoginUser(LoginUser.builder()
-                        .username("admin")
-                        .loginCompanyNo(3L)
-                        .loginDeptNo(3L)
-                .build());
-        userSessionService.loadUserInfoByLoginUser(LoginUser.builder()
-                .username("emp02")
-                .loginCompanyNo(4L)
-                .loginDeptNo(9L)
-                .build());
     }
 
     /**

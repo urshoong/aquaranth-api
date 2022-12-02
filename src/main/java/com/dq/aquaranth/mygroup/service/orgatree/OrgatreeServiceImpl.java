@@ -23,7 +23,7 @@ public class OrgatreeServiceImpl implements OrgatreeService {
      * 조직도
      */
     @Override
-    public List<OrgaTreeDTO> findAllOrga (Long upperDeptNo, Long depth, Long companyNo) {
+    public List<OrgaTreeDTO> findAllOrga(Long upperDeptNo, Long depth, Long companyNo) {
         log.info("조직도 트리 출력");
         return orgatreeMapper.findAllOrga(upperDeptNo, depth, companyNo);
     }

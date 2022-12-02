@@ -1,6 +1,6 @@
 
 
-package com.dq.aquaranth.dept;
+package com.dq.aquaranth.dept.mapper;
 
 
 import com.dq.aquaranth.dept.dto.DeptDTO;

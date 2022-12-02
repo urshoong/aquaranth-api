@@ -51,7 +51,7 @@ public class CompanyController {
     /**
      * 회사 기본정보 수정
      */
-    @PutMapping("/modify/{caompanyNo}")
+    @PutMapping("/modify/{companyNo}")
     public Long modifyCompany(@RequestBody CompanyUpdateDTO companyUpdateDTO, Authentication authentication) {
         String username = authentication.getName();
         return companyService.update(companyUpdateDTO, username);

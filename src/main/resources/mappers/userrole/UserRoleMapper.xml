@@ -100,9 +100,9 @@
         insert into tbl_orga_role (role_group_no, orga_no, reg_user)
         <if test="orgaNoList != null and orgaNoList.size != 0">
         select #{roleGroupNo}, t.orga_no, #{username}
-          from tbl_emp te
-          left join tbl_emp_mapping tem on te.emp_no = tem.emp_no
-          left join tbl_orga t on tem.orga_no = t.orga_no
+            from tbl_orga t
+            left join tbl_emp_mapping tem on t.orga_no = tem.orga_no
+            left join tbl_emp te on tem.emp_no = te.emp_no
          where t.orga_no not in (select tog.orga_no
                                    from tbl_orga_role tor
                                    left join tbl_orga tog on tor.orga_no = tog.orga_no
