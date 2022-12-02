@@ -11,18 +11,23 @@ import com.dq.aquaranth.menu.exception.MenuException;
 import com.dq.aquaranth.menu.mapper.MenuMapper;
 import com.dq.aquaranth.objectstorage.dto.request.ObjectGetRequestDTO;
 import com.dq.aquaranth.objectstorage.service.ObjectStorageService;
+import com.dq.aquaranth.rolegroup.domain.RoleGroup;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 import static com.dq.aquaranth.menu.constant.RedisKeys.MENU_KEYS;
+import static com.dq.aquaranth.menu.constant.RedisKeys.ROLES_KEYS;
 import static com.dq.aquaranth.menu.util.ObjectStorageUtil.getObjectGetRequestDTO;
 
 @Log4j2
@@ -93,6 +98,21 @@ public class DefaultMenuService implements MenuService {
         return menuMapper.initializeAppImport();
     }
 
+    @Override
+    public List<MenuResponseDTO> findInRedis(MenuQueryDTO menuQueryDTO, HttpServletRequest httpServletRequest) {
+        String username = httpServletRequest.getUserPrincipal().getName();
+        LoginUserInfo loginUserInfo;
+        try {
+            loginUserInfo = objectMapper.readValue(redisService.getCacheObject(username).toString(),LoginUserInfo.class);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+        List<Long> roleGroupNo = loginUserInfo
+                .getRoleGroups()
+                .stream().map(RoleGroup::getRoleGroupNo)
+                .collect(Collectors.toList());
+        return menuMapper.findInRedis(menuQueryDTO, roleGroupNo);
+    }
 
 
     private void setMenuIconUrl(MenuResponseDTO menuResponseDTO) {

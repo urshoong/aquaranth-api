@@ -34,5 +34,6 @@ public interface AuthorizationMenuMapper {
     List<MenuTreeResponseDTO> findUnderMenuByTwo(MenuTreeQueryDTO menuTreeQueryDTO);
 
     Optional<MenuDetailResponseDTO> findMenuDetailsBy(MenuQueryDTO menuQueryDTO);
+
     Integer delete(MenuQueryDTO menuQueryDTO);
 }

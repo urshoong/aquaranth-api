@@ -17,5 +17,6 @@ public interface MenuMapper {
     List<MenuResponseDTO> findAllBy(@Param("menu") MenuQueryDTO menuQueryDTO, @Param("user") UserDTO userDTO);
 
     List<MenuImportResponseDTO> initializeAppImport();
+    List<MenuResponseDTO> findInRedis(@Param("menu") MenuQueryDTO menuQueryDTO, @Param("rolegroup") List<Long> roleGroupNo);
 
 }

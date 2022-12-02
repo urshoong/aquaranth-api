@@ -45,4 +45,9 @@ public class MenuController {
     public List<MenuImportResponseDTO> initializeAppImport() {
         return menuService.initializeAppImport();
     }
+
+    @GetMapping("/findinredis")
+    public List<MenuResponseDTO> findInRedis(MenuQueryDTO menuQueryDTO, HttpServletRequest httpServletRequest) {
+        return menuService.findInRedis(menuQueryDTO, httpServletRequest);
+    }
 }
