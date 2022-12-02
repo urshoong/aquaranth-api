@@ -116,15 +116,15 @@
     </insert>
 
     <delete id="removeOrgaRole">
+        <if test="removeOrgaRoleList != null and removeOrgaRoleList.size != 0">
         delete
         from tbl_orga_role
-        <if test="removeOrgaRoleList != null and removeOrgaRoleList.size != 0">
         where orga_no in
             <foreach collection="removeOrgaRoleList" item="item" index="index" separator="," open="(" close=")">
                 #{item}
             </foreach>
-        </if>
         and role_group_no = #{roleGroupNo}
+        </if>
     </delete>
 
     <select id="findUserListByOrgaNo" resultType="com.dq.aquaranth.userrole.dto.response.UserRoleUserListBasedDTO">
@@ -159,7 +159,7 @@
                         te.emp_name like concat('%', #{keyword1}, '%')
                       )
             ) emps
-         where emps.roles > 0
+         # where emps.roles > 0
         limit #{skip}, #{size}
     </select>
 
