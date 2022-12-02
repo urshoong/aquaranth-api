@@ -84,7 +84,8 @@ public class UserRoleServiceImpl implements UserRoleService {
     }
 
     @Override
-    public UserRoleResponseDTO removeOrgaRole(List<UserRoleReqRemoveUserRoleDTO> removeData) {
+    @Transactional(rollbackFor = {RuntimeException.class})
+    public UserRoleResponseDTO removeOrgaRole(List<UserRoleReqRemoveUserRoleDTO> removeData) throws RuntimeException {
         UserRoleResponseDTO result = UserRoleResponseDTO.builder().build();
         AtomicBoolean flag = new AtomicBoolean(false);
         AtomicReference<Long> targetOrgaNo = new AtomicReference<>((long) 0);
@@ -95,8 +96,9 @@ public class UserRoleServiceImpl implements UserRoleService {
         });
 
         if(flag.get()){
-            result.setState("fail");
-            result.setMessage("다른 회사/부서/사원에 부여된 권한은 해제할 수 없습니다.");
+            result.setState("error");
+            result.setTitle("권한그룹 해제 실패");
+            result.setMessage("해당 사용자에 부여된\n권한이 아닙니다.");
         }else{
             List<Long> removeUserRoleList = removeData.stream()
                     .filter(dto -> Objects.equals(dto.getTargetOrgaNo(), dto.getOrgaNo()))
@@ -115,8 +117,11 @@ public class UserRoleServiceImpl implements UserRoleService {
             log.info("beforeSize : " + beforeSize);
             log.info("afterSize : " + afterSize);
 
+            if(afterSize != beforeSize) throw new RuntimeException("권한그룹 삭제에 실패했습니다");
+
             result.setState("success");
-            result.setMessage("선택한 권한그룹이 해제되었습니다.");
+            result.setTitle("권한그룹 해제 완료");
+            result.setMessage("선택한 권한그룹이\n해제되었습니다.");
         }
 
         return result;

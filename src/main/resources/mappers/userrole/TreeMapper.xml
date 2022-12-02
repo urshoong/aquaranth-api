@@ -92,7 +92,10 @@
              ) x
         where x.company_name is not null
         <if test="option == 'emp' and keyword != '' and keyword != null">
-        and emp_name like concat('%', #{keyword}, '%')
+        and (
+            emp_name like concat('%', #{keyword}, '%') OR
+            username like concat('%', #{keyword}, '%')
+        )
         </if>
         <if test="option == 'dept' and keyword != '' and keyword != null">
         and dept_name like concat('%', #{keyword}, '%')

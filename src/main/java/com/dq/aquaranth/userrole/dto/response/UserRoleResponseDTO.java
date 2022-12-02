@@ -10,6 +10,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserRoleResponseDTO {
-    private String state;
-    private String message;
+    private String state, title, message;
 }
