@@ -1,6 +1,5 @@
 package com.dq.aquaranth.rolegroup.controller;
 
-import com.dq.aquaranth.login.domain.CustomUser;
 import com.dq.aquaranth.menu.annotation.MenuCode;
 import com.dq.aquaranth.menu.constant.MenuCodes;
 import com.dq.aquaranth.rolegroup.domain.MenuRole;

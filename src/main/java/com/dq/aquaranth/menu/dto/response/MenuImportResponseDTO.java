@@ -1,4 +1,4 @@
-package com.dq.aquaranth.objectstorage.dto.request;
+package com.dq.aquaranth.menu.dto.response;
 
 
 import lombok.AllArgsConstructor;
@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ObjectGetRequestDTO {
-    private String filename;
-    private Integer time;
+public class MenuImportResponseDTO {
+    private String menuPath;
+    private Long menuNo;
 }

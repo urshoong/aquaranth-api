@@ -1,6 +1,5 @@
 package com.dq.aquaranth.menu.interceptor;
 
-import com.dq.aquaranth.login.service.RedisService;
 import com.dq.aquaranth.login.service.UserSessionService;
 import com.dq.aquaranth.menu.annotation.MenuCode;
 import com.dq.aquaranth.menu.constant.ErrorCodes;
@@ -12,7 +11,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -20,6 +18,8 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
+
+import static com.dq.aquaranth.menu.constant.RedisKeys.ROLES_KEYS;
 
 @Log4j2
 @Component
@@ -47,16 +47,14 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
         String username = request.getUserPrincipal().getName();
 
         List<RoleGroup> loginUserInfo = userSessionService.findUserInfoInRedis(username).getRoleGroups();
-
-
-        List<RoleGroup> menuRoles = objectMapper.readValue(redisTemplate.opsForValue().get(menuCode).toString(), new TypeReference<>(){});
-
+        List<RoleGroup> menuRoles = objectMapper.readValue(redisTemplate.opsForValue().get(ROLES_KEYS.getKeys() + menuCode).toString(), new TypeReference<>(){});
 
         loginUserInfo.stream()
                 .filter(loginUser -> menuRoles.stream().anyMatch(menuRole -> loginUser.getRoleGroupNo().equals(menuRole.getRoleGroupNo())))
                 .findAny()
                 .orElseThrow(() -> new MenuException(ErrorCodes.UNAUTHORIZED_MEMBER));
 
+        log.info("{} 에 대한 {} 메뉴권한 확인",username, menuCode);
         return true;
     }
 }

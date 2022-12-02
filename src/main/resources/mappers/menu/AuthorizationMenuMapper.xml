@@ -33,27 +33,18 @@
         </where>
     </sql>
 
-    <sql id="menu">
-        <where>
-            <if test="menuCode != null">
-                AND menu_code = #{menuCode}
-            </if>
-            <if test="menuNo != null">
-                AND menu_no = #{menuNo}
-            </if>
-        </where>
-    </sql>
-
     <select id="findBy" resultType="com.dq.aquaranth.menu.dto.response.MenuResponseDTO">
         SELECT *
         FROM tbl_menu m
         <include refid="find_one"/>
+        order by m.menu_order, m.menu_no
     </select>
 
     <select id="findAllBy" resultType="com.dq.aquaranth.menu.dto.response.MenuResponseDTO">
         SELECT *
         FROM tbl_menu m
         <include refid="find_all"/>
+        order by m.menu_order, m.menu_no
     </select>
 
     <insert id="insert" parameterType="com.dq.aquaranth.menu.dto.request.MenuInsertDTO">
@@ -81,7 +72,7 @@
         UPDATE tbl_menu
         SET uuid = #{uuid},
         filename = #{filename}
-        <include refid="menu"/>
+        <include refid="find_one"/>
     </update>
 
 
@@ -89,13 +80,14 @@
         SELECT um.*
         FROM tbl_menu m
         JOIN tbl_menu um on um.menu_no = m.upper_menu_no
-        <include refid="menu"/>
+        <include refid="find_one"/>
+        order by m.menu_order, m.menu_no
     </select>
 
     <delete id="delete">
         DELETE
         FROM tbl_menu
-        <include refid="menu"/>
+        <include refid="find_one"/>
     </delete>
 
     <update id="update">
@@ -103,7 +95,7 @@
         SET menu_name = #{menuName},
         menu_order = #{menuOrder},
         main_flag = #{mainFlag}
-        <include refid="menu"/>
+        <include refid="find_one"/>
     </update>
 
 
@@ -134,9 +126,56 @@
         order by f.orga_type
     </select>
 
-    <select id="findByMenuCodeUnderRecursive" resultType="com.dq.aquaranth.menu.dto.response.MenuResponseDTO">
+    <select id="findUnderMenuBy" resultType="com.dq.aquaranth.menu.dto.response.MenuResponseDTO">
         select *
         from tbl_menu
-        where menu_path like CONCAT('/',#{menuCode},'%')
+        where menu_path like CONCAT('/', #{menuCode}, '%')
+        order by menu_order, menu_no
     </select>
+
+    <select id="findUnderMenuByTwo" resultType="com.dq.aquaranth.menu.dto.response.tree.MenuTreeResponseDTO">
+        SELECT m.menu_no,
+        m.depth,
+        m.upper_menu_no,
+        m.menu_name,
+        m.menu_code,
+        m.menu_path,
+        m.uuid,
+        m.filename,
+        (SELECT COUNT(*)
+        from tbl_menu
+        WHERE upper_menu_no = m.menu_no) sub_menu_count
+        from tbl_menu m
+        <if test="gnb eq true">
+            where m.upper_menu_no IS NULL
+        </if>
+        <if test="gnb != true">
+            where m.upper_menu_no = #{menuNo}
+        </if>
+        order by m.menu_order, m.menu_no
+</select>
+
+
+    <!--   트리에서 받은 메뉴번호를 이용하여 메뉴를 상세조회 합니다. -->
+    <select id="findMenuDetailsBy" resultType="com.dq.aquaranth.menu.dto.response.MenuDetailResponseDTO">
+        select m.upper_menu_no,
+        um.menu_name as upper_menu_name,
+        m.menu_no,
+        m.menu_name,
+        m.menu_code,
+        m.main_flag,
+        m.menu_order,
+        m.uuid,
+        m.filename
+        from tbl_menu m
+        left join tbl_menu um on um.menu_no = m.upper_menu_no
+        <if test="menuCode != null">
+            WHERE m.menu_code = #{menuCode}
+        </if>
+        <if test="menuNo != null">
+            WHERE m.menu_no = #{menuNo}
+        </if>
+        order by m.menu_order, m.menu_no
+    </select>
+
 </mapper>

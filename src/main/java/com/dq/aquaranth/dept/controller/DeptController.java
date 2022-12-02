@@ -2,7 +2,6 @@ package com.dq.aquaranth.dept.controller;
 
 import com.dq.aquaranth.dept.dto.*;
 import com.dq.aquaranth.dept.service.DeptService;
-import com.dq.aquaranth.emp.dto.EmpDTO;
 import com.dq.aquaranth.menu.annotation.MenuCode;
 import com.dq.aquaranth.menu.constant.MenuCodes;
 import lombok.RequiredArgsConstructor;

@@ -1,7 +1,6 @@
 package com.dq.aquaranth.rolegroup.service.impl;
 
-import com.dq.aquaranth.login.annotation.RedisUpdate;
-import com.dq.aquaranth.menu.dto.request.MenuRequestDTO;
+import com.dq.aquaranth.menu.dto.request.MenuQueryDTO;
 import com.dq.aquaranth.menu.mapper.AuthorizationMenuMapper;
 import com.dq.aquaranth.rolegroup.domain.MenuRole;
 import com.dq.aquaranth.rolegroup.dto.MenuRoleLnbDTO;
@@ -48,7 +47,7 @@ public class MenuRoleServiceImpl implements MenuRoleService {
     @Override
     @Transactional
     public void save(List<MenuRole> insertMenuRoles, String moduleCode, Long roleGroupNo) {
-        if (menuMapper.findAllBy(MenuRequestDTO.builder().menuCode(moduleCode).build()).isEmpty()) {
+        if (menuMapper.findAllBy(MenuQueryDTO.builder().menuCode(moduleCode).build()).isEmpty()) {
             log.error("GNB MenuCode {}는 존재하지 않습니다.", moduleCode);
             return;
         }

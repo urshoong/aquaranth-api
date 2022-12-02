@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Log4j2
-class MenuRoleServiceImplTest {
+class MenuCodesRoleServiceImplTest {
     @Autowired
     private MenuRoleService menuRoleService;
 
