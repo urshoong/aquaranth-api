@@ -5,7 +5,9 @@
 <mapper namespace="com.dq.aquaranth.emp.mapper.EmpMapper">
 
     <select id="findAll" resultType="com.dq.aquaranth.emp.dto.EmpDTO">
-        SELECT * FROM tbl_emp WHERE emp_no > 0
+        SELECT *
+        FROM tbl_emp
+        WHERE emp_no > 0
     </select>
 
     <select id="findById" resultType="com.dq.aquaranth.emp.dto.EmpDTO">
@@ -54,7 +56,9 @@
                 JOIN tbl_dept td ON td.dept_no = tbl_dept_mapping.dept_no
                 WHERE td.dept_no = #{deptNo}
             ),
-            'emp', #{regUser}
+            'emp', (SELECT emp_name
+                    FROM tbl_emp
+                    WHERE username=#{regUser})
         )
         <selectKey keyProperty="orgaNo" resultType="long" order="AFTER">
             SELECT LAST_INSERT_ID()
@@ -66,7 +70,10 @@
         UPDATE tbl_emp SET
            emp_name = #{empName}, gender = #{gender} , email = #{email},
            emp_phone = #{empPhone}, emp_address = #{empAddress}, mod_date = now(),
-           mod_user = #{modUser}, last_retired_date = #{lastRetiredDate},
+           mod_user = (SELECT emp_name
+                       FROM tbl_emp
+                       WHERE username=#{modUser}),
+           last_retired_date = #{lastRetiredDate},
            last_login_ip = #{lastLoginIp},
            emp_use = if(last_retired_date IS NOT NULL, false, true)
         WHERE emp_no = #{empNo}
@@ -77,6 +84,12 @@
             JOIN tbl_orga t ON t.orga_no = e.orga_no
             SET
             e.emp_rank = #{empRank}, e.emp_role = #{empRole},
+            e.mod_date = now(), e.mod_user = (SELECT emp_name
+                                              FROM tbl_emp
+                                              WHERE username=#{modUser}),
+            t.mod_date = now(), t.mod_user = (SELECT emp_name
+                                              FROM tbl_emp
+                                              WHERE username=#{modUser}),
             t.upper_orga_no = (SELECT tbl_dept_mapping.orga_no
                                 FROM tbl_dept_mapping
                                 WHERE tbl_dept_mapping.dept_no = #{deptNo})
@@ -151,5 +164,9 @@
     </select>
 
     <!-- resultMap 끝-->
+
+    <select id="functionHierarchy" resultType="String">
+        SELECT FN_GET_HIERARCHY_ORGA(#{orgaNo}) hierarchy FROM DUAL;
+    </select>
 
 </mapper>

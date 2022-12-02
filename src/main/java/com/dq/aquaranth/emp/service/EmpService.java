@@ -35,5 +35,8 @@ public interface EmpService {
     // 먼데?
 //    Long updateRecentAccessInfo();
 
+    // 회원 프로필 삭제
+    Long deleteProfile(Long empNo);
+
 
 }

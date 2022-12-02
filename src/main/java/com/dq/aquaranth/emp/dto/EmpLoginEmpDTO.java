@@ -9,6 +9,9 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * 로그인한 회원 정보. 고정된 값들 (부서에 따라 변하지 않는 값들) DTO
+ */
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -21,6 +24,7 @@ public class EmpLoginEmpDTO {
     private String username;
     private Long empNo;
     private String loginIp;
+    private String profileUrl;
 
     private List<EmpLoginCompanyDTO> companyList;
 }

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -117,29 +118,28 @@ public class EmpController {
     }
 
     @PutMapping(value = "/modify/{empNo}")
-    public Long modifyEmp(@Valid @RequestBody EmpUpdateDTO empUpdateDTO) {
-//        String ip = null;
-//        try {
-//            ip = Inet4Address.getLocalHost().getHostAddress();
-//            //TODO IP는 Test용으로 수정에 넣어놓음. 나중에 로그인 성공 시, 받아오기로 변경
-//        } catch (UnknownHostException e) {
-//            throw new RuntimeException(e);
-//        }
-//
-//        log.info("IP----------------"+ip);
-//        empUpdateDTO.setLastLoginIp(ip);
+    public Long modifyEmp(@Valid @RequestBody EmpUpdateDTO empUpdateDTO, Authentication authentication) {
+        String username = authentication.getName();
+
+        empUpdateDTO.setModUser(username);
+        empUpdateDTO.setModDate(LocalDateTime.now());
+
         return empService.update(empUpdateDTO);
     }
 
     @PutMapping(value = "/modifyOrga")
-    public Long modifyOrga(@RequestBody ListDTO listDTO) {
-        log.info("-----------------------modifyOrga 확인");
+    public Long modifyOrga(@RequestBody ListDTO listDTO, Authentication authentication) {
+
+        // 로그인한 사용자의 아이디 가져오기
+        String modUser = authentication.getName();
 
         log.info(listDTO);
         Long result = 0L;
 
 //        String registrant = "종현";
 ////      list.setModUser(registrant);
+
+        listDTO.getList().forEach(item -> item.setModUser(modUser));
 
         for (int i = 0; i < listDTO.getList().size(); i++) {
             result += empService.orgaUpdate(listDTO.getList().get(i));
@@ -154,6 +154,11 @@ public class EmpController {
 @PutMapping(value = "/updateprofile", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
 public Long updateEmpProfile(MultipartFileDTO fileDto) throws Exception {
     return empService.updateFile(fileDto);
+}
+
+@PutMapping(value = "/removeProfile/{empNo}")
+public long removeProfile(@PathVariable("empNo") Long empNo){
+    return empService.deleteProfile(empNo);
 }
 
     /**

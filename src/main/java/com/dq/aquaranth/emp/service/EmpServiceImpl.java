@@ -55,6 +55,7 @@ public class EmpServiceImpl implements EmpService {
     public EmpDTO findById(Long empNo) {
         EmpDTO empDTO = empMapper.findById(empNo);
 
+        // 파일이 없는 사원만 filename
         if(empDTO.getUuid() != null && empDTO.getFilename() != null) {
             ObjectGetRequestDTO objectRequestDTO = ObjectGetRequestDTO.builder()
                     .filename(empDTO.getUuid() + empDTO.getFilename())
@@ -78,9 +79,13 @@ public class EmpServiceImpl implements EmpService {
 
     @Override
     public Long orgaUpdate(EmpOrgaUpdateDTO empOrgaUpdateDTO) {
-        Long re = empMapper.orgaUpdate(empOrgaUpdateDTO);
-        log.info("service result : "+re);
-        return re;
+        Long orgaList = empMapper.orgaUpdate(empOrgaUpdateDTO);
+        log.info("service result : "+orgaList);
+        return orgaList;
+
+//        Long orgaList = empMapper.orgaUpdate(empOrgaUpdateDTO);
+//        log.info("service result : "+orgaList);
+//        return orgaList;
     }
 
 
@@ -153,6 +158,8 @@ public class EmpServiceImpl implements EmpService {
         return empMapper.updateProfile(empFileDTO);
     }
 
+    // 프로필 filename, uuid null 로 업데이트. 인데 그것이 삭제하는 것임.
+
     /**
      * 로그인한 회원 가져오기
      */
@@ -186,11 +193,15 @@ public class EmpServiceImpl implements EmpService {
         Long dept = userSessionService.findUserInfoInRedis(username).getDept().getDeptNo();
         Long company = userSessionService.findUserInfoInRedis(username).getCompany().getCompanyNo();
         String empRank = userSessionService.findUserInfoInRedis(username).getEmpMapping().getEmpRank();
+        Long orgaNo = userSessionService.findUserInfoInRedis(username).getEmpMapping().getOrgaNo();
+
+        String hierarchy = empMapper.functionHierarchy(orgaNo);
 
         EmpLoggingDTO empLoggingDTO = EmpLoggingDTO.builder()
                 .loginCompany(company)
                 .loginDept(dept)
                 .loginEmpRank(empRank)
+                .hierarchy(hierarchy)
                 .build();
 
         //-------------------------------------------
@@ -216,6 +227,20 @@ public class EmpServiceImpl implements EmpService {
 
         return empLoggingDTO;
     }
+
+    @Override
+    public Long deleteProfile(Long empNo) {
+
+        EmpFileDTO empFileDTO = EmpFileDTO
+                .builder()
+                .uuid(null)
+                .filename(null)
+                .empNo(empNo)
+                .build();
+
+        return empMapper.updateProfile(empFileDTO);
+    }
+
 
     //위에 같은거 있다. 뭐지? 뭔가 없어도 되는 것 같음.
 //    @Override
