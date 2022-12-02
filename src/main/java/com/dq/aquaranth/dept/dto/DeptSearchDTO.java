@@ -9,7 +9,12 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class GetSubDeptDTO {
-    private int depth;
-    private Long companyNo, upperDeptNo;
+public class DeptSearchDTO {
+
+    /**
+     * 부서 검색 결과를 담을 DTO
+     * 부서번호, 부서명, 소속경로
+     */
+    private String deptName, path;
+    private Long deptNo;
 }

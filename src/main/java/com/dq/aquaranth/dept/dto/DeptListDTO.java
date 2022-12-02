@@ -9,20 +9,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class DeptCriteria {
+public class DeptListDTO {
 
-
-    private int page;
-
-    private int size;
-
-    public int getSkip() {
-        return ( page-1 ) * size;
-    }
-
-    public int getSize() {
-        return size;
-    }
-
-
+    // 부서 검색을 통해 나오는 컬럼들
+    private Long deptNo;
+    private String deptName, regUser;
 }

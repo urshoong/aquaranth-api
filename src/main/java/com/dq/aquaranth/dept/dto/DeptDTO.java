@@ -13,11 +13,11 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class DeptDTO {
-    private Long deptNo;
+    private Long deptNo, companyNo, orgaNo;
     private Long upperDeptNo;
     private String deptName, deptDesc, regUser, modUser;
     private boolean delFlag, mainFlag;
-    private int ord, depth, companyNo;
+    private int ord, depth;
     private LocalDateTime regDate, modDate;
     private Long lastDno;
     /*
