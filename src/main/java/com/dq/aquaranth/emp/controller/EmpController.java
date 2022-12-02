@@ -7,21 +7,15 @@ import com.dq.aquaranth.login.service.UserSessionService;
 import com.dq.aquaranth.menu.annotation.MenuCode;
 import com.dq.aquaranth.menu.constant.MenuCodes;
 import com.dq.aquaranth.objectstorage.dto.request.MultipartFileDTO;
-import com.dq.aquaranth.objectstorage.service.ObjectStorageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
-import com.dq.aquaranth.objectstorage.service.ObjectStorageService;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.net.Inet4Address;
-import java.net.UnknownHostException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -33,6 +27,10 @@ public class EmpController {
     private final EmpService empService;
     private final UserSessionService userSessionService;
 
+    /**
+     * 사원테이블에 있는 모든 정보를 요청합니다.
+     * @return 사원리스트
+     */
     @GetMapping("/information")
     public List<EmpDTO> getEmpList() {
         return empService.findAll();
@@ -48,41 +46,11 @@ public class EmpController {
         return empService.findAllOrga(empNo);
     }
 
-
-    ////////////////////////////////////////////
-    public String getRemoteIp(HttpServletRequest request) {
-
-        String ip = request.getHeader("X-Forwarded-For");
-
-        if (ip == null) {
-            ip = request.getHeader("Proxy-Client-IP");
-        }
-        if (ip == null) {
-            ip = request.getHeader("WL-Proxy-Client-IP");
-        }
-        if (ip == null) {
-            ip = request.getHeader("HTTP_CLIENT_IP");
-        }
-        if (ip == null) {
-            ip = request.getHeader("HTTP_X_FORWARDED_FOR");
-        }
-        if (ip == null) {
-            ip = request.getRemoteAddr();
-        }
-
-        return ip;
-
-        //사용 : String ip  = getRemoteIp(request);
-
-        //사용할 곳에서 , HttpServletRequest request 쓰고 getRemoteIp(request)
-        //0:0:0:0:0:0:0:1 로, 이는 IPv6 형식의 값. 추후 로그아웃 때 사용하기로 한다.
-    }
-    ////////////////////////////////////////////
     @PostMapping("/register")
-    public EmpDTO registerEmp (@Valid @RequestBody  EmpInsertInformationDTO reqDTO) throws IllegalAccessException{
+    public EmpDTO registerEmp (@Valid @RequestBody  EmpInsertInformationDTO reqDTO, Authentication authentication) throws IllegalAccessException{
         log.info(reqDTO);
 
-        String registrant = "종현"; //TODO regUser들 로그인 id로 바꾸기
+        String registrant = authentication.getName();
 
         //조직 DTO에 받은 값 넣기
         EmpOrgaDTO orgaDTO = EmpOrgaDTO.builder()
@@ -124,8 +92,8 @@ public class EmpController {
     }
 
     @PostMapping("/registerOrga")
-    public Long registerEmpOrga (@RequestBody EmpOrgaInsertDTO reqDTO){
-        String registrant = "종현"; //TODO regUser들 로그인 id로 바꾸기
+    public Long registerEmpOrga (@RequestBody EmpOrgaInsertDTO reqDTO, Authentication authentication){
+        String registrant = authentication.getName();
         Long empNo = reqDTO.getEmpNo();
 
         //조직 DTO에 받은 값 넣기
@@ -150,32 +118,28 @@ public class EmpController {
     }
 
     @PutMapping(value = "/modify/{empNo}")
-    public Long modifyEmp(@Valid @RequestBody EmpUpdateDTO empUpdateDTO, HttpServletRequest request) {
-        String ip = null;
-        try {
-            ip = Inet4Address.getLocalHost().getHostAddress();
-            //TODO IP는 Test용으로 수정에 넣어놓음. 나중에 로그인 성공 시, 받아오기로 변경
-        } catch (UnknownHostException e) {
-            throw new RuntimeException(e);
-        }
+    public Long modifyEmp(@Valid @RequestBody EmpUpdateDTO empUpdateDTO, Authentication authentication) {
+        String username = authentication.getName();
 
+        empUpdateDTO.setModUser(username);
+        empUpdateDTO.setModDate(LocalDateTime.now());
 
-//        String ip  = getRemoteIp(request);
-        log.info("IP----------------"+ip);
-        empUpdateDTO.setLastLoginIp(ip);
         return empService.update(empUpdateDTO);
     }
 
     @PutMapping(value = "/modifyOrga")
-    public Long modifyOrga(@RequestBody ListDTO listDTO) {
+    public Long modifyOrga(@RequestBody ListDTO listDTO, Authentication authentication) {
 
-        log.info("-----------------------modifyOrga 확인");
+        // 로그인한 사용자의 아이디 가져오기
+        String modUser = authentication.getName();
 
         log.info(listDTO);
         Long result = 0L;
 
 //        String registrant = "종현";
 ////      list.setModUser(registrant);
+
+        listDTO.getList().forEach(item -> item.setModUser(modUser));
 
         for (int i = 0; i < listDTO.getList().size(); i++) {
             result += empService.orgaUpdate(listDTO.getList().get(i));
@@ -187,16 +151,15 @@ public class EmpController {
     /**
      * 사원 프로필 업데이트
      */
-    private final ObjectStorageService objectStorageService;
-//    public Long modifyProfile(@RequestBody EmpFileDTO empFileDTO){
-//        return null;
-//    }
-
 @PutMapping(value = "/updateprofile", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
 public Long updateEmpProfile(MultipartFileDTO fileDto) throws Exception {
     return empService.updateFile(fileDto);
 }
 
+@PutMapping(value = "/removeProfile/{empNo}")
+public long removeProfile(@PathVariable("empNo") Long empNo){
+    return empService.deleteProfile(empNo);
+}
 
     /**
      * 로그인한 회원 정보
@@ -205,6 +168,13 @@ public Long updateEmpProfile(MultipartFileDTO fileDto) throws Exception {
     public List<EmpLoginEmpDTO> findLoginUser(Authentication authentication){
         String username = authentication.getName();
         return empService.findLoginUser(username);
+    }
+
+    /* 로그인한 회원의 deptno, companyno, empRank 받기 */
+    @GetMapping("/loginRedisValue")
+    public EmpLoggingDTO findLoginRedisValue(Authentication authentication){
+        String username = authentication.getName();
+        return empService.findLoggingInformation(username);
     }
 
     /**
@@ -218,28 +188,9 @@ public Long updateEmpProfile(MultipartFileDTO fileDto) throws Exception {
 
         log.info(loginUser);
 
+        //레디스에 올린다.
         userSessionService.loadUserInfoByLoginUser(loginUser);
-        return null;
+
+        return loginUser;
     }
-
-
-
-//    @PostMapping("/upload")
-//    public String upload(@RequestBody MultipartFile[] uploadfile, Model model) throws IllegalAccessException, IOException{
-//        List<EmpFileDTO> list = new ArrayList<>();
-//
-//        for (MultipartFile file : uploadfile){
-//            if(!file.isEmpty()){
-//                EmpFileDTO fileDTO = new EmpFileDTO(UUID.randomUUID().toString(),
-//                                                    file.getOriginalFilename(),
-//                                                    file.getContentType());
-//                list.add(fileDTO);
-//
-//                File newFileName = new File(fileDTO.getUuid()+"_"+fileDTO.getFileName());
-//                file.transferTo(newFileName);
-//            }
-//        }
-//        model.addAttribute("files", list);
-//        return "result";
-//    }
 }

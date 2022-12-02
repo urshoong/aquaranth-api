@@ -56,6 +56,12 @@ public interface EmpMapper {
     Long orgaUpdate(EmpOrgaUpdateDTO empOrgaUpdateDTO);
 
     /**
+     * 사원의 최근 로그인 ip, 최근 로그인 시간을 수정합니다.
+     * @param updateAccessDTO : 받아온 최근 ip와 시간이 담긴 객체
+     */
+    Long updateRecentAccessInfo(EmpUpdateRecentAccessDTO updateAccessDTO);
+
+    /**
      * 사원 아이디(username)로 사원을 찾습니다.
      *
      * @param username : 사원 아이디(username)
@@ -77,5 +83,7 @@ public interface EmpMapper {
      */
 
     List<EmpLoginEmpDTO> findLoginUser(String username);
+
+    String functionHierarchy(Long orgaNo);
 
 }
