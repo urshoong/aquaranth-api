@@ -29,7 +29,7 @@
         WHERE tbl_emp.emp_no = #{empNo}
     </select>
 
-    <insert id="insert" parameterType="com.dq.aquaranth.emp.dto.EmpDTO">
+     <insert id="insert" parameterType="com.dq.aquaranth.emp.dto.EmpDTO">
         INSERT INTO tbl_emp (
             emp_name, username, password, gender,
             emp_phone, emp_address, email,

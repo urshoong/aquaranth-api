@@ -2,6 +2,7 @@ package com.dq.aquaranth.emp.mapper;
 
 import com.dq.aquaranth.emp.dto.EmpFileDTO;
 import lombok.extern.log4j.Log4j2;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -22,5 +23,11 @@ class EmpMapperTest {
                         .empNo(2L)
                         .build();
         log.info(empMapper.updateProfile(empFileDTO));
+    }
+
+    @Test
+    @DisplayName("마스터 사용자를 생성합니다.")
+    void createMaster() {
+
     }
 }
