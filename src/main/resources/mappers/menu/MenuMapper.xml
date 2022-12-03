@@ -41,7 +41,7 @@
     </select>
 
     <select id="initRoutes" resultType="com.dq.aquaranth.menu.dto.response.MenuImportResponseDTO">
-        SELECT menu_path, menu_no
+        SELECT menu_path, menu_no, menu_name
         FROM tbl_menu;
     </select>
 </mapper>

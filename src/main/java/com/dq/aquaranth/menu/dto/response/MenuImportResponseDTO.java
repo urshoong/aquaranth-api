@@ -18,4 +18,5 @@ import lombok.NoArgsConstructor;
 public class MenuImportResponseDTO {
     private String menuPath;
     private Long menuNo;
+    private String menuName;
 }
