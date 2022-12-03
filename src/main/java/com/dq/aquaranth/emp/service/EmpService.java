@@ -1,7 +1,7 @@
 package com.dq.aquaranth.emp.service;
 
 import com.dq.aquaranth.emp.dto.*;
-import com.dq.aquaranth.objectstorage.dto.request.MultipartFileDTO;
+import com.dq.aquaranth.menu.objectstorage.dto.request.MultipartFileDTO;
 
 import java.util.List;
 

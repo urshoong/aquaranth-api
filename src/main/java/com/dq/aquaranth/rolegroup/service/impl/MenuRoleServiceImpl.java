@@ -1,7 +1,7 @@
 package com.dq.aquaranth.rolegroup.service.impl;
 
 import com.dq.aquaranth.menu.dto.request.MenuQueryDTO;
-import com.dq.aquaranth.menu.mapper.AuthorizationMenuMapper;
+import com.dq.aquaranth.menu.mapper.MenuConfigurationMapper;
 import com.dq.aquaranth.rolegroup.domain.MenuRole;
 import com.dq.aquaranth.rolegroup.dto.MenuRoleLnbDTO;
 import com.dq.aquaranth.rolegroup.mapper.MenuRoleMapper;
@@ -19,7 +19,7 @@ import java.util.List;
 @Log4j2
 public class MenuRoleServiceImpl implements MenuRoleService {
     private final MenuRoleMapper menuRoleMapper;
-    private final AuthorizationMenuMapper menuMapper;
+    private final MenuConfigurationMapper menuMapper;
 
 
     @Override

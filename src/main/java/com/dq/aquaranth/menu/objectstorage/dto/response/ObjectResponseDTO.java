@@ -1,4 +1,4 @@
-package com.dq.aquaranth.menu.dto.response;
+package com.dq.aquaranth.menu.objectstorage.dto.response;
 
 
 import lombok.AllArgsConstructor;
@@ -7,7 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * 클라이언트 앱 초기화용 DTO입니다.
+ * ObjectStorage에서 요청한 URL이 담긴 클래스 입니다.
  *
  * @author 김민준
  */
@@ -15,7 +15,6 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class MenuImportResponseDTO {
-    private String menuPath;
-    private Long menuNo;
+public class ObjectResponseDTO {
+    private String url;
 }

@@ -4,132 +4,22 @@
 
 <mapper namespace="com.dq.aquaranth.menu.mapper.MenuMapper">
 
-    <sql id="find_all">
-        <where>
-            <if test="menu.menuCode != null">
-                OR tm.menu_code = #{menu.menuCode}
-            </if>
-            <if test="menu.menuNo != null">
-                OR tm.menu_no = #{menu.menuNo}
-            </if>
-            <if test="menu.keyword eq 'gnb'">
-                OR tm.upper_menu_no IS NULL
-            </if>
-            <if test="menu.keyword eq 'lnb'">
-                OR MATCH (tm.menu_path) AGAINST ( '%/'#{menu.menuCode}'/%' )
-            </if>
-            <if test="true">
-                AND tm.main_flag = TRUE
-            </if>
-        </where>
-    </sql>
-
-    <sql id="find_one">
-        <where>
-            <if test="menu.menuCode != null">
-                AND tm.menu_code = #{menu.menuCode}
-            </if>
-            <if test="menu.menuNo != null">
-                AND tm.menu_no = #{menu.menuNo}
-            </if>
-            <if test="true">
-                AND tm.main_flag = TRUE
-            </if>
-        </where>
-    </sql>
-
-    <select id="findBy" resultType="com.dq.aquaranth.menu.dto.response.MenuResponseDTO">
-        select distinct tm.*
-        from (
-        select orga.orga_no, orga_role_no, role_group_no
-        from (
-        with recursive cte as (
-        select o.*
-        from tbl_orga o
-        join tbl_dept_mapping tdm on o.orga_no = tdm.orga_no
-        where tdm.dept_no = #{user.deptNo}
-        union all
-        select t.*
-        from cte c
-        join tbl_orga t on t.orga_no = c.upper_orga_no
-        )
-        select orga_no
-        from tbl_company
-        where company_no = #{user.companyNo}
-        union
-        select orga_no
-        from cte
-        union
-        select to2.orga_no
-        from tbl_emp te
-        join tbl_emp_mapping tem on te.emp_no = tem.emp_no
-        join tbl_orga to2 on tem.orga_no = to2.orga_no
-        join tbl_dept_mapping m on to2.upper_orga_no = m.orga_no
-        where te.username = #{user.username}
-        and m.dept_no = #{user.deptNo}
-        ) orga
-        left join tbl_orga_role tor on tor.orga_no = orga.orga_no
-        ) ogr
-        join tbl_role_group trg on trg.role_group_no = ogr.role_group_no
-        join tbl_menu_role tmr on trg.role_group_no = tmr.role_group_no
-        join tbl_menu tm on tmr.menu_no = tm.menu_no
-        <include refid="find_one"/>
-        order by menu_order, menu_no
-    </select>
-
-    <select id="findAllBy" resultType="com.dq.aquaranth.menu.dto.response.MenuResponseDTO">
-        select distinct tm.*
-        from (
-        select orga.orga_no, orga_role_no, role_group_no
-        from (
-        with recursive cte as (
-        select o.*
-        from tbl_orga o
-        join tbl_dept_mapping tdm on o.orga_no = tdm.orga_no
-        where tdm.dept_no = #{user.deptNo}
-        union all
-        select t.*
-        from cte c
-        join tbl_orga t on t.orga_no = c.upper_orga_no
-        )
-        select orga_no
-        from tbl_company
-        where company_no = #{user.companyNo}
-        union
-        select orga_no
-        from cte
-        union
-        select to2.orga_no
-        from tbl_emp te
-        join tbl_emp_mapping tem on te.emp_no = tem.emp_no
-        join tbl_orga to2 on tem.orga_no = to2.orga_no
-        join tbl_dept_mapping m on to2.upper_orga_no = m.orga_no
-        where te.username = #{user.username}
-        and m.dept_no = #{user.deptNo}
-        ) orga
-        left join tbl_orga_role tor on tor.orga_no = orga.orga_no
-        ) ogr
-        join tbl_role_group trg on trg.role_group_no = ogr.role_group_no
-        join tbl_menu_role tmr on trg.role_group_no = tmr.role_group_no
-        join tbl_menu tm on tmr.menu_no = tm.menu_no
-        <include refid="find_all"/>
-        order by menu_order, menu_no
-    </select>
-    <select id="initializeAppImport" resultType="com.dq.aquaranth.menu.dto.response.MenuImportResponseDTO">
-        SELECT menu_path, menu_no
-        FROM tbl_menu;
-
-    </select>
-
-    <select id="dddd">
-
-        SELECT *
-        FROM tbl_menu
-
-
-    </select>
-    <select id="findInRedis" resultType="com.dq.aquaranth.menu.dto.response.MenuResponseDTO">
-        select mr.*
+    <select id="findAllBy" resultType="com.dq.aquaranth.menu.dto.response.MenuTreeResponseDTO">
+        select distinct
+        mr.menu_no,
+        mr.upper_menu_no,
+        mr.menu_name,
+        mr.main_flag,
+        mr.menu_code,
+        mr.menu_path,
+        mr.menu_order,
+        mr.menu_default,
+        mr.depth,
+        mr.uuid,
+        mr.filename,
+        (SELECT COUNT(*)
+        from tbl_menu
+        WHERE upper_menu_no = m.menu_no) sub_menu_count
         from tbl_menu m
             join (select tm.*
                   from tbl_menu tm
@@ -143,10 +33,15 @@
                         group by tmr.role_group_no, tm.menu_no) rg on rg.menu_no = tm.menu_no
         where tm.main_flag = true) mr on mr.menu_no = m.menu_no
         <if test="menu.keyword eq 'gnb'">
-            where m.upper_menu_no IS NULL
+            where m.upper_menu_no IS NULL AND m.delete_flag = false;
         </if>
         <if test="menu.menuNo != null">
-            where m.upper_menu_no = #{menuNo}
+            where m.upper_menu_no = #{menu.menuNo} AND m.delete_flag = false;
         </if>
+    </select>
+
+    <select id="initRoutes" resultType="com.dq.aquaranth.menu.dto.response.MenuImportResponseDTO">
+        SELECT menu_path, menu_no
+        FROM tbl_menu;
     </select>
 </mapper>

@@ -6,6 +6,11 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+/**
+ * 인터셉터 설정입니다.
+ * 권한 체크를 우회할 수 있는 경로를 설정할 수 있습니다.
+ * @author 김민준
+ */
 @Configuration
 @RequiredArgsConstructor
 public class InterceptorConfig implements WebMvcConfigurer{

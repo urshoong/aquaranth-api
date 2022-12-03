@@ -19,7 +19,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/api/menu-role")
 @Log4j2
-@MenuCode(MenuCodes.ROLE0020)
+@MenuCode(MenuCodes.ROLE0010)
 public class MenuRoleApiController {
     private final MenuRoleService menuRoleService;
 

@@ -8,7 +8,7 @@ import com.auth0.jwt.exceptions.SignatureVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.dq.aquaranth.commons.utils.ResponseUtil;
-import com.dq.aquaranth.menu.constant.ErrorCodes;
+import com.dq.aquaranth.menu.exception.ErrorCodes;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.jetbrains.annotations.NotNull;

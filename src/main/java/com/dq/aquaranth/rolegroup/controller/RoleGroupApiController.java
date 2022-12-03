@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 @RequestMapping("/api/role-group")
 @Log4j2
-@MenuCode(MenuCodes.ROLE0020)
+@MenuCode(MenuCodes.ROLE0010)
 public class RoleGroupApiController {
     private final RoleGroupService roleGroupService;
 

@@ -21,7 +21,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Log4j2
 @RequestMapping("/api/userrole")
-@MenuCode(MenuCodes.ROLE0010)
+@MenuCode(MenuCodes.ROLE0020)
 public class UserRoleController {
 
     private final UserRoleService userRoleService;

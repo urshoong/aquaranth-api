@@ -14,8 +14,8 @@ import com.dq.aquaranth.emp.mapper.EmpMapper;
 import com.dq.aquaranth.emp.mapper.EmpMappingMapper;
 import com.dq.aquaranth.login.domain.LoginUser;
 import com.dq.aquaranth.login.dto.LoginUserInfo;
-import com.dq.aquaranth.menu.constant.ErrorCodes;
-import com.dq.aquaranth.menu.exception.MenuException;
+import com.dq.aquaranth.menu.exception.ErrorCodes;
+import com.dq.aquaranth.menu.exception.CommonException;
 import com.dq.aquaranth.rolegroup.mapper.RoleGroupMapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -48,7 +48,7 @@ public class UserSessionServiceImpl implements UserSessionService {
     public LoginUserInfo findUserInfoInRedis(String username) {
         String value = (String) redisTemplate.opsForValue().get(username);
         if (Objects.isNull(value)) {
-            throw new MenuException(ErrorCodes.REDIS_USER_NOT_FOUND);
+            throw new CommonException(ErrorCodes.REDIS_USER_NOT_FOUND);
         }
 
         ObjectMapper mapper = new ObjectMapper()
@@ -78,7 +78,7 @@ public class UserSessionServiceImpl implements UserSessionService {
             try {
                 decodedJWT = verifier.verify(refreshToken);
             } catch (TokenExpiredException | JWTDecodeException verificationException) {
-                throw new MenuException(ErrorCodes.REFRESH_TOKEN_EXPIRED);
+                throw new CommonException(ErrorCodes.REFRESH_TOKEN_EXPIRED);
             }
 
             // 토큰이 유효한지 확인되면, 사용자의 이름을 가져올 수 있습니다.
@@ -86,7 +86,7 @@ public class UserSessionServiceImpl implements UserSessionService {
             log.info("refresh token 검증이 완료되었습니다.");
             return jwtUtil.generateToken(username);
         }
-        throw new MenuException(ErrorCodes.TOKEN_MISSING);
+        throw new CommonException(ErrorCodes.TOKEN_MISSING);
     }
 
     /**
