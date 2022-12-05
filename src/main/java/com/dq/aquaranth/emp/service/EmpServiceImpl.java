@@ -74,6 +74,12 @@ public class EmpServiceImpl implements EmpService {
     @Override
     public Long update(EmpUpdateDTO empUpdateDTO)
     {
+        Long empNo = empUpdateDTO.getEmpNo();
+        if(empUpdateDTO.getLastRetiredDate() != null){
+            //해당 orga들 퇴사일 now로.
+            //알고있는 정보 empNo, RetiredDate
+            empMappingMapper.updateEmpMappingRetiredDate(empNo);
+        }
         return empMapper.update(empUpdateDTO);
     }
 
@@ -82,10 +88,6 @@ public class EmpServiceImpl implements EmpService {
         Long orgaList = empMapper.orgaUpdate(empOrgaUpdateDTO);
         log.info("service result : "+orgaList);
         return orgaList;
-
-//        Long orgaList = empMapper.orgaUpdate(empOrgaUpdateDTO);
-//        log.info("service result : "+orgaList);
-//        return orgaList;
     }
 
 
