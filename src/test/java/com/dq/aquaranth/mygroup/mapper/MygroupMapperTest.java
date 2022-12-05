@@ -47,7 +47,7 @@ class MygroupMapperTest {
                 .builder()
                 .mygroupNo(mygroupNo)
                 .mygroupName(mygroupName)
-                .username(username)
+                .modUser(username)
                 .build();
 
         Long updateResult = mygroupMapper.update(mygroupUpdateDTO);
