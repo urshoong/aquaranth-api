@@ -53,13 +53,33 @@ public class UserRoleServiceImpl implements UserRoleService {
     }
 
     @Override
-    public Integer insertUserRole(UserRoleReqInsertOrgaRoleDTO userRoleReqInsertOrgaRoleDTO) {
-        return userRoleMapper.insertUserRole(userRoleReqInsertOrgaRoleDTO);
+    public UserRoleResponseDTO insertUserRole(UserRoleReqInsertOrgaRoleDTO userRoleReqInsertOrgaRoleDTO) throws RuntimeException {
+        int beforeListSize = userRoleReqInsertOrgaRoleDTO.getOrgaNoList().size();
+        Integer result = userRoleMapper.insertUserRole(userRoleReqInsertOrgaRoleDTO);
+
+        if(beforeListSize != result) throw new RuntimeException("권한그룹 처리 실패");
+
+        return UserRoleResponseDTO
+                .builder()
+                .title("등록 완료")
+                .message("권한그룹이 부여되었습니다.")
+                .state("success")
+                .build();
     }
 
     @Override
-    public Integer removeOrgaRole(UserRoleReqRemoveOrgaRoleDTO userRoleReqRemoveOrgaRoleDTO) {
-        return userRoleMapper.removeOrgaRole(userRoleReqRemoveOrgaRoleDTO);
+    public UserRoleResponseDTO removeOrgaRole(UserRoleReqRemoveOrgaRoleDTO userRoleReqRemoveOrgaRoleDTO) throws RuntimeException {
+        int beforeListSIze = userRoleReqRemoveOrgaRoleDTO.getRemoveOrgaRoleList().size();
+        Integer result = userRoleMapper.removeOrgaRole(userRoleReqRemoveOrgaRoleDTO);
+
+        if(beforeListSIze != result) throw new RuntimeException("권한그룹 처리 실패");
+
+        return UserRoleResponseDTO
+                .builder()
+                .title("삭제 완료")
+                .message("권한그룹이 해제되었습니다.")
+                .state("success")
+                .build();
     }
 
     /** UserList **/
