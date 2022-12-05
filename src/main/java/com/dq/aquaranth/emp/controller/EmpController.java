@@ -110,6 +110,7 @@ public class EmpController {
                 .empNo(empNo)
                 .orgaNo(orgaNo)
                 .empRank(reqDTO.getEmpRank())
+                .empRole(reqDTO.getEmpRole())
                 .regUser(registrant)
                 .build();
 
@@ -150,15 +151,15 @@ public class EmpController {
     /**
      * 사원 프로필 업데이트
      */
-@PutMapping(value = "/updateprofile", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-public Long updateEmpProfile(MultipartFileDTO fileDto) throws Exception {
-    return empService.updateFile(fileDto);
-}
+    @PutMapping(value = "/updateprofile", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public Long updateEmpProfile(MultipartFileDTO fileDto) throws Exception {
+        return empService.updateFile(fileDto);
+    }
 
-@PutMapping(value = "/removeProfile/{empNo}")
-public long removeProfile(@PathVariable("empNo") Long empNo){
-    return empService.deleteProfile(empNo);
-}
+    @PutMapping(value = "/removeProfile/{empNo}")
+    public long removeProfile(@PathVariable("empNo") Long empNo){
+        return empService.deleteProfile(empNo);
+    }
 
     /**
      * 로그인한 회원 정보
