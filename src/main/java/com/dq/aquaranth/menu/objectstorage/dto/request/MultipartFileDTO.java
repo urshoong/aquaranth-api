@@ -17,6 +17,6 @@ import org.springframework.web.multipart.MultipartFile;
 @AllArgsConstructor
 @NoArgsConstructor
 public class MultipartFileDTO {
-    String key;
-    MultipartFile multipartFile;
+    private String key;
+    private MultipartFile multipartFile;
 }

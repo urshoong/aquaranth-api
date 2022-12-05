@@ -19,7 +19,6 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
@@ -92,15 +91,16 @@ public class DefaultMenuConfigurationService implements MenuConfigurationService
      */
     @Override
     @Transactional
-    public MenuInsertDTO insert(MenuInsertDTO menuInsertDTO, final MultipartFile multipartFile) throws Exception {
+    public Integer insert(MenuInsertDTO menuInsertDTO, String username) throws Exception {
         Optional<MenuResponseDTO> findByUpperMenu = menuConfigurationMapper.findBy(MenuQueryDTO.builder().menuNo(menuInsertDTO.getUpperMenuNo()).build());
         MenuResponseDTO upperMenu = findByUpperMenu.orElseGet(() -> MenuResponseDTO.builder().menuPath("/").depth(0L).build());
         menuInsertDTO.setMenuPath(upperMenu.getMenuPath() + "/" + menuInsertDTO.getMenuPath());
         menuInsertDTO.setDepth(upperMenu.getDepth() + 1L);
-        if (!multipartFile.isEmpty()) {
+        menuInsertDTO.setRegUser(username);
+        if (!menuInsertDTO.getMultipartFile().isEmpty()) {
             String uuid = UUID.randomUUID().toString();
-            String filename = multipartFile.getOriginalFilename();
-            ObjectPostRequestDTO objectPostRequestDTO = getObjectPostRequestDTO(multipartFile, uuid, filename);
+            String filename = menuInsertDTO.getMultipartFile().getOriginalFilename();
+            ObjectPostRequestDTO objectPostRequestDTO = getObjectPostRequestDTO(menuInsertDTO.getMultipartFile(), uuid, filename);
             menuInsertDTO.setUuid(uuid);
             menuInsertDTO.setFilename(filename);
             objectStorageService.postObject(objectPostRequestDTO);
@@ -115,8 +115,8 @@ public class DefaultMenuConfigurationService implements MenuConfigurationService
      */
     @Override
     @Transactional
-    public Integer update(final MenuUpdateDTO menuUpdateDTO) {
-
+    public Integer update(final MenuUpdateDTO menuUpdateDTO, String username) {
+        menuUpdateDTO.setModUser(username);
         return menuConfigurationMapper.update(menuUpdateDTO);
     }
 
@@ -128,13 +128,13 @@ public class DefaultMenuConfigurationService implements MenuConfigurationService
      */
     @Override
     @Transactional
-    public Integer updateIcon(final MultipartFileDTO multipartFileDTO) throws Exception {
+    public Integer updateIcon(final MultipartFileDTO multipartFileDTO, String username) throws Exception {
         String uuid = UUID.randomUUID().toString();
         String filename = multipartFileDTO.getMultipartFile().getOriginalFilename();
 
         ObjectPostRequestDTO objectPostRequestDTO = getObjectPostRequestDTO(multipartFileDTO.getMultipartFile(), uuid, filename);
 
-        MenuIconUpdateDTO menuIconUpdateDTO = MenuIconUpdateDTO.builder().menuCode(multipartFileDTO.getKey()).uuid(uuid).filename(filename).build();
+        MenuIconUpdateDTO menuIconUpdateDTO = MenuIconUpdateDTO.builder().menuCode(multipartFileDTO.getKey()).uuid(uuid).filename(filename).modUser(username).build();
 
         Integer result = menuConfigurationMapper.updateIcon(menuIconUpdateDTO);
 

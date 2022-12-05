@@ -19,7 +19,7 @@ public interface MenuConfigurationMapper {
 
     Optional<MenuDetailResponseDTO> findMenuDetailsBy(MenuQueryDTO menuQueryDTO);
 
-    MenuInsertDTO insert(MenuInsertDTO menuUpdateDTO);
+    Integer insert(MenuInsertDTO menuUpdateDTO);
 
     Integer update(MenuUpdateDTO menuUpdateDTO);
 
