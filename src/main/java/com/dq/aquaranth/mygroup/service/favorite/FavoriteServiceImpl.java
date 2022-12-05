@@ -22,7 +22,7 @@ public class FavoriteServiceImpl implements FavoriteService {
      * 즐겨찾기
      */
     @Override
-    public Long insert(FavoriteInsertDTO favoriteInsertDTO, String username) {
+    public Long insert(FavoriteInsertDTO favoriteInsertDTO, String regUser) {
         log.info("해당 마이그룹에 사원 즐겨찾기");
         //즐겨찾기 성공 시 "1", 실패 시 "0"
         Long insertResult = 0L;
@@ -41,7 +41,7 @@ public class FavoriteServiceImpl implements FavoriteService {
         log.info("로그인한 사원 아이디: " + orgatreeEmpInformationDTO.getUsername());
 
         // 2-1-1. 찾은 사원 정보와 로그인한 사원의 아이디 비교하기
-        if (orgatreeEmpInformationDTO.getUsername().equals(username)) {
+        if (orgatreeEmpInformationDTO.getUsername().equals(regUser)) {
             // 아이디가 동일하면 즐겨찾기 실패("-1" 반환)
             insertResult = -1L;
             log.info("해당 사원은 로그인한 사원이므로 즐겨찾기할 수 없습니다.");
