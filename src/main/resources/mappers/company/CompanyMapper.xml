@@ -26,12 +26,7 @@
     <!--상위 조직번호가 없고 'company' 타입인 조직 추가-->
     <insert id="insertOrga">
         insert into tbl_orga (upper_orga_no, orga_type, reg_user)
-        value (#{upperOrgaNo}, #{orgaType}, (
-        select emp_name
-        from tbl_emp
-        where username=#{username}
-        )
-        );
+        value (#{upperOrgaNo}, #{orgaType}, #{regUser});
         <selectKey keyProperty="orgaNo" resultType="long" order="AFTER">
             select LAST_INSERT_ID()
         </selectKey>
@@ -46,11 +41,7 @@
         )
         values (
         #{companyNo}, #{orgaNo}, #{companyName}, #{companyAddress}, #{companyTel},
-        #{ownerName}, #{foundingDate}, #{businessNumber}, #{companyUse},
-        (select emp_name
-        from tbl_emp
-        where username=#{username})
-        );
+        #{ownerName}, #{foundingDate}, #{businessNumber}, #{companyUse}, #{regUser};
         <selectKey keyProperty="companyNo" resultType="long" order="AFTER">
             select LAST_INSERT_ID()
         </selectKey>
@@ -62,9 +53,7 @@
     <update id="update">
         update tbl_company
         set company_name=#{companyName}, company_address=#{companyAddress}, company_tel=#{companyTel}
-          , owner_name=#{ownerName}, company_use=#{companyUse}, mod_user=(select emp_name
-                                                                          from tbl_emp
-                                                                          where username=#{username})
+          , owner_name=#{ownerName}, company_use=#{companyUse}, mod_user=#{regUser}
           , mod_date = now()
         where company_no = #{companyNo};
     </update>

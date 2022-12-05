@@ -26,7 +26,7 @@
         from tbl_dept d
         join tbl_dept_mapping dm on d.dept_no = dm.dept_no
         where (upper_dept_no = #{upperDeptNo} OR upper_dept_no is null )and depth = #{depth}
-        and company_no = #{companyNo}
+        and company_no = #{companyNo};
     </select>
 
 
@@ -42,8 +42,7 @@
         from tbl_emp e
                  join tbl_emp_mapping em on e.emp_no = em.emp_no
                  join tbl_orga o on o.orga_no=em.orga_no
-        where o.upper_orga_no=#{orgaNo}
-        ;
+        where o.upper_orga_no=#{orgaNo};
     </select>
 
 
@@ -60,7 +59,6 @@
              , e.uuid
         from tbl_emp e
                  join tbl_emp_mapping em on e.emp_no = em.emp_no
-        where em.orga_no=#{orgaNo}
-        ;
+        where em.orga_no=#{orgaNo};
     </select>
 </mapper>
