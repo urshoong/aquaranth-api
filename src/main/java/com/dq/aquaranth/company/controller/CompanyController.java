@@ -39,7 +39,7 @@ public class CompanyController {
     }
 
     /**
-     * 회사 기본정보 추가
+     * 회사 기본정보 추가(회사 조직, 부서 조직, 부서, 부서매핑 동시에 추가)
      */
     @PostMapping("/register")
     public Long registerCompany(@RequestBody CompanyInformationDTO companyInformationDTO, Authentication authentication) {

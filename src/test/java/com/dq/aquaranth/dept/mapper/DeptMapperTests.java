@@ -6,7 +6,6 @@ package com.dq.aquaranth.dept.mapper;
 import com.dq.aquaranth.dept.dto.DeptDTO;
 import com.dq.aquaranth.dept.dto.DeptRegisterDTO;
 import com.dq.aquaranth.dept.dto.DeptSearchDTO;
-import com.dq.aquaranth.dept.mapper.DeptMapper;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -50,16 +49,6 @@ public class DeptMapperTests {
 
         int result = deptMapper.update(deptDTO2);
         log.info("update : " + result);
-    }
-
-    @Test
-    public void testList() {
-        int skip = 0;
-        int size = 10;
-
-        List<DeptDTO> list = deptMapper.getList(skip, size);
-
-        list.forEach(deptDTO2 -> log.info(deptDTO2));
     }
 
     @Test
@@ -133,11 +122,12 @@ public class DeptMapperTests {
     }
 
     @Test
-    @DisplayName("부서 번호, 부서 이름로 검색 test")
+    @DisplayName("부서 번호, 부서 이름으로 검색 test")
     void search() {
-        String deptSearch = "테스";
+        String deptName = "개발";
+        Long deptNo = 1L;
 
-        List<DeptSearchDTO> deptSearchDTO = deptMapper.deptSearch(deptSearch);
+        List<DeptSearchDTO> deptSearchDTO = deptMapper.deptSearch(deptName, deptNo);
 
         deptSearchDTO.forEach(log::info);
     }

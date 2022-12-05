@@ -177,9 +177,9 @@ public class EmpServiceImpl implements EmpService {
 
         String finalIp = ip;
 
-            result.forEach(emp -> {
-                emp.setLoginIp(finalIp);
-            });
+        result.forEach(emp -> {
+            emp.setLoginIp(finalIp);
+        });
 
         return result;
     }
@@ -223,7 +223,7 @@ public class EmpServiceImpl implements EmpService {
                 .empNo(empNo)
                 .build();
 
-         empMapper.updateRecentAccessInfo(updateDTO);
+        empMapper.updateRecentAccessInfo(updateDTO);
 
         return empLoggingDTO;
     }

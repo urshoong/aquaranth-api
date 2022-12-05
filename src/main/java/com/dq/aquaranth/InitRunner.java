@@ -28,11 +28,6 @@ import java.util.List;
 @Log4j2
 public class InitRunner implements ApplicationRunner {
     private final RedisService redisService;
-    private final MenuConfigurationService menuConfigurationService;
-    private final RoleGroupService roleGroupService;
-
-    private final UserSessionService userSessionService;
-
 
     /**
      * springboot load 시 실행됩니다.
@@ -49,21 +44,6 @@ public class InitRunner implements ApplicationRunner {
     public void initRedis() {
         log.info("Redis init");
         redisService.deleteObject(redisService.keys("*")); // 기존 데이터 삭제
-
-        // db 에 저장된 모든 메뉴를 가져옵니다.
-        List<String> menuCodes = new ArrayList<>();
-        for (MenuResponseDTO param : menuConfigurationService.findAllBy(new MenuQueryDTO())) {
-            menuCodes.add(param.getMenuCode());
-        }
-
-        // 메뉴코드에 매핑된 권한그룹들을 전부 가져와서, menuCode, roleGroupNo 형태로 저장합니다.
-        menuCodes.forEach(menuCode -> {
-            List<RoleGroup> roleGroups = new ArrayList<>(roleGroupService.findByMenuCode(menuCode));
-            try {
-                redisService.setCacheObject(menuCode, roleGroups);
-            } catch (JsonProcessingException e) {
-                throw new RuntimeException(e);
-            }
-        });
+        redisService.updateMenuRoles();
     }
 }

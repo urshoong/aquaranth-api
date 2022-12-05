@@ -1,6 +1,7 @@
 package com.dq.aquaranth.login.controller;
 
 import com.dq.aquaranth.login.dto.LoginUserInfo;
+import com.dq.aquaranth.login.service.RedisService;
 import com.dq.aquaranth.login.service.UserSessionService;
 import com.dq.aquaranth.menu.annotation.MenuCode;
 import lombok.RequiredArgsConstructor;
@@ -22,9 +23,10 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 @MenuCode
 public class UserApiController {
     private final UserSessionService userSessionService;
+    private final RedisService redisService;
 
     @GetMapping("/token/refresh")
-    public Map<String, String> refreshTokenCheck(HttpServletRequest request){
+    public Map<String, String> refreshTokenCheck(HttpServletRequest request) {
         String authorizationHeader = request.getHeader(AUTHORIZATION);
         return userSessionService.checkRefresh(authorizationHeader);
     }
@@ -32,5 +34,10 @@ public class UserApiController {
     @GetMapping("/login/userinfo")
     public LoginUserInfo getLoginUserInfo(Authentication authentication) {
         return userSessionService.findUserInfoInRedis(authentication.getName());
+    }
+
+    @GetMapping("/logout")
+    public void logout(Authentication authentication) {
+        redisService.deleteObject(authentication.getName());
     }
 }

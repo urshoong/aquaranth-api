@@ -21,7 +21,7 @@ public interface MygroupMapper {
     /**
      * 로그인한 사원의 마이그룹 생성
      */
-    Long insert(String username);
+    Long insert(String regUser);
 
     /**
      * 로그인한 사원의 마이그룸 이름 수정

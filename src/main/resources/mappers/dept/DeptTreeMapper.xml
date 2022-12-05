@@ -9,14 +9,4 @@
     <select id="getTreeModal" resultType="com.dq.aquaranth.dept.dto.DeptDTO">
         select * from tbl_dept where company_no = #{companyNo} order by ord;
     </select>
-
-
-
-
-
-
-
-
-
-
 </mapper>

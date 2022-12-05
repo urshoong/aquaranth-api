@@ -54,7 +54,7 @@ class CompanyMapperTest {
                 .builder()
                 //.upperOrgaNo(null) => default 값을 null 이 들어가기 때문에 값을 굳이 주지 않아도 된다.
                 .orgaType("company")
-                .username(username)
+                .regUser(username)
                 .build();
         Long orgaResult = companyMapper.insertOrga(companyOrgaDTO);
 
@@ -69,7 +69,7 @@ class CompanyMapperTest {
                 .businessNumber("232-88-02486")
                 .ownerName("이주완")
                 .companyUse(true)
-                .username(username)
+                .regUser(username)
                 .build();
         Long companyResult = companyMapper.insert(companyInformationDTO);
         log.info("orgaInsertResult : " + orgaResult);
@@ -99,7 +99,7 @@ class CompanyMapperTest {
                 .foundingDate(modFoundingDate)
                 .businessNumber("220-81-67539")
                 .companyUse(true)
-                .username(username)
+                .modUser(username)
                 .build();
 
         Long modResult = companyMapper.update(companyUpdateDTO);

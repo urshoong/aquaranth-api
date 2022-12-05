@@ -18,16 +18,14 @@
         where emp_no = (select tbl_emp.emp_no
                         from tbl_emp
                         where username=#{username})
-        group by my.mygroup_no
-        ;
+        group by my.mygroup_no;
     </select>
 
     <!--해당 마이그룹 조회-->
     <select id="findByMygroupNo" resultType="com.dq.aquaranth.mygroup.dto.mygroup.MygroupInformationDTO">
         select mygroup_no, mygroup_name
         from tbl_mygroup
-        where mygroup_no=#{mygroupNo}
-        ;
+        where mygroup_no=#{mygroupNo};
     </select>
 
 
@@ -38,10 +36,7 @@
         values ((select emp_no
                  from tbl_emp
                  where username=#{username})
-               , (select emp_name
-                  from tbl_emp
-                  where username=#{username}))
-        ;
+               , #{regUser});
     </insert>
 
 
@@ -49,20 +44,15 @@
     <!--로그인한 사원의 마이그룹 이름 수정-->
     <update id="update">
         update tbl_mygroup set mygroup_name=#{mygroupName}
-                             , mod_user=(select emp_name
-                                         from tbl_emp
-                                         where username=#{username})
+                             , mod_user=#{modUser}
                              , mod_date=now()
-        where mygroup_no=#{mygroupNo}
-        ;
-
+        where mygroup_no=#{mygroupNo};
     </update>
 
 
     <!--해당 마이그룹 삭제(즐겨찾기된 사원 먼저 삭제 후 실행)-->
     <delete id="delete">
         delete from tbl_mygroup
-        where mygroup_no=#{mygroupNo}
-        ;
+        where mygroup_no=#{mygroupNo};
     </delete>
 </mapper>

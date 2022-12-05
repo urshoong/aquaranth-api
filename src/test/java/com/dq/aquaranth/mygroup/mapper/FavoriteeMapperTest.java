@@ -28,7 +28,7 @@ class FavoriteeMapperTest {
                 .builder()
                 .mygroupNo(mygroupNo)
                 .orgaNo(orgaNo)
-                .username(username)
+                .regUser(username)
                 .build();
         Long insertResult = favoriteeMapper.insert(favoriteInsertDTO);
         log.info("즐겨찾기 한 결과 : " + insertResult);

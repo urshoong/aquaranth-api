@@ -33,9 +33,9 @@ public class MygroupServiceImpl implements MygroupService {
     }
 
     @Override
-    public Long insert(String username) {
+    public Long insert(String regUser) {
         log.info("로그인한 사원의 마이그룹 생성");
-        return mygroupMapper.insert(username);
+        return mygroupMapper.insert(regUser);
     }
 
     @Override

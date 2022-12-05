@@ -1,5 +1,11 @@
 package com.dq.aquaranth.login.service;
 
+import com.dq.aquaranth.login.dto.LoginUserInfo;
+import com.dq.aquaranth.menu.dto.request.MenuQueryDTO;
+import com.dq.aquaranth.menu.dto.response.MenuResponseDTO;
+import com.dq.aquaranth.menu.service.MenuConfigurationService;
+import com.dq.aquaranth.rolegroup.domain.RoleGroup;
+import com.dq.aquaranth.rolegroup.service.RoleGroupService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -11,10 +17,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -27,6 +30,8 @@ import java.util.concurrent.TimeUnit;
 @Log4j2
 public class RedisService {
     private final RedisTemplate<String, Object> redisTemplate;
+    private final MenuConfigurationService menuConfigurationService;
+    private final RoleGroupService roleGroupService;
 
     /**
      * redis 에 데이터 저장을 요청합니다.
@@ -224,5 +229,27 @@ public class RedisService {
      */
     public Collection<String> keys(final String pattern) {
         return redisTemplate.keys(pattern);
+    }
+
+    public void updateMenuRoles() {
+        // db 에 저장된 모든 메뉴를 가져옵니다.
+        List<String> menuCodes = new ArrayList<>();
+        for (MenuResponseDTO param : menuConfigurationService.findAllBy(new MenuQueryDTO())) {
+            menuCodes.add(param.getMenuCode());
+        }
+
+        // 메뉴코드에 매핑된 권한그룹들을 전부 가져와서, menuCode, roleGroupNo 형태로 저장합니다.
+        menuCodes.forEach(menuCode -> {
+            List<RoleGroup> roleGroups = new ArrayList<>(roleGroupService.findByMenuCode(menuCode));
+            try {
+                setCacheObject(menuCode, roleGroups);
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
+        });
+    }
+
+    public List<Object> findAllUsers() {
+        return getCacheList("U_");
     }
 }
