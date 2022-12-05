@@ -39,14 +39,14 @@ public class CompanyServiceImpl implements CompanyService {
         CompanyOrgaDTO companyOrgaDTO = CompanyOrgaDTO
                 .builder()
                 .orgaType("company")
-                .username(username)
+                .regUser(username)
                 .build();
         companyMapper.insertOrga(companyOrgaDTO);
         log.info(companyOrgaDTO.getOrgaNo());
 
         log.info("회사 기본정보 추가");
         companyInformationDTO.setOrgaNo(companyOrgaDTO.getOrgaNo());
-        companyInformationDTO.setUsername(username);
+        companyInformationDTO.setRegUser(username);
 
         return companyMapper.insert(companyInformationDTO);
     }
@@ -54,7 +54,7 @@ public class CompanyServiceImpl implements CompanyService {
     @Override
     public Long update(CompanyUpdateDTO companyUpdateDTO, String username) {
         log.info("회사 기본정보 수정");
-        companyUpdateDTO.setUsername(username);
+        companyUpdateDTO.setModUser(username);
         return companyMapper.update(companyUpdateDTO);
     }
 

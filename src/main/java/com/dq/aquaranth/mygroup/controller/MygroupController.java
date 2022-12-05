@@ -41,15 +41,15 @@ public class MygroupController {
     @PostMapping("/register")
     public Long registerMygroup(Authentication authentication) {
         log.info("로그인한 사원의 마이그룹 생성");
-        String username = authentication.getName();
-        return mygroupService.insert(username);
+        String regUser = authentication.getName();
+        return mygroupService.insert(regUser);
     }
 
     @PutMapping("/modify/{mygroupNo}")
     public Long modifyMygroup(@RequestBody MygroupUpdateDTO mygroupUpdateDTO, Authentication authentication) {
         log.info("로그인한 사원의 마이그룹 이름 수정");
-        String username = authentication.getName();
-        mygroupUpdateDTO.setUsername(username);
+        String modUser = authentication.getName();
+        mygroupUpdateDTO.setModUser(modUser);
         return mygroupService.update(mygroupUpdateDTO);
     }
 

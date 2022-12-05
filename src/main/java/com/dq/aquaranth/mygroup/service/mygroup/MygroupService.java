@@ -13,7 +13,7 @@ public interface MygroupService {
      */
     List<MygroupListDTO> findAllMygroup(String username);
     MygroupInformationDTO findByMygroupNo(Long mygroupNo);
-    Long insert(String username);
+    Long insert(String regUser);
     Long update(MygroupUpdateDTO mygroupUpdateDTO);
     Long delete(Long mygroupNo);
 }
