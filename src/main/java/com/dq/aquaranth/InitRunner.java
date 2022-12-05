@@ -18,8 +18,6 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.dq.aquaranth.menu.constant.RedisKeys.ROLES_KEYS;
-
 /**
  * application 실행시 처리되는 로직입니다
  *
@@ -62,7 +60,7 @@ public class InitRunner implements ApplicationRunner {
         menuCodes.forEach(menuCode -> {
             List<RoleGroup> roleGroups = new ArrayList<>(roleGroupService.findByMenuCode(menuCode));
             try {
-                redisService.setCacheObject(ROLES_KEYS.getKeys() + menuCode, roleGroups);
+                redisService.setCacheObject(menuCode, roleGroups);
             } catch (JsonProcessingException e) {
                 throw new RuntimeException(e);
             }
