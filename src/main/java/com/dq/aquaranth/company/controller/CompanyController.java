@@ -43,8 +43,7 @@ public class CompanyController {
      */
     @PostMapping("/register")
     public Long registerCompany(@RequestBody CompanyInformationDTO companyInformationDTO, Authentication authentication) {
-        CustomUser customUser = (CustomUser) authentication.getPrincipal();
-        String username = customUser.getUsername();
+        String username = authentication.getName();
         log.info(username);
         return companyService.insert(companyInformationDTO, username);
     }
@@ -52,7 +51,7 @@ public class CompanyController {
     /**
      * 회사 기본정보 수정
      */
-    @PutMapping("/modify/{caompanyNo}")
+    @PutMapping("/modify/{companyNo}")
     public Long modifyCompany(@RequestBody CompanyUpdateDTO companyUpdateDTO, Authentication authentication) {
         String username = authentication.getName();
         return companyService.update(companyUpdateDTO, username);
@@ -61,7 +60,7 @@ public class CompanyController {
     /**
      * 회사 기본정보 삭제(즉, 사용 여부가 '사용'인 회사를 '미사용'으로 변경)
      */
-    @DeleteMapping("/remove/{companyNo}")
+    @GetMapping("/remove/{companyNo}")
     public Long removeCompany(@PathVariable Long companyNo) {
         return companyService.deleteByCompanyNo(companyNo);
     }

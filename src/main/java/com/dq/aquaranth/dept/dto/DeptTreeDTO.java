@@ -1,7 +1,5 @@
 package com.dq.aquaranth.dept.dto;
 
-//dept_no, orga_no, dept_name, upper_dept_no, ord, depth, company_no
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

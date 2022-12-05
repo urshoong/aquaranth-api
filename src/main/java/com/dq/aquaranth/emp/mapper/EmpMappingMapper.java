@@ -11,4 +11,7 @@ public interface EmpMappingMapper {
      * @param empMappingDTO : 사원-조직 매핑 정보 객체
      */
     Long empMappingInsert(EmpMappingDTO empMappingDTO);
+
+    // 레디스에 올릴 empMapping값. username과 deptno으로 검색한다.
+    EmpMappingDTO findByUsernameAndDeptNo(String username, Long deptNo);
 }

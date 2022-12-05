@@ -1,11 +1,10 @@
 package com.dq.aquaranth.menu.interceptor;
 
-import com.dq.aquaranth.login.service.RedisService;
 import com.dq.aquaranth.login.service.UserSessionService;
 import com.dq.aquaranth.menu.annotation.MenuCode;
-import com.dq.aquaranth.menu.constant.ErrorCodes;
 import com.dq.aquaranth.menu.constant.MenuCodes;
-import com.dq.aquaranth.menu.exception.MenuException;
+import com.dq.aquaranth.menu.exception.CommonException;
+import com.dq.aquaranth.menu.exception.ErrorCodes;
 import com.dq.aquaranth.rolegroup.domain.RoleGroup;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -19,16 +18,33 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
+
+/**
+ * 권한 체크용 인터셉터입니다.
+ * 컨트롤러로 들어오는 유저 정보와, 접근하려는 컨트롤러를 확인하여
+ * 유저의 권한그룹들을 조회한 뒤, 컨트롤러에 접근할 수 있는 권한그룹과
+ * 일치한지 확인합니다.
+ * <p>
+ * 컨트롤러에는 커스텀 어노테이션으로 메뉴코드가 부여되어 있고,
+ * 컨트롤러로 접근하는 어노테이션 메뉴코드 값을 읽고,
+ * 레디스에 해당하는 메뉴코드 키값을 검색하여
+ * 권한 그룹을 조회합니다.
+ * <p>
+ * 해당하는 권한그룹이 있다면 요청을 허가하고,
+ * 해당하는 권한그룹이 없다면 예외와 함께 요청을 차단합니다.
+ *
+ * @author 김민준
+ */
 @Log4j2
 @Component
 @RequiredArgsConstructor
 public class AuthorizationInterceptor implements HandlerInterceptor {
-
-
     private final UserSessionService userSessionService;
-    private final ObjectMapper objectMapper;
     private final RedisTemplate<String, Object> redisTemplate;
+    private final ObjectMapper objectMapper;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -37,24 +53,25 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
         }
         HandlerMethod handlerMethod = (HandlerMethod) handler;
 
-        String menuCode = handlerMethod.getBean().getClass().getDeclaredAnnotation(MenuCode.class).value().getCode();
+        String username = Optional.ofNullable(request.getUserPrincipal().getName()).orElseThrow(() -> new CommonException(ErrorCodes.ERROR));
+        if (Objects.isNull(username)) {
+            throw new CommonException(ErrorCodes.INVALID_USER);
+        }
 
-        if (menuCode.equals(MenuCodes.ROOT.getCode())){
+        String menuCode = handlerMethod.getBean().getClass().getDeclaredAnnotation(MenuCode.class).value().getCode();
+        if (menuCode.equals(MenuCodes.ROOT.getCode())) {
             return true;
         }
 
-        String username = request.getUserPrincipal().getName();
-
         List<RoleGroup> loginUserInfo = userSessionService.findUserInfoInRedis(username).getRoleGroups();
+        List<RoleGroup> menuRoles = objectMapper.readValue(redisTemplate.opsForValue().get(menuCode).toString(), new TypeReference<>() {
+        });
 
+        loginUserInfo.stream().filter(loginUser -> menuRoles
+                            .stream().anyMatch(menuRole -> loginUser.getRoleGroupNo().equals(menuRole.getRoleGroupNo())))
+                            .findAny().orElseThrow(() -> new CommonException(ErrorCodes.UNAUTHORIZED_MEMBER));
 
-        List<RoleGroup> menuRoles = objectMapper.readValue(redisTemplate.opsForValue().get(menuCode).toString(), new TypeReference<>(){});
-
-
-        loginUserInfo.stream()
-                .filter(loginUser -> menuRoles.stream().anyMatch(menuRole -> loginUser.getRoleGroupNo().equals(menuRole.getRoleGroupNo())))
-                .findAny()
-                .orElseThrow(() -> new MenuException(ErrorCodes.UNAUTHORIZED_MEMBER));
+        log.info("{} 에 대한 {} 메뉴권한 확인", username, menuCode);
 
         return true;
     }

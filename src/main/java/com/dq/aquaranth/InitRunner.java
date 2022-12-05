@@ -1,9 +1,11 @@
 package com.dq.aquaranth;
 
+import com.dq.aquaranth.login.domain.LoginUser;
 import com.dq.aquaranth.login.service.RedisService;
-import com.dq.aquaranth.menu.dto.request.MenuRequestDTO;
+import com.dq.aquaranth.login.service.UserSessionService;
+import com.dq.aquaranth.menu.dto.request.MenuQueryDTO;
 import com.dq.aquaranth.menu.dto.response.MenuResponseDTO;
-import com.dq.aquaranth.menu.service.MenuService;
+import com.dq.aquaranth.menu.service.MenuConfigurationService;
 import com.dq.aquaranth.rolegroup.domain.RoleGroup;
 import com.dq.aquaranth.rolegroup.service.RoleGroupService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -26,8 +28,9 @@ import java.util.List;
 @Log4j2
 public class InitRunner implements ApplicationRunner {
     private final RedisService redisService;
-    private final MenuService menuService;
+    private final MenuConfigurationService menuConfigurationService;
     private final RoleGroupService roleGroupService;
+
 
 
     /**
@@ -48,7 +51,7 @@ public class InitRunner implements ApplicationRunner {
 
         // db 에 저장된 모든 메뉴를 가져옵니다.
         List<String> menuCodes = new ArrayList<>();
-        for (MenuResponseDTO param : menuService.findAllBy(new MenuRequestDTO())) {
+        for (MenuResponseDTO param : menuConfigurationService.findAllBy(new MenuQueryDTO())) {
             menuCodes.add(param.getMenuCode());
         }
 
@@ -61,9 +64,5 @@ public class InitRunner implements ApplicationRunner {
                 throw new RuntimeException(e);
             }
         });
-    }
-
-    public void setMenuIcon(){
-
     }
 }

@@ -22,6 +22,5 @@ public class EmpLoginDTO {
     private String deptName;
     private Long deptNo;
     private String empRank;
-    private String info;
     private Long orgaNo;
 }

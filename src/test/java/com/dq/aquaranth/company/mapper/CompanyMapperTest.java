@@ -47,7 +47,7 @@ class CompanyMapperTest {
     @Test
     @DisplayName("회사 기본정보 추가")
     void insertOrgaAndInsertCompany() {
-        LocalDate foundingDate = LocalDate.of(2018,07,03);
+        LocalDate foundingDate = LocalDate.of(2018, 7, 3);
         String username = "emp10";
         CompanyOrgaDTO companyOrgaDTO
                 = CompanyOrgaDTO
@@ -57,6 +57,7 @@ class CompanyMapperTest {
                 .username(username)
                 .build();
         Long orgaResult = companyMapper.insertOrga(companyOrgaDTO);
+
         CompanyInformationDTO companyInformationDTO
                 = CompanyInformationDTO
                 .builder()

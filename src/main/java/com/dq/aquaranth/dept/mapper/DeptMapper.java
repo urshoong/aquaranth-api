@@ -9,7 +9,7 @@ import java.util.List;
 public interface DeptMapper {
     public DeptDTO select(Long deptNo);
 
-    public int insert(DeptDTO deptDTO2);
+    public Long selectDeptOrgaNo(Long deptNo);
 
     public int delete(Long deptNo);
 
@@ -29,11 +29,10 @@ public interface DeptMapper {
 
     void updateLastDno(@Param("parentDeptNo") Long parentDeptNo, @Param("deptNo") Long deptNo);
 
-    void insertOrga( @Param("orga") Long orga, @Param("regUser") String regUser);
+    public int insert(DeptRegisterDTO deptRegisterDTO);
+    int insertOrga(DeptOrgaRegisterDTO deptOrgaRegisterDTO);
 
-    Long getLast();
-
-    void insertOrgaMapping(@Param("deptNo") Long deptNo, @Param("orgaNo") Long orgaNo, @Param("regUser") String regUser );
+    int insertOrgaMapping(DeptMappingRegisterDTO deptMappingRegisterDTO);
 
     //===========================등록 트랜잭션======================================
 
@@ -49,6 +48,12 @@ public interface DeptMapper {
 
 
 
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    List<DeptSearchDTO> deptSearch(String deptSearch);
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
 
 
@@ -63,4 +68,9 @@ public interface DeptMapper {
 
     //종현
     DeptDTO findByUsername(String username);
+
+
+
+
+
 }

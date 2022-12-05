@@ -2,11 +2,11 @@ package com.dq.aquaranth.dept.controller;
 
 import com.dq.aquaranth.dept.dto.*;
 import com.dq.aquaranth.dept.service.DeptService;
-import com.dq.aquaranth.emp.dto.EmpDTO;
 import com.dq.aquaranth.menu.annotation.MenuCode;
 import com.dq.aquaranth.menu.constant.MenuCodes;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -33,11 +33,18 @@ public class DeptController {
 
     //등록
     @PostMapping
-    public Map<Object, Object> register(@RequestBody DeptDTO deptDTO2) {
+//    public Map<Object, Object> register(@RequestBody DeptDTO deptDTO2, Authentication authentication) {
+    public Integer register(@RequestBody DeptRegisterDTO deptRegisterDTO, Authentication authentication) {
 
-        log.info(deptDTO2);
+        log.info(deptRegisterDTO);
 
-        Map<Object, Object> result = deptService.register(deptDTO2);
+        //로그인한 사용자의 username 가져오기
+        String username = authentication.getName();
+        log.info("username : " + username);
+        deptRegisterDTO.setUsername(username);
+
+//        Map<Object, Object> result = deptService.insert(deptDTO2);
+        Integer result = deptService.insert(deptRegisterDTO);
 
         return result;
     }
@@ -93,7 +100,8 @@ public class DeptController {
 
       //회사 바로 출력 되고 클릭하면 바로 밑 하위 부서만 조회(준성이형)
       @GetMapping("/findTree/{companyNo}/{depth}/{upperDeptNo}")
-      public List<DeptDTO> findTree(@PathVariable("companyNo")Long companyNo ,@PathVariable("depth")int depth, @PathVariable("upperDeptNo")Long upperDeptNo ,GetSubDeptDTO getSubDeptDTO) {
+//      public List<DeptDTO> findTree(@PathVariable("companyNo")Long companyNo ,@PathVariable("depth")int depth, @PathVariable("upperDeptNo")Long upperDeptNo ,GetSubDeptDTO getSubDeptDTO) {
+      public List<DeptDTO> findTree(GetSubDeptDTO getSubDeptDTO) {
         return deptService.getSubDepth(getSubDeptDTO);
       }
 

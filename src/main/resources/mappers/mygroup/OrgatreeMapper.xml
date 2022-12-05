@@ -49,14 +49,15 @@
 
     <!--해당 부서에 소속된 사원 중 한 사원의 정보 조회-->
     <select id="findByEmpNo" resultType="com.dq.aquaranth.mygroup.dto.orgatree.OrgatreeEmpInformationDTO">
-        select e.emp_no
-             , em.orga_no
+        select em.orga_no
              , e.emp_name
              , e.username
              , em.emp_rank
              , FN_GET_HIERARCHY_ORGA(#{orgaNo}) as path
              , e.emp_phone
              , e.email
+             , e.filename
+             , e.uuid
         from tbl_emp e
                  join tbl_emp_mapping em on e.emp_no = em.emp_no
         where em.orga_no=#{orgaNo}

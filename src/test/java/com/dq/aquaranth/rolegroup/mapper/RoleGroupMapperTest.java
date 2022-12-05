@@ -3,9 +3,9 @@ package com.dq.aquaranth.rolegroup.mapper;
 import com.dq.aquaranth.login.domain.LoginUser;
 import com.dq.aquaranth.rolegroup.domain.RoleGroup;
 import com.dq.aquaranth.rolegroup.dto.PageRequestDTO;
+import com.dq.aquaranth.rolegroup.dto.PageResponseDTO;
 import com.dq.aquaranth.rolegroup.dto.RoleGroupResponseDTO;
 import com.dq.aquaranth.rolegroup.dto.RoleGroupUpdateDTO;
-import com.dq.aquaranth.userrole.dto.paging.PageResponseDTO;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -31,7 +31,7 @@ class RoleGroupMapperTest {
     }
 
     @Test
-    @DisplayName("회사번호를 전달받았을 경우 해당회사에 해당하는 권한그룹만 나타냅니다")
+    @DisplayName("회사번호나 키워드를 입력받았다면 해당 조건에 맞는 권한그룹리스트를 조회합니다.")
     void findAll_exist_companyNo_and_roleGroupName() {
         // given
         Long searchCompanyNo = 2L;
@@ -64,35 +64,35 @@ class RoleGroupMapperTest {
     @Test
     @DisplayName("권한그룹을 추가합니다.")
     void insert() {
-//        // given
-//        String newRoleGroupName = "test 권한그룹2";
-//        boolean newRoleGroupUse = true;
-//        Long newCompanyNo = 2L; // MEGA ZONE
-//
-//        RoleGroup insertRoleGroup = RoleGroup.builder()
-//                .roleGroupName(newRoleGroupName)
-//                .roleGroupUse(newRoleGroupUse)
-//                .companyNo(newCompanyNo)
-//                .regUser("종현")
-//                .build();
-//
-//        // when
-//        roleGroupMapper.insert(insertRoleGroup); // 권한그룹 추가하기
-//        log.info(insertRoleGroup.getRoleGroupNo());
-//
-//        // then
-//        assertNotNull(insertRoleGroup.getRoleGroupNo());
-//        log.info(insertRoleGroup);
+        // given
+        String newRoleGroupName = "test 권한그룹2";
+        boolean newRoleGroupUse = true;
+        Long newCompanyNo = 2L; // MEGA ZONE
 
-        // page-nation 용 권한그룹 모킹 데이터
-        for (int i = 0; i < 100; i++) {
-            roleGroupMapper.insert(RoleGroup.builder()
-                    .roleGroupName("권한그룹 mock 데이터 " + i)
-                    .roleGroupUse(true)
-                    .companyNo(2L)
-                    .regUser("test 종현")
-                    .build());
-        }
+        RoleGroup insertRoleGroup = RoleGroup.builder()
+                .roleGroupName(newRoleGroupName)
+                .roleGroupUse(newRoleGroupUse)
+                .companyNo(newCompanyNo)
+                .regUser("종현")
+                .build();
+
+        // when
+        roleGroupMapper.insert(insertRoleGroup); // 권한그룹 추가하기
+        log.info(insertRoleGroup.getRoleGroupNo());
+
+        // then
+        assertNotNull(insertRoleGroup.getRoleGroupNo());
+        log.info(insertRoleGroup);
+
+        // 권한그룹 다중 모킹 데이터
+//        for (int i = 0; i < 100; i++) {
+//            roleGroupMapper.insert(RoleGroup.builder()
+//                    .roleGroupName("권한그룹 mock 데이터 " + i)
+//                    .roleGroupUse(true)
+//                    .companyNo(2L)
+//                    .regUser("test 종현")
+//                    .build());
+//        }
     }
 
     @Test
@@ -172,5 +172,23 @@ class RoleGroupMapperTest {
         int total = roleGroupMapper.getTotal();
 
         log.info(total);
+    }
+
+    @Test
+    @DisplayName("페이지 번호에 맞는 권한그룹리스트를 조회합니다.")
+    void getRoleGroupPageNo() {
+        // given
+        int pageNo = 1;
+        PageRequestDTO pageReq = PageRequestDTO.builder()
+                .page(pageNo)
+                .build();
+
+        // then
+        List<RoleGroupResponseDTO> list = roleGroupMapper.getList(pageReq);
+
+        // when
+        for (RoleGroupResponseDTO param : list) {
+            log.info(param);
+        }
     }
 }

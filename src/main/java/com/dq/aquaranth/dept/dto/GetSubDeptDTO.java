@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class GetSubDeptDTO {
-    private int companyNo, depth;
-    private Long upperDeptNo;
+    private int depth;
+    private Long companyNo, upperDeptNo;
 }

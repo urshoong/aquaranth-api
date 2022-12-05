@@ -6,7 +6,6 @@ import com.dq.aquaranth.login.dto.LoginUserInfo;
 import com.dq.aquaranth.login.service.UserSessionService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.*;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -16,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 
 /**
  * {@code @RedisUpdate} 어노테이션이 붙은 메서드가 실행되기 전 동작하는 AOP 입니다.
+ *
  * @author jonghyun
  */
 @Component
@@ -41,10 +41,12 @@ public class RedisUpdateAop {
         String username = request.getUserPrincipal().getName();
         LoginUserInfo loginUserInfo = userSessionService.findUserInfoInRedis(username);
 
-        userSessionService.loadUserInfoByLoginUser(LoginUser.builder()
+        LoginUserInfo savedLoginUserInfo = userSessionService.loadUserInfoByLoginUser(LoginUser.builder()
                 .loginDeptNo(loginUserInfo.getDept().getDeptNo())
                 .loginCompanyNo(loginUserInfo.getCompany().getCompanyNo())
                 .username(username)
                 .build());
+
+        log.info("Redis 에 {}님의 정보가 업데이트 되었습니다. => {}", username, savedLoginUserInfo);
     }
 }

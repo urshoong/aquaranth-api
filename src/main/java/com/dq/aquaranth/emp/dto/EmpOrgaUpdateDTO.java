@@ -15,9 +15,8 @@ import java.time.LocalDate;
 public class EmpOrgaUpdateDTO {
     private Long orgaNo, deptNo, companyNo, empNo;
     private String empRank, empRole,  companyAddress, companyName, companyTel, deptName;
+    private String modUser;
     private boolean deptMain;
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate retiredDate, hiredDate;
-//    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-//    private LocalDateTime modDate;
 }

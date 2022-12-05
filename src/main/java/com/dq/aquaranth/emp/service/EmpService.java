@@ -1,7 +1,7 @@
 package com.dq.aquaranth.emp.service;
 
 import com.dq.aquaranth.emp.dto.*;
-import com.dq.aquaranth.objectstorage.dto.request.MultipartFileDTO;
+import com.dq.aquaranth.menu.objectstorage.dto.request.MultipartFileDTO;
 
 import java.util.List;
 
@@ -28,5 +28,15 @@ public interface EmpService {
 
 
     List<EmpLoginEmpDTO> findLoginUser(String username);
+
+    // 레디스 녀석들 가져오기
+    EmpLoggingDTO findLoggingInformation(String username);
+
+    // 먼데?
+//    Long updateRecentAccessInfo();
+
+    // 회원 프로필 삭제
+    Long deleteProfile(Long empNo);
+
 
 }

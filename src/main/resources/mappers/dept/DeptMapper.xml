@@ -8,15 +8,25 @@
 
 <!--    1개 조회-->
     <select id="select" resultType="com.dq.aquaranth.dept.dto.DeptDTO">
-        select * from tbl_dept where dept_no = #{dept_no}
+<!--        select * from view_dept_tree where dept_no = #{dept_no}-->
+        select * from tbl_dept where dept_no = #{deptNo}
     </select>
 
+    <select id="selectDeptOrgaNo" resultType="long">
+        select tdm.orga_no
+        from tbl_dept t
+        join tbl_dept_mapping tdm on t.dept_no = tdm.dept_no
+        where t.dept_no = #{deptNo};
+    </select>
 
 <!--    =================================등록 트랜잭션 ========================================-->
 <!--    조직 추가-->
     <insert id="insertOrga">
+        <selectKey keyProperty="orgaNo" order="AFTER" resultType="long">
+            select LAST_INSERT_ID()
+        </selectKey>
         insert into tbl_orga (upper_orga_no, orga_type, reg_user)
-        values (#{orga}, 'dept' , #{regUser})
+        values (#{upperOrgaNo}, 'dept' , #{regUser})
     </insert>
 
 <!--    조직 매핑 테이블 추가-->
@@ -30,8 +40,36 @@
         <selectKey keyProperty="deptNo" order="AFTER" resultType="long">
             SELECT LAST_INSERT_ID()
         </selectKey>
-        insert into  tbl_dept (upper_dept_no, company_no, dept_name, del_flag, main_flag, dept_desc,   depth, reg_user)
-        values (#{upperDeptNo}, #{companyNo}, #{deptName}, #{delFlag}, #{mainFlag}, #{deptDesc},  #{depth}, #{regUser})
+        insert into tbl_dept (
+          upper_dept_no
+        , company_no
+        , dept_name
+        , dept_desc
+        , depth
+        , reg_user)
+        values (
+        <if test="upperDeptNo == 0">
+        null
+        </if>
+        <if test="upperDeptNo != 0">
+        #{upperDeptNo}
+        </if>
+        , #{companyNo}
+        , #{deptName}
+        , #{deptDesc}
+        <if test="upperDeptNo == 0">
+        , 1
+        </if>
+        <if test="upperDeptNo != 0">
+        , (
+        select d2.depth+1 as depth
+        from tbl_dept d2
+        where dept_no=#{upperDeptNo}
+        )
+        </if>
+        , #{username}
+        )
+        ;
     </insert>
 
 <!--    만든 함수를 이용해서 (상위부서 번호와 그룹번호를 사용)  ord값 조회-->
@@ -104,7 +142,7 @@
         select
         dept_no, orga_no, dept_name, upper_dept_no, ord, depth, company_no, last_dno
         from
-        v_dept_tree
+        view_dept_tree
 
         where company_no = #{company} order by ord
     </select>
@@ -146,6 +184,40 @@
         <if test="depth eq 0">
             select 0 dept_no,
             null upper_dept_no,
+            tc.company_name dept_name,
+            0 ord,
+            0 depth,
+            null last_dno,
+            tc.company_no,
+            (select count(*)
+            from tbl_dept td
+            where td.company_no = tc.company_no
+            and td.depth = 1) lower_dept_cnt,
+            tc.orga_no
+            from tbl_company tc
+            where tc.company_no = #{companyNo}
+            union all
+        </if>
+        select td.dept_no, td.upper_dept_no, td.dept_name, td.ord, td.depth, td.last_dno, td.company_no
+        , (select count(*)
+        from tbl_dept
+        where company_no = td.company_no
+        and upper_dept_no = td.dept_no
+        group by upper_dept_no
+        ) lower_dept_cnt
+        , (select tdm.orga_no
+        from tbl_dept_mapping tdm
+        join tbl_orga t on tdm.orga_no = t.orga_no
+        where tdm.dept_no = td.dept_no
+        ) orga_no
+        from tbl_dept td
+        where (td.upper_dept_no = #{upperDeptNo} OR
+        td.upper_dept_no is null )
+        and td.depth = #{depth}
+        and td.company_no = #{companyNo}
+       <!-- <if test="depth eq 0">
+            select 0 dept_no,
+            null upper_dept_no,
             company_name dept_name,
             0 ord,
             0 depth,
@@ -158,6 +230,24 @@
         select dept_no, upper_dept_no, dept_name, ord, depth, last_dno, company_no
         from tbl_dept
         where (upper_dept_no = #{upperDeptNo} OR upper_dept_no is null )and depth = #{depth}
-        and company_no = #{companyNo}
+        and company_no = #{companyNo}-->
+    </select>
+
+
+
+    <!--############################검색############################################-->
+
+    <!--부서 검색-->
+    <!--부서코드, 부서명으로 검색-->
+    <!--검색 결과 : 부서명(소속경로)-->
+
+    <select id="deptSearch" resultType="com.dq.aquaranth.dept.dto.DeptSearchDTO">
+        select d.dept_no
+            , d.dept_name
+            , FN_GET_HIERARCHY_ORGA(dm.orga_no) as path
+        from tbl_dept d
+            join tbl_dept_mapping dm on d.dept_no = dm.dept_no
+        where d.dept_no like concat('%', #{deptSearch}, '%')
+            or d.dept_name like concat('%', #{deptSearch}, '%')
     </select>
 </mapper>
