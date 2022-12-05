@@ -33,7 +33,6 @@ public class InitRunner implements ApplicationRunner {
     private final MenuConfigurationService menuConfigurationService;
     private final RoleGroupService roleGroupService;
 
-    private final UserSessionService userSessionService;
 
 
     /**
