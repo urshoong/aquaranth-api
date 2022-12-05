@@ -60,5 +60,7 @@ public class MenuRoleServiceImpl implements MenuRoleService {
             log.info("{}번 권한그룹에 {}번 메뉴가 정상적으로 저장되었습니다.", menuRole.getRoleGroupNo(), menuRole.getMenuNo());
         }
 
+        // 레디스 업데이트
+
     }
 }

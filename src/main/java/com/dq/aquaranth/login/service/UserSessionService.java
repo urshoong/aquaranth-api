@@ -43,5 +43,4 @@ public interface UserSessionService {
      * @return - 회사정보
      */
     CompanyInformationDTO findLoginUserCompany(String username);
-
 }
