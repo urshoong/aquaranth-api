@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-import static com.dq.aquaranth.menu.constant.RedisKeys.ROLES_KEYS;
 
 /**
  * 권한 체크용 인터셉터입니다.
@@ -65,7 +64,7 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
         }
 
         List<RoleGroup> loginUserInfo = userSessionService.findUserInfoInRedis(username).getRoleGroups();
-        List<RoleGroup> menuRoles = objectMapper.readValue(redisTemplate.opsForValue().get(ROLES_KEYS.getKeys() + menuCode).toString(), new TypeReference<>() {
+        List<RoleGroup> menuRoles = objectMapper.readValue(redisTemplate.opsForValue().get(menuCode).toString(), new TypeReference<>() {
         });
 
         loginUserInfo.stream().filter(loginUser -> menuRoles

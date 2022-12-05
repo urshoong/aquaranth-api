@@ -37,6 +37,7 @@ import static com.dq.aquaranth.login.jwt.JwtProperties.*;
 @Log4j2
 public class UserSessionServiceImpl implements UserSessionService {
     private final RedisTemplate<String, Object> redisTemplate;
+    private final RedisService redisService;
     private final JWTUtil jwtUtil;
     private final RoleGroupMapper roleGroupMapper;
     private final CompanyMapper companyMapper;
