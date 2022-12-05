@@ -67,9 +67,14 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
         List<RoleGroup> menuRoles = objectMapper.readValue(redisTemplate.opsForValue().get(menuCode).toString(), new TypeReference<>() {
         });
 
-        loginUserInfo.stream().filter(loginUser -> menuRoles
-                            .stream().anyMatch(menuRole -> loginUser.getRoleGroupNo().equals(menuRole.getRoleGroupNo())))
-                            .findAny().orElseThrow(() -> new CommonException(ErrorCodes.UNAUTHORIZED_MEMBER));
+        try{loginUserInfo.stream()
+                .filter(loginUser -> menuRoles.stream().anyMatch(menuRole -> loginUser.getRoleGroupNo().equals(menuRole.getRoleGroupNo())))
+                .findAny().orElseThrow(NullPointerException::new);}
+        catch (NullPointerException e){
+            request.getRequestDispatcher("/api/menu/error").forward(request,response);
+            log.info("{} 에 대한 {} 메뉴권한은 허가되지 않았습니다.", username, menuCode);
+            return false;
+        }
 
         log.info("{} 에 대한 {} 메뉴권한 확인", username, menuCode);
 

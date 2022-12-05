@@ -3,12 +3,15 @@ package com.dq.aquaranth.menu.controller;
 
 import com.dq.aquaranth.menu.annotation.MenuCode;
 import com.dq.aquaranth.menu.dto.request.MenuQueryDTO;
+import com.dq.aquaranth.menu.dto.response.ErrorResponseDTO;
 import com.dq.aquaranth.menu.dto.response.MenuImportResponseDTO;
 import com.dq.aquaranth.menu.dto.response.MenuResponseDTO;
 import com.dq.aquaranth.menu.dto.response.MenuTreeResponseDTO;
+import com.dq.aquaranth.menu.exception.ErrorCodes;
 import com.dq.aquaranth.menu.service.MenuService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -54,4 +57,15 @@ public class MenuController {
     public List<MenuImportResponseDTO> initRoutes() {
         return menuService.initRoutes();
     }
+
+    /**
+     * 인터셉터에서 발생한
+     * 권한 에러를 처리합니다.
+     * @return
+     */
+    @GetMapping("/error")
+    public ResponseEntity<ErrorResponseDTO> response(){
+        return ErrorResponseDTO.toResponseEntity(ErrorCodes.UNAUTHORIZED_MEMBER);
+    }
+
 }
