@@ -16,5 +16,5 @@ public class FavoriteInsertDTO {
      * 마이그룹 번호, 사원번호, 로그인한 사원의 아이디
      */
     private Long mygroupNo, orgaNo;
-    private String username;
+    private String regUser;
 }

@@ -1,9 +1,6 @@
 package com.dq.aquaranth.company.service;
 
-import com.dq.aquaranth.company.dto.CompanyInformationDTO;
-import com.dq.aquaranth.company.dto.CompanyListDTO;
-import com.dq.aquaranth.company.dto.CompanyUpdateDTO;
-import com.dq.aquaranth.company.dto.CompanyOrgaDTO;
+import com.dq.aquaranth.company.dto.*;
 import com.dq.aquaranth.company.mapper.CompanyMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -34,27 +31,71 @@ public class CompanyServiceImpl implements CompanyService {
     @Override
     @Transactional
     public Long insert(CompanyInformationDTO companyInformationDTO, String username) {
+
+        Long resultInsert;
+
+        //1. company
+        //1-1. 조직 추가
         log.info("상위 조직번호가 없고 'company' 타입인 조직을 먼저 추가");
-        log.info(username);
         CompanyOrgaDTO companyOrgaDTO = CompanyOrgaDTO
                 .builder()
                 .orgaType("company")
-                .username(username)
+                .regUser(username)
                 .build();
         companyMapper.insertOrga(companyOrgaDTO);
-        log.info(companyOrgaDTO.getOrgaNo());
 
+        //1-2. 회사 추가
         log.info("회사 기본정보 추가");
         companyInformationDTO.setOrgaNo(companyOrgaDTO.getOrgaNo());
-        companyInformationDTO.setUsername(username);
+        companyInformationDTO.setRegUser(username);
+        resultInsert = companyMapper.insert(companyInformationDTO);
 
-        return companyMapper.insert(companyInformationDTO);
+
+        //2. dept
+        //2-1. 조직 추가
+        log.info("상위 조직번호가 회사 조직번호고 'dept' 타입인 조직을 먼저 추가");
+        log.info("상위 조직번호 : " + companyOrgaDTO.getOrgaNo());
+        CompanyOrgaDTO companyOrgaDeptDTO = CompanyOrgaDTO
+                .builder()
+                .upperOrgaNo(companyOrgaDTO.getOrgaNo())
+                .orgaType("dept")
+                .regUser(username)
+                .build();
+        companyMapper.insertOrga(companyOrgaDeptDTO);
+
+        //2-2. 부서 추가
+        log.info("회사 추가 시 '대표이사' 부서 추가");
+        CompanyDeptDTO companyDeptDTO = CompanyDeptDTO
+                .builder()
+                .companyNo(companyInformationDTO.getCompanyNo())
+                .depth(1L)
+                .deptName("대표이사")
+                .deptDesc("대표이사")
+                .regUser(username)
+                .build();
+        log.info("회사 번호 : " + companyInformationDTO.getCompanyNo());
+        companyMapper.insertDept(companyDeptDTO);
+
+        //2-3. 부서 매핑 추가
+        log.info("회사 추가 시 부서 매핑 추가");
+        CompanyDeptMappingDTO companyDeptMappingDTO = CompanyDeptMappingDTO
+                .builder()
+                .deptNo(companyDeptDTO.getDeptNo())
+                .orgaNo(companyOrgaDeptDTO.getOrgaNo())
+                .regUser(username)
+                .build();
+        log.info("부서 번호 : " + companyDeptMappingDTO.getDeptNo());
+        log.info("조직 번호 : " + companyDeptMappingDTO.getOrgaNo());
+        companyMapper.insertDeptMapping(companyDeptMappingDTO);
+
+
+        return resultInsert;
     }
 
     @Override
     public Long update(CompanyUpdateDTO companyUpdateDTO, String username) {
         log.info("회사 기본정보 수정");
-        companyUpdateDTO.setUsername(username);
+        companyUpdateDTO.setModUser(username);
         return companyMapper.update(companyUpdateDTO);
     }
 
