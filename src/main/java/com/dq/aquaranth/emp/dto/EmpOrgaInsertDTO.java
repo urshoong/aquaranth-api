@@ -13,6 +13,6 @@ import java.time.LocalDate;
 @Builder
 public class EmpOrgaInsertDTO {
     private Long orgaNo, empNo, upperOrgaNo, deptNo;
-    private String empRank, orgaType, regUser;
+    private String empRole, empRank, orgaType, regUser;
     private LocalDate regDate;
 }

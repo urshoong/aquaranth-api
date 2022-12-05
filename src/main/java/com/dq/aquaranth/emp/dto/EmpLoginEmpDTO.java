@@ -24,8 +24,6 @@ public class EmpLoginEmpDTO {
     private String username;
     private Long empNo;
     private String loginIp;
-    private String uuid;
-    private String filename;
     private String profileUrl;
 
     private List<EmpLoginCompanyDTO> companyList;
