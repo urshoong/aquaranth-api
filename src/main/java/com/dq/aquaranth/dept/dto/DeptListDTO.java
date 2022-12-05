@@ -13,5 +13,5 @@ public class DeptListDTO {
 
     // 부서 검색을 통해 나오는 컬럼들
     private Long deptNo;
-    private String deptName, regUser;
+    private String deptName;
 }
