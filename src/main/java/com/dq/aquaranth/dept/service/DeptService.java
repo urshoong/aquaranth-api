@@ -1,7 +1,6 @@
 package com.dq.aquaranth.dept.service;
 
 import com.dq.aquaranth.company.mapper.CompanyMapper;
-import com.dq.aquaranth.company.service.CompanyService;
 import com.dq.aquaranth.dept.dto.*;
 import com.dq.aquaranth.dept.mapper.DeptMapper;
 import lombok.RequiredArgsConstructor;
@@ -10,7 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Map;
 
 @Service
 @Log4j2
@@ -22,7 +20,7 @@ public class DeptService {
 
     private final CompanyMapper companyMapper;
 
-    //조회
+    //상세 조회
     public DeptDTO getOne(Long deptNo) {
         DeptDTO deptDTO2 = deptMapper.select(deptNo);
 
@@ -49,8 +47,6 @@ public class DeptService {
 
         log.info("after: ", deptRegisterDTO.getDeptNo());
 
-
-
         /** 2. 조직 추가 */
         // 회사면 회사 orgaNo 넣어야되고, 부서면 부서 orgaNo넣어야됨.
         DeptDTO deptDTO = deptMapper.select(lastDeptNo);
@@ -69,7 +65,6 @@ public class DeptService {
         } else {
             // 상위 부서 번호가 있을 경우 > 하위 부서
             // 해당 상위부서의 조직번호 찾기
-//            tempUpperOrgaNo = deptMapper.select(deptRegisterDTO.getUpperDeptNo()).getUpperDeptNo();
             tempUpperOrgaNo = deptMapper.selectDeptOrgaNo(deptRegisterDTO.getUpperDeptNo());
         }
 
@@ -96,59 +91,11 @@ public class DeptService {
         log.info("insertDeptMapping : " + insertDeptMapping);
         log.info("result : " + result);
 
-        /*
-        log.info("before: ", deptRegisterDTO.getDeptNo());
-        Long beforeDeptNo = deptRegisterDTO.getDeptNo();
-
-        // 부서테이블 추가
-        int insertDept = deptMapper.insert(deptRegisterDTO);
-        Long lastDeptNo = deptRegisterDTO.getDeptNo();
-
-        log.info("after: ", deptRegisterDTO.getDeptNo());
-
-
-        // 조직테이블 추가
-        DeptDTO deptDTO = deptMapper.select(lastDeptNo);
-
-
-        DeptOrgaRegisterDTO deptOrgaRegisterDTO = DeptOrgaRegisterDTO
-                .builder()
-                .regUser(deptDTO.getRegUser())
-                .build();
-
-        // 해당 회사의 조직번호 찾기
-        Long companyOrgaNo = companyMapper.findByCompanyNo(deptDTO.getCompanyNo()).getOrgaNo();
-
-        // 해당 상위부서의 조직번호 찾기
-        Long upperDeptOrgaNo = deptMapper.select(beforeDeptNo).getUpperDeptNo();
-
-        if (deptDTO.getUpperDeptNo() == null || deptDTO.getUpperDeptNo() == 0L) {
-            deptOrgaRegisterDTO.setOrgaNo(companyOrgaNo);
-        }
-        else {
-            deptOrgaRegisterDTO.setOrgaNo(upperDeptOrgaNo);
-        }
-
-        deptMapper.insertOrga(deptOrgaRegisterDTO);
-
-        Long lastOrgaNo = deptOrgaRegisterDTO.getOrgaNo();
-        log.info("lastOrgaNo: ", lastOrgaNo);
-
-        // 부서매핑테이블 추가
-        DeptMappingRegisterDTO deptMappingRegisterDTO = DeptMappingRegisterDTO
-                .builder()
-                .deptNo(deptDTO.getDeptNo())
-                .orgaNo(lastOrgaNo)
-                .regUser(deptDTO.getRegUser())
-                .build();
-        deptMapper.insertOrgaMapping(deptMappingRegisterDTO);
-
-        return insertDept;
-        */
         return result;
     }
 
 
+    // 수정
     public DeptDTO modify(DeptDTO deptDTO2) {
         int result = deptMapper.update(deptDTO2);
         Long no = deptDTO2.getDeptNo();
@@ -162,29 +109,21 @@ public class DeptService {
         return modifyDTO;
     }
 
+    // 삭제
     public Long remove(Long deptNo) {
         deptMapper.delete(deptNo);
         return deptNo;
     }
 
-    public List<DeptDTO> list(int skip, int size) {
-        List<DeptDTO> result = deptMapper.getList(skip,size);
-        return result;
-    }
-
-    //ord번호로 오름차순 정렬 리스트 조회
+    // ord번호로 오름차순 정렬 리스트 조회
     public List<DeptDTO> listDept(Long companyNo) {
         return deptMapper.getGnoList(companyNo);
     }
 
-//    public List<DeptDTO2> registerDept(DeptDTO2 deptDTO2) {
-//
-//    }
-
-
     public List<DeptDTO> listDepth (Long upperDeptNo, int depth){
 
         return deptMapper.getFromParent(upperDeptNo, depth);
+
     }
 
 
@@ -194,11 +133,16 @@ public class DeptService {
         return deptMapper.getTree(company);
     }
 
-    //맨처음 회사 나오고 버튼 누르면 바로 밑 하위 부서 조회(준성이형)
+    //맨처음 회사 나오고 버튼 누르면 바로 밑 하위 부서 조회
     public List<DeptDTO> getSubDepth(GetSubDeptDTO getSubDeptDTO) {
         return deptMapper.getSubDepth(getSubDeptDTO);
     }
 
+    // 검색
+    public List<DeptSearchDTO> searchList(String deptName, Long deptNo) {
+        log.info("부서명, 부서이름으로 해당 부서 검색합니다.");
+        return deptMapper.deptSearch(deptName, deptNo);
+    }
 
     // 회사 번호로 부서 목록 조회
     public List<DepartmentDTO> findByCompanyNo(Long companyNo)

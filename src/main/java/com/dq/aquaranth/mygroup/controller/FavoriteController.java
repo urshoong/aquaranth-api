@@ -27,9 +27,9 @@ public class FavoriteController {
     public Long registerFavorite(@RequestBody FavoriteInsertDTO favoriteInsertDTO, Authentication authentication) {
         log.info("해당 마이그룹에 사원 즐겨찾기");
         // 로그인한 사원의 아이디
-        String username = authentication.getName();
-        favoriteInsertDTO.setUsername(username);
-        return favoriteService.insert(favoriteInsertDTO, username);
+        String regUser = authentication.getName();
+        favoriteInsertDTO.setRegUser(regUser);
+        return favoriteService.insert(favoriteInsertDTO, regUser);
     }
 
     @GetMapping("/list/{mygroupNo}")

@@ -27,6 +27,16 @@ public interface CompanyMapper {
     Long insert(CompanyInformationDTO companyInformationDTO);
 
     /**
+     * 회사 추가 시 부서 추가
+     */
+    Long insertDept(CompanyDeptDTO companyDeptDTO);
+
+    /**
+     * 회사 추가 시 부서 매핑 추가
+     */
+    Long insertDeptMapping(CompanyDeptMappingDTO companyDeptMappingDTO);
+
+    /**
      * 회사 기본정보 수정
      */
     Long update(CompanyUpdateDTO companyUpdateDTO);

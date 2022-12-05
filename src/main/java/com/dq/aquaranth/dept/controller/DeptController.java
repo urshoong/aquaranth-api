@@ -69,13 +69,6 @@ public class DeptController {
 
     }
 
-
-    @GetMapping("/list")
-    public List<DeptDTO> list(DeptCriteria deptCriteria) {
-        return deptService.list(deptCriteria.getSkip(), deptCriteria.getSize());
-    }
-
-
     @GetMapping("/list/{companyNo}")
     public List<DeptDTO> listDept (@PathVariable Long companyNo) {
 
@@ -104,6 +97,12 @@ public class DeptController {
       public List<DeptDTO> findTree(GetSubDeptDTO getSubDeptDTO) {
         return deptService.getSubDepth(getSubDeptDTO);
       }
+
+      // 부서를 검색 조건에 맞게 조회
+    @GetMapping("/search")
+    public List<DeptSearchDTO> searchDept(@RequestBody String deptName, Long deptNo) {
+        return deptService.searchList(deptName, deptNo);
+    }
 
     // 해당 회사의 부서 목록 출력
     @GetMapping("/readName/{companyNo}")

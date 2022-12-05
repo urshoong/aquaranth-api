@@ -10,7 +10,7 @@ public interface FavoriteService {
     /**
      * 즐겨찾기
      */
-    Long insert(FavoriteInsertDTO favoriteInsertDTO, String username);
+    Long insert(FavoriteInsertDTO favoriteInsertDTO, String regUser);
     List<FavoriteEmpListDTO> findAll(Long mygroupNo);
     Long delete(Long mygroupNo, Long orgaNo);
 }
