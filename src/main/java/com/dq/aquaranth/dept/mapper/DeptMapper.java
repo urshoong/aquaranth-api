@@ -15,8 +15,6 @@ public interface DeptMapper {
 
     public int update(DeptDTO deptDTO2);
 
-    public List<DeptDTO> getList(@Param("skip") int skip, @Param("size") int size);
-
     public List<DeptDTO> getGnoList(Long companyNo);
 
     //===========================등록 트랜잭션======================================
@@ -36,28 +34,16 @@ public interface DeptMapper {
 
     //===========================등록 트랜잭션======================================
 
-
-
     List<DeptDTO> getFromParent(@Param("upperDeptNo") Long upperDeptNo, @Param("depth") int depth);
 
-//    트리 구조 조회
+    //    트리 구조 조회
     List<DeptTreeDTO> getTree(@Param("company") Long company );
 
     //상위 회사 먼저 나오고 클릭하면 하위 부서 조회
     List<DeptDTO> getSubDepth(GetSubDeptDTO getSubDeptDTO);
 
-
-
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    List<DeptSearchDTO> deptSearch(String deptSearch);
-
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
-
-//    List<DeptDTO> deptList();
+    // 검색
+    List<DeptSearchDTO> deptSearch(@Param("deptName") String deptName,@Param("deptNo") Long deptNo);
 
     /**
      * 선택한 회사의 부서 목록을 조회합니다.
