@@ -1,7 +1,9 @@
 package com.dq.aquaranth.menu.service;
 
+import com.dq.aquaranth.login.constant.RedisKeys;
 import com.dq.aquaranth.login.dto.LoginUserInfo;
 import com.dq.aquaranth.login.service.RedisService;
+import com.dq.aquaranth.login.service.UserSessionService;
 import com.dq.aquaranth.menu.dto.request.MenuQueryDTO;
 import com.dq.aquaranth.menu.dto.response.MenuImportResponseDTO;
 import com.dq.aquaranth.menu.dto.response.MenuResponseDTO;
@@ -37,6 +39,7 @@ public class DefaultMenuService implements MenuService {
     private final ObjectMapper objectMapper;
     private final ObjectStorageService objectStorageService;
     private final RedisService redisService;
+    private final UserSessionService userSessionService;
 
 
     /**
@@ -48,7 +51,7 @@ public class DefaultMenuService implements MenuService {
      */
     @Override
     public List<MenuTreeResponseDTO> findAllBy(MenuQueryDTO menuQueryDTO, String username) {
-        LoginUserInfo loginUserInfo = getLoginUserInfo(username);
+        LoginUserInfo loginUserInfo = userSessionService.findUserInfoInRedis(username);
         List<Long> roleGroupNo = loginUserInfo.getRoleGroups()
                                                 .stream().map(RoleGroup::getRoleGroupNo)
                                                 .collect(Collectors.toList());
@@ -77,24 +80,5 @@ public class DefaultMenuService implements MenuService {
     @Override
     public List<MenuImportResponseDTO> initRoutes() {
         return menuMapper.initRoutes();
-    }
-
-    /**
-     * 레디스에 로그인한
-     * 사용자의 정보를 조회합니다.
-     *
-     * @param username
-     * @return
-     */
-    private LoginUserInfo getLoginUserInfo(String username) {
-        LoginUserInfo loginUserInfo;
-        try {
-            loginUserInfo = objectMapper.readValue(redisService.getCacheObject(username).toString(), LoginUserInfo.class);
-        } catch (NullPointerException nullPointerException) {
-            throw new CommonException(ErrorCodes.REDIS_USER_NOT_FOUND);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
-        return loginUserInfo;
     }
 }

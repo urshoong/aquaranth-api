@@ -1,5 +1,6 @@
 package com.dq.aquaranth.menu.interceptor;
 
+import com.dq.aquaranth.login.constant.RedisKeys;
 import com.dq.aquaranth.login.service.UserSessionService;
 import com.dq.aquaranth.menu.annotation.MenuCode;
 import com.dq.aquaranth.menu.constant.MenuCodes;
@@ -64,7 +65,7 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
         }
 
         List<RoleGroup> loginUserInfo = userSessionService.findUserInfoInRedis(username).getRoleGroups();
-        List<RoleGroup> menuRoles = objectMapper.readValue(redisTemplate.opsForValue().get(menuCode).toString(), new TypeReference<>() {
+        List<RoleGroup> menuRoles = objectMapper.readValue(redisTemplate.opsForValue().get(RedisKeys.ROLE_KEY.getKey() + menuCode).toString(), new TypeReference<>() {
         });
 
         try{loginUserInfo.stream()

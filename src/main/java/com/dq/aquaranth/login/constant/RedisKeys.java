@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum RedisKeys {
-    COMPANY("COMPANY"), DEPT("DEPT"), EMP("EMP"), MENU_ROLE("MENU_ROLE");
+    ROLE_KEY("M_"), USER_KEY("U_");
 
     private final String key;
 }

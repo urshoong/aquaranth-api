@@ -12,6 +12,7 @@ import com.dq.aquaranth.company.mapper.CompanyMapper;
 import com.dq.aquaranth.dept.mapper.DeptMapper;
 import com.dq.aquaranth.emp.mapper.EmpMapper;
 import com.dq.aquaranth.emp.mapper.EmpMappingMapper;
+import com.dq.aquaranth.login.constant.RedisKeys;
 import com.dq.aquaranth.login.domain.LoginUser;
 import com.dq.aquaranth.login.dto.LoginUserInfo;
 import com.dq.aquaranth.menu.dto.request.MenuQueryDTO;
@@ -51,8 +52,9 @@ public class UserSessionServiceImpl implements UserSessionService {
 
     @Override
     public LoginUserInfo findUserInfoInRedis(String username) {
-        String value = (String) redisTemplate.opsForValue().get(username);
+        String value = (String) redisTemplate.opsForValue().get(RedisKeys.USER_KEY.getKey() + username);
         if (Objects.isNull(value)) {
+            log.error("redis 에 유저정보가 존재하지 않습니다. username => {}", username);
             throw new CommonException(ErrorCodes.REDIS_USER_NOT_FOUND);
         }
 
@@ -122,7 +124,7 @@ public class UserSessionServiceImpl implements UserSessionService {
 
         log.info("redis에 유저 정보를 저장합니다. {} 초 후 만료됨.",REFRESH_TOKEN_EXPIRATION_TIME);
         redisTemplate.opsForValue().set(
-                loginUser.getUsername(),
+                RedisKeys.USER_KEY.getKey() + loginUser.getUsername(),
                 loginUserInfo,
                 REFRESH_TOKEN_EXPIRATION_TIME,
                 TimeUnit.MILLISECONDS

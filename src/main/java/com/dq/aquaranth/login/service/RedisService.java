@@ -1,5 +1,6 @@
 package com.dq.aquaranth.login.service;
 
+import com.dq.aquaranth.login.constant.RedisKeys;
 import com.dq.aquaranth.login.dto.LoginUserInfo;
 import com.dq.aquaranth.menu.dto.request.MenuQueryDTO;
 import com.dq.aquaranth.menu.dto.response.MenuResponseDTO;
@@ -242,7 +243,7 @@ public class RedisService {
         menuCodes.forEach(menuCode -> {
             List<RoleGroup> roleGroups = new ArrayList<>(roleGroupService.findByMenuCode(menuCode));
             try {
-                setCacheObject(menuCode, roleGroups);
+                setCacheObject(RedisKeys.ROLE_KEY.getKey() + menuCode, roleGroups);
             } catch (JsonProcessingException e) {
                 throw new RuntimeException(e);
             }

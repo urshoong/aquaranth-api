@@ -1,11 +1,16 @@
 package com.dq.aquaranth.rolegroup.service.impl;
 
+import com.dq.aquaranth.login.constant.RedisKeys;
+import com.dq.aquaranth.login.service.RedisService;
 import com.dq.aquaranth.menu.dto.request.MenuQueryDTO;
 import com.dq.aquaranth.menu.mapper.MenuConfigurationMapper;
 import com.dq.aquaranth.rolegroup.domain.MenuRole;
+import com.dq.aquaranth.rolegroup.domain.RoleGroup;
 import com.dq.aquaranth.rolegroup.dto.MenuRoleLnbDTO;
 import com.dq.aquaranth.rolegroup.mapper.MenuRoleMapper;
+import com.dq.aquaranth.rolegroup.mapper.RoleGroupMapper;
 import com.dq.aquaranth.rolegroup.service.MenuRoleService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
@@ -13,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -20,6 +26,8 @@ import java.util.List;
 public class MenuRoleServiceImpl implements MenuRoleService {
     private final MenuRoleMapper menuRoleMapper;
     private final MenuConfigurationMapper menuMapper;
+    private final RedisService redisService;
+    private final RoleGroupMapper roleGroupMapper;
 
 
     @Override
@@ -60,7 +68,7 @@ public class MenuRoleServiceImpl implements MenuRoleService {
             log.info("{}번 권한그룹에 {}번 메뉴가 정상적으로 저장되었습니다.", menuRole.getRoleGroupNo(), menuRole.getMenuNo());
         }
 
-        // 레디스 업데이트
-
+        redisService.deleteObject(redisService.keys(RedisKeys.ROLE_KEY.getKey()));
+        redisService.updateMenuRoles();
     }
 }

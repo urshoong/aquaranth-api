@@ -63,15 +63,11 @@ public class CustomSecurityConfig {
 
                 // 권한 설정
                 .authorizeHttpRequests()
-//                .antMatchers("/api/menu").hasRole("ROLE_ADMIN")
                 .anyRequest().permitAll()
 
                 .and()
                 .logout()
                 .disable()
-//                .logoutUrl("/api/logout")
-//                .logoutSuccessHandler(logoutSuccessHandler())
-//                .and()
 
                 .authenticationManager(authenticationManager)
                 .addFilter(authenticationFilter) // 인증필터
