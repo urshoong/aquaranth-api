@@ -50,7 +50,7 @@
                      select o.*
                      from tbl_orga o
                               join tbl_dept_mapping tdm on o.orga_no = tdm.orga_no
-                     where tdm.dept_no = ${deptNo}
+                     where tdm.dept_no = #{loginDeptNo}
                      union all
                      select t.*
                      from cte c
@@ -58,7 +58,7 @@
                  )
                  select orga_no
                  from tbl_company
-                 where company_no = ${loginCompanyNo}
+                 where company_no = #{loginCompanyNo}
                  union
                  select orga_no
                  from cte
@@ -68,8 +68,8 @@
                           join tbl_emp_mapping tem on te.emp_no = tem.emp_no
                           join tbl_orga to2 on tem.orga_no = to2.orga_no
                           join tbl_dept_mapping m on to2.upper_orga_no = m.orga_no
-                 where te.username = ${username}
-                   and m.dept_no = ${loginDeptNo}
+                 where te.username = #{username}
+                   and m.dept_no = #{loginDeptNo}
              ) orga
                  join tbl_orga_role tor on tor.orga_no = orga.orga_no
                  join tbl_role_group trg on tor.role_group_no = trg.role_group_no
