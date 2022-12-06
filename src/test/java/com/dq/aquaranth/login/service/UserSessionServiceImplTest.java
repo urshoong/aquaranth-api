@@ -9,6 +9,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 @SpringBootTest
 @Log4j2
 class UserSessionServiceImplTest {
@@ -48,9 +50,15 @@ class UserSessionServiceImplTest {
     }
 
     @Test
-    @DisplayName("로그아웃")
+    @DisplayName("Redis에 접속한 사원정보 삭제")
     void logout() {
+        // given
         String username = RedisKeys.USER_KEY.getKey() + "tndus";
+
+        // when
         redisService.deleteObject(username);
+
+        // then
+        assertThat(redisService.getCacheObject(username)).isNull();
     }
 }

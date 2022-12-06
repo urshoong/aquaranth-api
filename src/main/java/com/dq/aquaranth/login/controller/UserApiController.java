@@ -1,5 +1,7 @@
 package com.dq.aquaranth.login.controller;
 
+import com.dq.aquaranth.emp.dto.EmpLoggingDTO;
+import com.dq.aquaranth.emp.service.EmpService;
 import com.dq.aquaranth.login.constant.RedisKeys;
 import com.dq.aquaranth.login.dto.LoginUserInfo;
 import com.dq.aquaranth.login.service.RedisService;
@@ -25,6 +27,7 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 public class UserApiController {
     private final UserSessionService userSessionService;
     private final RedisService redisService;
+    private final EmpService empService;
 
     @GetMapping("/token/refresh")
     public Map<String, String> refreshTokenCheck(HttpServletRequest request) {
@@ -44,5 +47,12 @@ public class UserApiController {
         log.info("{}님이 로그아웃 하였습니다.", username);
         redisService.deleteObject(username);
         return "success";
+    }
+
+    /* 로그인한 회원의 deptno, companyno, empRank 받기 */
+    @GetMapping("/loginRedisValue")
+    public EmpLoggingDTO findLoginRedisValue(Authentication authentication){
+        String username = authentication.getName();
+        return empService.findLoggingInformation(username);
     }
 }

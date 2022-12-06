@@ -170,12 +170,7 @@ public class EmpController {
         return empService.findLoginUser(username);
     }
 
-    /* 로그인한 회원의 deptno, companyno, empRank 받기 */
-    @GetMapping("/loginRedisValue")
-    public EmpLoggingDTO findLoginRedisValue(Authentication authentication){
-        String username = authentication.getName();
-        return empService.findLoggingInformation(username);
-    }
+
 
     /**
      * 로그인한 회원 정보 보내서 redis에 올리기
