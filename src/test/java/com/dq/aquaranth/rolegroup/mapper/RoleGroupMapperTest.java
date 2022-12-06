@@ -142,9 +142,9 @@ class RoleGroupMapperTest {
     @DisplayName("로그인한 사원의 권한그룹들을 가져옵니다.")
     void findRoleGroupsByLoginUser() {
         // given
-        String username = "user";
-        Long companyNo = 1L; // MEGAZONE(orgaNo=2)
-        Long deptNo = 1L; // 개발팀(orgaNo=7)
+        String username = "tndus";
+        Long companyNo = 7L; // MEGAZONE(orgaNo=2)
+        Long deptNo = 7L; // 개발팀(orgaNo=7)
 
         LoginUser loginUser = LoginUser.builder()
                 .loginCompanyNo(companyNo)

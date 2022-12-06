@@ -1,5 +1,6 @@
 package com.dq.aquaranth.login.controller;
 
+import com.dq.aquaranth.login.constant.RedisKeys;
 import com.dq.aquaranth.login.dto.LoginUserInfo;
 import com.dq.aquaranth.login.service.RedisService;
 import com.dq.aquaranth.login.service.UserSessionService;
@@ -38,7 +39,7 @@ public class UserApiController {
 
     @GetMapping("/logout")
     public String logout(Authentication authentication) {
-        String username = authentication.getName();
+        String username = RedisKeys.USER_KEY.getKey() + authentication.getName();
 
         log.info("{}님이 로그아웃 하였습니다.", username);
         redisService.deleteObject(username);

@@ -123,6 +123,7 @@ public class UserSessionServiceImpl implements UserSessionService {
         }
 
         log.info("redis에 유저 정보를 저장합니다. {} 초 후 만료됨.",REFRESH_TOKEN_EXPIRATION_TIME);
+        log.info("저장된 유저정보 key: {}, value: {}", RedisKeys.USER_KEY.getKey() + loginUser.getUsername(), loginUserInfo);
         redisTemplate.opsForValue().set(
                 RedisKeys.USER_KEY.getKey() + loginUser.getUsername(),
                 loginUserInfo,
