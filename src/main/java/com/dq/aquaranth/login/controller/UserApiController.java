@@ -37,7 +37,11 @@ public class UserApiController {
     }
 
     @GetMapping("/logout")
-    public void logout(Authentication authentication) {
-        redisService.deleteObject(authentication.getName());
+    public String logout(Authentication authentication) {
+        String username = authentication.getName();
+
+        log.info("{}님이 로그아웃 하였습니다.", username);
+        redisService.deleteObject(username);
+        return "success";
     }
 }

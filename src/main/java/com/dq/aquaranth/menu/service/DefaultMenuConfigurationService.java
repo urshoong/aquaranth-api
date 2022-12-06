@@ -92,9 +92,11 @@ public class DefaultMenuConfigurationService implements MenuConfigurationService
     @Override
     @Transactional
     public Integer insert(MenuInsertDTO menuInsertDTO, String username) throws Exception {
+        log.info(menuInsertDTO);
         Optional<MenuResponseDTO> findByUpperMenu = menuConfigurationMapper.findBy(MenuQueryDTO.builder().menuNo(menuInsertDTO.getUpperMenuNo()).build());
-        MenuResponseDTO upperMenu = findByUpperMenu.orElseGet(() -> MenuResponseDTO.builder().menuPath("/").depth(0L).build());
-        menuInsertDTO.setMenuPath(upperMenu.getMenuPath() + "/" + menuInsertDTO.getMenuPath());
+        MenuResponseDTO upperMenu = findByUpperMenu.orElseGet(() -> MenuResponseDTO.builder().menuNo(null).menuPath("").depth(0L).build());
+        menuInsertDTO.setUpperMenuNo(upperMenu.getMenuNo());
+        menuInsertDTO.setMenuPath(upperMenu.getMenuPath() + "/" + menuInsertDTO.getMenuCode());
         menuInsertDTO.setDepth(upperMenu.getDepth() + 1L);
         menuInsertDTO.setRegUser(username);
         if (!menuInsertDTO.getMultipartFile().isEmpty()) {

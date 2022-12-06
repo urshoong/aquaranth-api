@@ -20,9 +20,7 @@ public class MenuInsertDTO {
     private Long menuNo;
     private String menuCode;
     private String menuName;
-    @Builder.Default
     private boolean mainFlag = true;
-    @Builder.Default
     private Long menuOrder = 99L;
     private MultipartFile multipartFile;
 

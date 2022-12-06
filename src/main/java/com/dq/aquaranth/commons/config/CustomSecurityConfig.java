@@ -5,6 +5,7 @@ import com.dq.aquaranth.emp.mapper.EmpMapper;
 import com.dq.aquaranth.login.handler.CustomLogoutSuccessHandler;
 import com.dq.aquaranth.login.jwt.JwtAuthenticationFilter;
 import com.dq.aquaranth.login.jwt.JwtAuthorizationFilter;
+import com.dq.aquaranth.login.service.RedisService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -33,6 +34,7 @@ public class CustomSecurityConfig {
     private final UserDetailsService userDetailsService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final JWTUtil jwtUtil;
+    private final RedisService redisService;
 
     @Bean
     public SecurityFilterChain filterChain(final HttpSecurity http) throws Exception {
@@ -66,10 +68,11 @@ public class CustomSecurityConfig {
 
                 .and()
                 .logout()
-                .logoutUrl("/api/logout")
-                .logoutSuccessHandler(logoutSuccessHandler())
+                .disable()
+//                .logoutUrl("/api/logout")
+//                .logoutSuccessHandler(logoutSuccessHandler())
+//                .and()
 
-                .and()
                 .authenticationManager(authenticationManager)
                 .addFilter(authenticationFilter) // 인증필터
                 .addFilterBefore(new JwtAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class); // 권한필터, 모든 요청을 받으려면 다른 필터들 보다 먼저 처리되어야 한다.
@@ -79,7 +82,7 @@ public class CustomSecurityConfig {
 
     @Bean
     public LogoutSuccessHandler logoutSuccessHandler(){
-        return new CustomLogoutSuccessHandler();
+        return new CustomLogoutSuccessHandler(redisService);
     }
 
     @Bean
