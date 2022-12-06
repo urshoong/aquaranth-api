@@ -44,21 +44,35 @@
     </select>
 
     <select id="findRoleGroupsByLoginUser" resultType="com.dq.aquaranth.rolegroup.domain.RoleGroup">
-        select *
-        from tbl_role_group
-        where role_group_no in (select distinct tor.role_group_no
-                                from tbl_emp emp
-                                         # 사원의 조직번호 알아내기
-                                         join tbl_emp_mapping emapping on emp.emp_no = emapping.emp_no
-                                    # 입력받은 부서번호로 조직번호 알아내기
-                                         join tbl_dept_mapping dmapping on dmapping.dept_no = #{loginDeptNo}
-                                    # 입력받은 회사번호로 조직번호 알아내기
-                                         join tbl_company company on company_no = #{loginCompanyNo}
-                                    # 조직권한 테이블에서 얻어낸 3개의 조직번호로 권한그룹번호들을 알아내기
-                                         join tbl_orga_role tor
-                                where username = #{username} and tor.orga_no = emapping.orga_no
-                                   or tor.orga_no = dmapping.orga_no
-                                   or tor.orga_no = company.orga_no);
+        select trg.*
+        from (
+                 with recursive cte as (
+                     select o.*
+                     from tbl_orga o
+                              join tbl_dept_mapping tdm on o.orga_no = tdm.orga_no
+                     where tdm.dept_no = ${deptNo}
+                     union all
+                     select t.*
+                     from cte c
+                              join tbl_orga t on t.orga_no = c.upper_orga_no
+                 )
+                 select orga_no
+                 from tbl_company
+                 where company_no = ${loginCompanyNo}
+                 union
+                 select orga_no
+                 from cte
+                 union
+                 select to2.orga_no
+                 from tbl_emp te
+                          join tbl_emp_mapping tem on te.emp_no = tem.emp_no
+                          join tbl_orga to2 on tem.orga_no = to2.orga_no
+                          join tbl_dept_mapping m on to2.upper_orga_no = m.orga_no
+                 where te.username = ${username}
+                   and m.dept_no = ${loginDeptNo}
+             ) orga
+                 join tbl_orga_role tor on tor.orga_no = orga.orga_no
+                 join tbl_role_group trg on tor.role_group_no = trg.role_group_no
     </select>
     <select id="findByMenuCode" resultType="com.dq.aquaranth.rolegroup.domain.RoleGroup">
         select roleGroup.*

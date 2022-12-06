@@ -20,8 +20,8 @@ public class MenuInsertDTO {
     private Long menuNo;
     private String menuCode;
     private String menuName;
-    private boolean mainFlag = true;
-    private Long menuOrder = 99L;
+    private boolean mainFlag;
+    private Long menuOrder;
     private MultipartFile multipartFile;
 
     private String menuPath;
