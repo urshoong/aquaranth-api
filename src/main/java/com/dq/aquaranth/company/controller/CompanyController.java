@@ -69,7 +69,7 @@ public class CompanyController {
      * 회사코드, 회사명, 사용여부로 회사 기본정보 검색
      */
     @GetMapping("/search")
-    public List<CompanyListDTO> searchCompany(@RequestParam Boolean companyUse, String companySearch) {
+    public List<CompanyListDTO> searchCompany(@RequestParam String companyUse, String companySearch) {
         return companyService.search(companyUse, companySearch);
     }
 

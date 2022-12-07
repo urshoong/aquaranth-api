@@ -92,9 +92,18 @@
     <select id="search" resultType="com.dq.aquaranth.company.dto.CompanyListDTO">
         select company_no, company_name, owner_name, company_use
         from tbl_company
-        where company_use=#{companyUse}
-          and (company_no like concat('%', #{companySearch}, '%')
-            or company_name like concat('%', #{companySearch}, '%'));
+        <where>
+            <if test="companyUse == 'true'">
+                company_use=1
+            </if>
+            <if test="companyUse == 'false'">
+                company_use=0
+            </if>
+            <if test="companySearch != null or companySearch != ''">
+                and (company_no like concat('%', #{companySearch}, '%')
+                or company_name like concat('%', #{companySearch}, '%'));
+            </if>
+        </where>
     </select>
 
 
