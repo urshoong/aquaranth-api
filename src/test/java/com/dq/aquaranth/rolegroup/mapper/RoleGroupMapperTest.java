@@ -96,7 +96,7 @@ class RoleGroupMapperTest {
     }
 
     @Test
-    @DisplayName("권한그룹번호로 권한그룹명을 수정합니다.")
+    @DisplayName("권한그룹번호로 권한그룹을 수정합니다.")
     void update() {
         // given
         Long updateRoleGroupNo = 13L;
@@ -161,7 +161,7 @@ class RoleGroupMapperTest {
     }
 
     @Test
-    @DisplayName("total 컬럼을 요청합니다.")
+    @DisplayName("마지막으로 조회한 권한그룹리스트의 갯수를 요청합니다.")
     public void getTotal() {
         roleGroupMapper.getList(PageRequestDTO.builder()
                 .page(2)

@@ -86,14 +86,13 @@
         select sql_calc_found_rows roleGroup.*, company.company_name
         from tbl_role_group roleGroup
                  join tbl_company company on roleGroup.company_no = company.company_no
-        <where>
-            <if test="companyNo != null and companyNo != ''">
-                and company.company_no = #{companyNo}
-            </if>
-            <if test="roleGroupName != null and roleGroupName != ''">
-                and roleGroup.role_group_name like concat('%', #{roleGroupName}, '%')
-            </if>
-        </where>
+        where company.company_use = true
+        <if test="companyNo != null and companyNo != ''">
+            and company.company_no = #{companyNo}
+        </if>
+        <if test="roleGroupName != null and roleGroupName != ''">
+            and roleGroup.role_group_name like concat('%', #{roleGroupName}, '%')
+        </if>
         limit #{skip}, #{size}
     </select>
 <!--    found_rows() : total count 를 구할때, 한번의 쿼리만으로 처리가능. count를 사용하면 쿼리를 두번날려야 해서 부하를 유발한다.-->

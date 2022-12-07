@@ -5,12 +5,15 @@ import com.dq.aquaranth.menu.constant.MenuCodes;
 import com.dq.aquaranth.rolegroup.domain.RoleGroup;
 import com.dq.aquaranth.rolegroup.dto.*;
 import com.dq.aquaranth.rolegroup.service.RoleGroupService;
+import com.dq.aquaranth.userrole.dto.response.UserRoleCompanyDTO;
+import com.dq.aquaranth.userrole.service.UserRoleService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -19,6 +22,8 @@ import java.time.LocalDateTime;
 @MenuCode(MenuCodes.ROLE0010)
 public class RoleGroupApiController {
     private final RoleGroupService roleGroupService;
+    private final UserRoleService userRoleService;
+
 
     @GetMapping("")
     public PageResponseDTO<RoleGroupResponseDTO> getRoleGroupList(PageRequestDTO pageRequestDTO) {
@@ -60,5 +65,10 @@ public class RoleGroupApiController {
     @DeleteMapping("/{roleGroupNo}")
     public void remove(@PathVariable Long roleGroupNo) {
         roleGroupService.deleteById(roleGroupNo);
+    }
+
+    @GetMapping("/companyListAll")
+    public List<UserRoleCompanyDTO> findCompanyAll() {
+        return userRoleService.findCompanyAll();
     }
 }

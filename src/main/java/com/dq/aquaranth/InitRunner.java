@@ -34,7 +34,8 @@ public class InitRunner implements ApplicationRunner {
      */
     @Override
     public void run(ApplicationArguments args) {
-        initRedis();
+//        TODO: 주석제거
+//        initRedis();
     }
 
     /**
