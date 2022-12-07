@@ -8,6 +8,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Rollback;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -18,22 +19,29 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Log4j2
-class MenuCodesRoleServiceImplTest {
+class MenuRoleServiceImplTest {
     @Autowired
     private MenuRoleService menuRoleService;
 
     @Test
-    @DisplayName("GNB 하위 메뉴권한을 전부 초기화합니다.")
-    void test_addMenu_notExist() {
+    @Rollback
+    @DisplayName("메뉴권한 저장시 해당 권한그룹에 GNB 하위 메뉴권한을 전부 삭제합니다.")
+    void addMenuDeleteMenuRole() {
+        // given
         List<MenuRole> insertMenuRoles = new ArrayList<>();
         String moduleCode = "SYS";
         Long roleGroupNo = 12L;
 
+        // when
         menuRoleService.save(insertMenuRoles, moduleCode, roleGroupNo);
+
+        // then
+        assertNull(menuRoleService.findByRoleGroupNoAndModuleCode(roleGroupNo, moduleCode));
     }
 
     @Test
-    @DisplayName("삭제할 GNB의 menu code가 존재하지 않을 때")
+    @Rollback
+    @DisplayName("메뉴권한 저장시 메뉴권한을 초기화할때 메뉴코드가 존재하지 않으면 에러로그를 남깁니다.")
     void test_moduleCode_notExist() {
         // given
         List<MenuRole> insertMenuRoles = new ArrayList<>();
@@ -50,6 +58,7 @@ class MenuCodesRoleServiceImplTest {
     }
 
     @Test
+    @Rollback
     @DisplayName("권한그룹에 메뉴권한을 부여합니다.")
     void save() {
         // given
