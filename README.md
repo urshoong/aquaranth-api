@@ -194,8 +194,3 @@ Aquaranth API
 ### DevOps
 ![](https://img.shields.io/badge/goorm-000000.svg?style=for-the-badge&logo=iCloud&logoColor=white)
 ![](https://img.shields.io/badge/Object_Storage-B63B4B.svg?style=for-the-badge&logo=Amazon-S3&logoColor=white)
-
-## Contributors
-<a href="https://github.com/nhn-on7/marketgg-client/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=devaquariums/aquaranth-client" />
-</a>
