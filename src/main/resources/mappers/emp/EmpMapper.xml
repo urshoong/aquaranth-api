@@ -19,7 +19,7 @@
     <select id="orgaFindById" resultType="com.dq.aquaranth.emp.dto.EmpSelectOrga">
         SELECT tc.company_name, td.dept_name, tem.emp_rank, tem.emp_no,
                tem.hired_date, tem.reg_date, tc.company_tel, tc.company_address,
-               tdm.dept_main, tem.emp_role, tor.orga_no, tc.company_no, tdm.dept_no
+               tdm.dept_main, tem.emp_role, tor.orga_no, tc.company_no, tdm.dept_no, tem.retired_date
         FROM tbl_emp
                  LEFT JOIN tbl_emp_mapping tem on tbl_emp.emp_no = tem.emp_no
                  LEFT JOIN tbl_orga tor on tor.orga_no = tem.orga_no
@@ -56,10 +56,7 @@
         JOIN tbl_dept td ON td.dept_no = tbl_dept_mapping.dept_no
         WHERE td.dept_no = #{deptNo}
         ),
-        'emp', (SELECT emp_name
-        FROM tbl_emp
-        WHERE username=#{regUser})
-        )
+        'emp', #{regUser}
         <selectKey keyProperty="orgaNo" resultType="long" order="AFTER">
             SELECT LAST_INSERT_ID()
         </selectKey>
@@ -70,9 +67,7 @@
         UPDATE tbl_emp SET
                            emp_name = #{empName}, gender = #{gender} , email = #{email},
                            emp_phone = #{empPhone}, emp_address = #{empAddress}, mod_date = now(),
-                           mod_user = (SELECT emp_name
-                                       FROM tbl_emp
-                                       WHERE username=#{modUser}),
+                           mod_user = #{modUser},
                            last_retired_date = #{lastRetiredDate},
                            last_login_ip = #{lastLoginIp},
                            emp_use = if(last_retired_date IS NOT NULL, false, true)
@@ -84,12 +79,8 @@
             JOIN tbl_orga t ON t.orga_no = e.orga_no
         SET
             e.emp_rank = #{empRank}, e.emp_role = #{empRole},
-            e.mod_date = now(), e.mod_user = (SELECT emp_name
-                                              FROM tbl_emp
-                                              WHERE username=#{modUser}),
-            t.mod_date = now(), t.mod_user = (SELECT emp_name
-                                              FROM tbl_emp
-                                              WHERE username=#{modUser}),
+            e.mod_date = now(), e.mod_user = #{modUser},
+            t.mod_date = now(), t.mod_user = #{modUser},
             t.upper_orga_no = (SELECT tbl_dept_mapping.orga_no
                                FROM tbl_dept_mapping
                                WHERE tbl_dept_mapping.dept_no = #{deptNo})
