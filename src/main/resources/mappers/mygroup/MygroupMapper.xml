@@ -12,20 +12,26 @@
         select my.mygroup_no
              , my.mygroup_name
              , my.emp_no
-             , count(fa.favorite_emp_no) as countEmp
+             , sum(case when ((em.retired_date is null
+                                or DATEDIFF(em.retired_date, (select curdate())) >= 0)
+                                and e.emp_use = true
+                                ) then 1 else 0 end
+                    ) as countEmp
         from tbl_mygroup my
                  left join tbl_favorite fa on my.mygroup_no = fa.mygroup_no
-        where emp_no = (select tbl_emp.emp_no
-                        from tbl_emp
-                        where username=#{username})
-        group by my.mygroup_no;
+                 join tbl_emp_mapping em on fa.favorite_emp_no = em.orga_no
+                 join tbl_emp e on em.emp_no = e.emp_no
+        where my.emp_no = (select tbl_emp.emp_no
+                           from tbl_emp
+                           where username = #{username})
+        group by my.mygroup_no
     </select>
 
     <!--해당 마이그룹 조회-->
     <select id="findByMygroupNo" resultType="com.dq.aquaranth.mygroup.dto.mygroup.MygroupInformationDTO">
         select mygroup_no, mygroup_name
         from tbl_mygroup
-        where mygroup_no=#{mygroupNo};
+        where mygroup_no=#{mygroupNo}
     </select>
 
 
@@ -36,7 +42,7 @@
         values ((select emp_no
                  from tbl_emp
                  where username=#{username})
-               , #{regUser});
+               , #{regUser})
     </insert>
 
 
@@ -46,7 +52,7 @@
         update tbl_mygroup set mygroup_name=#{mygroupName}
                              , mod_user=#{modUser}
                              , mod_date=now()
-        where mygroup_no=#{mygroupNo};
+        where mygroup_no=#{mygroupNo}
     </update>
 
 

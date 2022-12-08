@@ -10,7 +10,7 @@
     <!--해당 마이그룹에 사원 즐겨찾기-->
     <insert id="insert">
         insert into tbl_favorite (mygroup_no, favorite_emp_no, reg_user)
-        values (#{mygroupNo}, #{orgaNo}, #{regUser});
+        values (#{mygroupNo}, #{orgaNo}, #{regUser})
     </insert>
 
 
@@ -30,7 +30,11 @@
                  join tbl_orga o on fa.favorite_emp_no = o.orga_no
                  join tbl_emp_mapping em on o.orga_no = em.orga_no
                  join tbl_emp e on em.emp_no = e.emp_no
-        where fa.mygroup_no=${mygroupNo};
+        where fa.mygroup_no=${mygroupNo}
+          and (em.retired_date is null
+            or DATEDIFF(em.retired_date, (select curdate())) >= 0
+            )
+          and e.emp_use = true
     </select>
 
 
@@ -38,6 +42,6 @@
     <!--해당 마이그룹에서 즐겨찾기 된 사원 삭제-->
     <delete id="delete">
         delete from tbl_favorite
-        where mygroup_no=#{mygroupNo} and favorite_emp_no=#{orgaNo};
+        where mygroup_no=#{mygroupNo} and favorite_emp_no=#{orgaNo}
     </delete>
 </mapper>
