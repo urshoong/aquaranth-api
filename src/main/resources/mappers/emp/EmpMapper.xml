@@ -16,6 +16,12 @@
         WHERE emp_no = #{empNo}
     </select>
 
+<!--    <select id="findByEmpUsingUsername" resultType="com.dq.aquaranth.emp.dto.EmpDTO">-->
+<!--        SELECT username-->
+<!--        FROM tbl_emp-->
+<!--        WHERE emp_no > 0 AND emp_use = 1-->
+<!--    </select>-->
+
     <select id="orgaFindById" resultType="com.dq.aquaranth.emp.dto.EmpSelectOrga">
         SELECT tc.company_name, td.dept_name, tem.emp_rank, tem.emp_no,
                tem.hired_date, tem.reg_date, tc.company_tel, tc.company_address,
@@ -96,7 +102,7 @@
     <select id="findByUsername" resultType="com.dq.aquaranth.emp.dto.EmpDTO">
         SELECT *
         FROM tbl_emp
-        WHERE username = #{username}
+        WHERE username = #{username} AND emp_no > 0 AND emp_use = 1
     </select>
 
     <update id="updateProfile">

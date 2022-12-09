@@ -179,15 +179,36 @@ public class EmpServiceImpl implements EmpService {
             throw new RuntimeException(e);
         }
 
-        List<EmpLoginEmpDTO> result = empMapper.findLoginUser(username);
+        // 접속한 아이디로 로그인한 사원의 정보를 찾아 계층형 구조의 값을 저장한다.
+        List<EmpLoginEmpDTO> loginEmpList = empMapper.findLoginUser(username);
 
         String finalIp = ip;
 
-        result.forEach(emp -> {
+        /////
+
+        EmpDTO empDTO = empMapper.findByUsername(username);
+
+        if(empDTO.getUuid() != null && empDTO.getFilename() != null) {
+            ObjectGetRequestDTO objectRequestDTO = ObjectGetRequestDTO.builder()
+                    .filename(empDTO.getUuid() + empDTO.getFilename())
+                    .build();
+
+            try {
+                empDTO.setProfileUrl(objectStorageService.getObject(objectRequestDTO).getUrl());
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        /////
+
+        // 계층 구조에 ip값을 밀어넣는다(?)
+        loginEmpList.forEach(emp -> {
             emp.setLoginIp(finalIp);
+            emp.setProfileUrl(empDTO.getProfileUrl());
         });
 
-        return result;
+        return loginEmpList;
     }
 
     /**
