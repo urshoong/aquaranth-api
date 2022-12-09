@@ -86,4 +86,6 @@ public interface EmpMapper {
 
     String functionHierarchy(Long orgaNo);
 
+//    EmpDTO findByEmpUsingUsername(String username);
+
 }

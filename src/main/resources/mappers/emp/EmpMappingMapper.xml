@@ -21,4 +21,10 @@
                                  FROM tbl_dept_mapping
                                  WHERE dept_no = #{deptNo});
     </select>
+
+    <update id="updateEmpMappingRetiredDate">
+        UPDATE tbl_emp_mapping
+        SET retired_date = DATE_FORMAT(now(), '%Y-%m-%d')
+        WHERE emp_no = #{empNo}
+    </update>
 </mapper>
