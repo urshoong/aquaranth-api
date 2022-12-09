@@ -62,7 +62,7 @@
         JOIN tbl_dept td ON td.dept_no = tbl_dept_mapping.dept_no
         WHERE td.dept_no = #{deptNo}
         ),
-        'emp', #{regUser}
+        'emp', #{regUser})
         <selectKey keyProperty="orgaNo" resultType="long" order="AFTER">
             SELECT LAST_INSERT_ID()
         </selectKey>

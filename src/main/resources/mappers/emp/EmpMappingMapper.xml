@@ -4,8 +4,8 @@
 
 <mapper namespace="com.dq.aquaranth.emp.mapper.EmpMappingMapper">
     <insert id="empMappingInsert" parameterType="com.dq.aquaranth.emp.dto.EmpMappingDTO">
-        INSERT INTO tbl_emp_mapping (orga_no, emp_no, emp_role, emp_rank, reg_user)
-        VALUES (#{orgaNo}, #{empNo}, #{empRole}, #{empRank}, #{regUser})
+        INSERT INTO tbl_emp_mapping (orga_no, emp_no, emp_rank, reg_user)
+        VALUES (#{orgaNo}, #{empNo}, #{empRank}, #{regUser})
     </insert>
 
 

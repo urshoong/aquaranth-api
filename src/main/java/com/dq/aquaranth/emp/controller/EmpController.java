@@ -110,7 +110,6 @@ public class EmpController {
                 .empNo(empNo)
                 .orgaNo(orgaNo)
                 .empRank(reqDTO.getEmpRank())
-                .empRole(reqDTO.getEmpRole())
                 .regUser(registrant)
                 .build();
 
