@@ -9,13 +9,6 @@ Aquaranth API
 ./gradlew bootRun
 ```
 
-## Verifying & Request Sequence Diagram
-![seq](https://user-images.githubusercontent.com/110054050/206376493-728d05b1-af20-490c-a970-412259f02ae9.png)
-
-## Project Architecture
-![arc](https://user-images.githubusercontent.com/110054050/206377505-5594df0c-6018-4d38-b28b-df090308bb7f.png)
-
-
 
 ## Features
 
@@ -85,6 +78,10 @@ Aquaranth API
 - [x] 현재 접속한 조직(회사/부서) 정보 / 최근 로그인 시간 / 직전 로그인 IP / 현재 로그인 IP
 - [x] 회사/부서 변경 기능
 - [x] 변경시 변경된 회사/부서에 대한 권한처리에 의해 메뉴(GNB/LNB) 노출 필요.
+
+
+## Verifying & Request Sequence Diagram
+![seq](https://github.com/devaquariums/aquaranth/blob/main/sequence_diagram/sequence_diagram.png?raw=true)
 
 
 ## Tech Stack
