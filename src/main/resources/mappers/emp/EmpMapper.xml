@@ -32,7 +32,7 @@
                  LEFT JOIN tbl_dept_mapping tdm on tor.upper_orga_no = tdm.orga_no
                  LEFT JOIN tbl_dept td on td.dept_no = tdm.dept_no
                  LEFT JOIN tbl_company tc on td.company_no = tc.company_no
-        WHERE tbl_emp.emp_no = #{empNo}
+        WHERE tbl_emp.emp_no = #{empNo} AND td.main_flag = 1 AND tc.company_use = 1
     </select>
 
     <insert id="insert" parameterType="com.dq.aquaranth.emp.dto.EmpDTO">

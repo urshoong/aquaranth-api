@@ -184,8 +184,6 @@ public class EmpServiceImpl implements EmpService {
 
         String finalIp = ip;
 
-        /////
-
         EmpDTO empDTO = empMapper.findByUsername(username);
 
         if(empDTO.getUuid() != null && empDTO.getFilename() != null) {
@@ -200,9 +198,7 @@ public class EmpServiceImpl implements EmpService {
             }
         }
 
-        /////
-
-        // 계층 구조에 ip값을 밀어넣는다(?)
+        // 계층 구조에 회원 정보 값을 넣는다.
         loginEmpList.forEach(emp -> {
             emp.setLoginIp(finalIp);
             emp.setProfileUrl(empDTO.getProfileUrl());
@@ -267,27 +263,5 @@ public class EmpServiceImpl implements EmpService {
 
         return empMapper.updateProfile(empFileDTO);
     }
-
-
-    //위에 같은거 있다. 뭐지? 뭔가 없어도 되는 것 같음.
-//    @Override
-//    public Long updateRecentAccessInfo() {
-//
-//        String ip = null;
-//
-//        try {
-//            ip = Inet4Address.getLocalHost().getHostAddress();
-//        } catch (UnknownHostException e) {
-//            throw new RuntimeException(e);
-//        }
-//
-//        EmpUpdateRecentAccessDTO updateDTO
-//                = EmpUpdateRecentAccessDTO.builder()
-//                .lastLoginIp(ip)
-//                .lastLoginTime(LocalDateTime.now())
-//                .build();
-//
-//        return empMapper.updateRecentAccessInfo(updateDTO);
-//    }
 
 }
