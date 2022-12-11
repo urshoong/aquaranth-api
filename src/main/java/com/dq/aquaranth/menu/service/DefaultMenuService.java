@@ -1,20 +1,15 @@
 package com.dq.aquaranth.menu.service;
 
-import com.dq.aquaranth.login.constant.RedisKeys;
 import com.dq.aquaranth.login.dto.LoginUserInfo;
 import com.dq.aquaranth.login.service.RedisService;
 import com.dq.aquaranth.login.service.UserSessionService;
 import com.dq.aquaranth.menu.dto.request.MenuQueryDTO;
 import com.dq.aquaranth.menu.dto.response.MenuImportResponseDTO;
-import com.dq.aquaranth.menu.dto.response.MenuResponseDTO;
 import com.dq.aquaranth.menu.dto.response.MenuTreeResponseDTO;
-import com.dq.aquaranth.menu.exception.CommonException;
-import com.dq.aquaranth.menu.exception.ErrorCodes;
 import com.dq.aquaranth.menu.mapper.MenuMapper;
 import com.dq.aquaranth.menu.objectstorage.dto.request.ObjectGetRequestDTO;
 import com.dq.aquaranth.menu.objectstorage.service.ObjectStorageService;
 import com.dq.aquaranth.rolegroup.domain.RoleGroup;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -36,9 +31,7 @@ public class DefaultMenuService implements MenuService {
 
 
     private final MenuMapper menuMapper;
-    private final ObjectMapper objectMapper;
     private final ObjectStorageService objectStorageService;
-    private final RedisService redisService;
     private final UserSessionService userSessionService;
 
 
@@ -53,19 +46,20 @@ public class DefaultMenuService implements MenuService {
     public List<MenuTreeResponseDTO> findAllBy(MenuQueryDTO menuQueryDTO, String username) {
         LoginUserInfo loginUserInfo = userSessionService.findUserInfoInRedis(username);
         List<Long> roleGroupNo = loginUserInfo.getRoleGroups()
-                                                .stream().map(RoleGroup::getRoleGroupNo)
-                                                .collect(Collectors.toList());
+                .stream().map(RoleGroup::getRoleGroupNo)
+                .collect(Collectors.toList());
         List<MenuTreeResponseDTO> menuTreeResponseDTOS = menuMapper.findAllBy(menuQueryDTO, roleGroupNo);
 
         menuTreeResponseDTOS.forEach(menuTreeResponseDTO -> {
-                    try {menuTreeResponseDTO.setIconUrl(objectStorageService.getObject(ObjectGetRequestDTO.builder()
-                                        .filename(menuTreeResponseDTO.getUuid() + menuTreeResponseDTO.getFilename())
-                                        .time((int) TimeUnit.DAYS.toHours(7))
-                                        .build())
-                                .getUrl());
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
+            try {
+                menuTreeResponseDTO.setIconUrl(objectStorageService.getObject(ObjectGetRequestDTO.builder()
+                                .filename(menuTreeResponseDTO.getUuid() + menuTreeResponseDTO.getFilename())
+                                .time((int) TimeUnit.DAYS.toHours(7))
+                                .build())
+                        .getUrl());
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
         });
 
         return menuTreeResponseDTOS;
