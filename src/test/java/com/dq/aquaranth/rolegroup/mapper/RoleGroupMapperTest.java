@@ -35,10 +35,10 @@ class RoleGroupMapperTest {
     void findAll_exist_companyNo_and_roleGroupName() {
         // given
         Long searchCompanyNo = 2L;
-        String searchRoleGroupName = "mock";
+//        String searchRoleGroupName = "mock";
         PageRequestDTO pageRequestDTO = PageRequestDTO.builder()
                 .page(2)
-                .roleGroupName(searchRoleGroupName)
+//                .roleGroupName(searchRoleGroupName)
                 .companyNo(searchCompanyNo)
                 .build();
 
@@ -47,7 +47,7 @@ class RoleGroupMapperTest {
 
         // then
         for (RoleGroupResponseDTO dto : result) {
-//            assertEquals(dto.getCompanyNo(), searchCompanyNo);
+            assertEquals(dto.getCompanyNo(), searchCompanyNo);
 //            assertTrue(dto.getRoleGroupName().contains(searchRoleGroupName));
             log.info(dto);
         }
@@ -96,7 +96,7 @@ class RoleGroupMapperTest {
     }
 
     @Test
-    @DisplayName("권한그룹번호로 권한그룹명 수정하기")
+    @DisplayName("권한그룹번호로 권한그룹을 수정합니다.")
     void update() {
         // given
         Long updateRoleGroupNo = 13L;
@@ -161,7 +161,7 @@ class RoleGroupMapperTest {
     }
 
     @Test
-    @DisplayName("total 컬럼을 요청합니다.")
+    @DisplayName("마지막으로 조회한 권한그룹리스트의 갯수를 요청합니다.")
     public void getTotal() {
         roleGroupMapper.getList(PageRequestDTO.builder()
                 .page(2)

@@ -1,9 +1,6 @@
 package com.dq.aquaranth.company.mapper;
 
-import com.dq.aquaranth.company.dto.CompanyInformationDTO;
-import com.dq.aquaranth.company.dto.CompanyListDTO;
-import com.dq.aquaranth.company.dto.CompanyOrgaDTO;
-import com.dq.aquaranth.company.dto.CompanyUpdateDTO;
+import com.dq.aquaranth.company.dto.*;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -125,10 +122,16 @@ class CompanyMapperTest {
     void search() {
         Long searchCompanyNo = 13L;         //검색할 회사코드
         String searchCompanyName = "N";     //검색할 회사명
-        Boolean searchCompanyUse = true;    //검색할 사용여부
+        String searchCompanyUse = "true";    //검색할 사용여부
+
+        CompanySearchDTO companySearchDTO = CompanySearchDTO
+                .builder()
+                .companyUse(searchCompanyUse)
+                .companySearch(searchCompanyName)
+                .build();
 
         List<CompanyListDTO> companyListDTO
-                = companyMapper.search(searchCompanyUse, searchCompanyName);
+                = companyMapper.search(companySearchDTO);
         companyListDTO.forEach(log::info);
     }
 }

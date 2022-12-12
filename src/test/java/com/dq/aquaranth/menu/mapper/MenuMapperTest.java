@@ -2,6 +2,7 @@ package com.dq.aquaranth.menu.mapper;
 
 import com.dq.aquaranth.menu.dto.request.MenuQueryDTO;
 import com.dq.aquaranth.menu.dto.request.MenuQueryUserDTO;
+import com.dq.aquaranth.menu.dto.response.MenuImportResponseDTO;
 import com.dq.aquaranth.menu.dto.response.MenuResponseDTO;
 import com.dq.aquaranth.menu.dto.response.MenuTreeResponseDTO;
 import com.dq.aquaranth.menu.exception.CommonException;
@@ -15,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.IntStream;
 import java.util.stream.LongStream;
@@ -25,44 +27,29 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 @MybatisTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class MenuMapperTest {
-    static List<Long> mockRoleGroups;
     @Autowired
     MenuMapper menuMapper;
 
-    @BeforeEach
-    @DisplayName("권한그룹 생성")
-    void setUp() {
-        mockRoleGroups = new ArrayList<>();
-        LongStream.range(1L,5L).forEach(value -> mockRoleGroups.add(value));
+    @Test
+    @DisplayName("모든메뉴를 조회합니다.")
+    void initRoutes() {
+        menuMapper.initRoutes().forEach(log::info);
     }
 
     @Test
-    @DisplayName(value = "1번 권한그룹부터 5번 권한그룹까지 조회할 수 있는 리스트")
-    void findBy() {
-        //given
-        MenuQueryDTO menuQueryDTO = MenuQueryDTO.builder().menuCode("ORGA0030").build();
-
-        //when
-        List<MenuTreeResponseDTO> expectedMenuList = menuMapper.findAllBy(menuQueryDTO, mockRoleGroups);
-
-        //then
-        log.info(expectedMenuList);
-//        assertThat(expectedMenuList).isNotNull();
-    }
-
-    @Test
-    @DisplayName(value = "admin 계정이 접근할 수 있는 메뉴 리스트를 조회")
+    @DisplayName("권한그룹, 메뉴정보별 메뉴조회")
     void findAllBy() {
-        //given
-        MenuQueryDTO menuQueryDTO = MenuQueryDTO.builder()
-                .menuCode("SYS")
-                .keyword("lnb").build();
+        // given
+        MenuQueryDTO findDTO = MenuQueryDTO.builder()
+//                .menuNo()
+//                .menuCode()
+//                .upperMenuNo()
+//                .keyword()
+                .build();
 
-        //when
-        List<MenuTreeResponseDTO> expectedMenu = menuMapper.findAllBy(menuQueryDTO, mockRoleGroups);
+        List<Long> roleGroupNoList = List.of(1L, 2L);
 
-        //then
-        expectedMenu.forEach(log::info);
-        assertThat(expectedMenu).isNotNull();
+        // when
+        menuMapper.findAllBy(findDTO, roleGroupNoList).forEach(log::info);
     }
 }

@@ -67,7 +67,7 @@ class MenuCodesRoleMapperTest {
     }
 
     @Test
-    @DisplayName("gnb메뉴를 포함한 하위메뉴들만 삭제합니다.")
+    @DisplayName("gnb메뉴를 포함한 하위메뉴들의 메뉴권한을 삭제합니다.")
     void deleteByRoleGroupNoAndModuleCode() {
         // given
         Long roleGroupNo = 12L;
@@ -81,7 +81,7 @@ class MenuCodesRoleMapperTest {
     }
 
     @Test
-    @DisplayName("권한그룹과, 상위모듈에 대한 메뉴권한을 조회합니다.")
+    @DisplayName("해당 권한그룹이 GNB를 포함한 하위메뉴에 대한 메뉴권한을 조회합니다.")
     void findByRoleGroupNoAndModuleCode() {
         // given
         Long roleGroupNo = 2L;

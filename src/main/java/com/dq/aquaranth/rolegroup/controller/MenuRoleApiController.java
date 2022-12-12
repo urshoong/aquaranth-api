@@ -2,6 +2,9 @@ package com.dq.aquaranth.rolegroup.controller;
 
 import com.dq.aquaranth.menu.annotation.MenuCode;
 import com.dq.aquaranth.menu.constant.MenuCodes;
+import com.dq.aquaranth.menu.dto.request.MenuQueryDTO;
+import com.dq.aquaranth.menu.dto.response.MenuResponseDTO;
+import com.dq.aquaranth.menu.service.MenuConfigurationService;
 import com.dq.aquaranth.rolegroup.domain.MenuRole;
 import com.dq.aquaranth.rolegroup.dto.MenuRoleInsertReqDTO;
 import com.dq.aquaranth.rolegroup.dto.MenuRoleLnbDTO;
@@ -22,6 +25,7 @@ import java.util.List;
 @MenuCode(MenuCodes.ROLE0010)
 public class MenuRoleApiController {
     private final MenuRoleService menuRoleService;
+    private final MenuConfigurationService menuConfigurationService;
 
     @GetMapping("")
     public List<MenuRoleLnbDTO> getMenuRoles(@RequestParam Long roleGroupNo, @RequestParam String moduleCode) {
@@ -45,5 +49,10 @@ public class MenuRoleApiController {
         }
 
         menuRoleService.save(insertMenuRoles, moduleCode, roleGroupNo);
+    }
+
+    @GetMapping("/menu")
+    public List<MenuResponseDTO> getGNB(MenuQueryDTO menuQueryDTO) {
+        return menuConfigurationService.findAllBy(menuQueryDTO);
     }
 }

@@ -1,19 +1,14 @@
 package com.dq.aquaranth.admin.service;
 
 import com.dq.aquaranth.company.dto.CompanyInformationDTO;
-import com.dq.aquaranth.company.dto.CompanyOrgaDTO;
 import com.dq.aquaranth.company.service.CompanyService;
-import com.dq.aquaranth.dept.dto.DeptDTO;
 import com.dq.aquaranth.dept.dto.DeptRegisterDTO;
-import com.dq.aquaranth.dept.mapper.DeptMapper;
 import com.dq.aquaranth.dept.service.DeptService;
-import com.dq.aquaranth.emp.dto.EmpDTO;
-import com.dq.aquaranth.emp.dto.EmpMappingDTO;
-import com.dq.aquaranth.emp.dto.EmpOrgaDTO;
-import com.dq.aquaranth.emp.dto.EmpOrgaInsertDTO;
+import com.dq.aquaranth.emp.dto.emp.EmpDTO;
+import com.dq.aquaranth.emp.dto.emp.EmpMappingDTO;
+import com.dq.aquaranth.emp.dto.orga.EmpOrgaDTO;
 import com.dq.aquaranth.emp.mapper.EmpMapper;
 import com.dq.aquaranth.emp.mapper.EmpMappingMapper;
-import com.dq.aquaranth.emp.service.EmpService;
 import com.dq.aquaranth.rolegroup.domain.MenuRole;
 import com.dq.aquaranth.rolegroup.domain.RoleGroup;
 import com.dq.aquaranth.rolegroup.mapper.MenuRoleMapper;
@@ -138,7 +133,7 @@ public class AdminServiceTest {
                 .regUser("master")
                 .build();
 
-        empMapper.orgaInsert(empOrgaDTO);
+        empMapper.insertOrga(empOrgaDTO);
 
         Long orgaLastId = empOrgaDTO.getOrgaNo();
 

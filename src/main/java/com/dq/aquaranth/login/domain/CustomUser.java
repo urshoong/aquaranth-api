@@ -1,6 +1,6 @@
 package com.dq.aquaranth.login.domain;
 
-import com.dq.aquaranth.emp.dto.EmpDTO;
+import com.dq.aquaranth.emp.dto.emp.EmpDTO;
 import lombok.Getter;
 import lombok.ToString;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

@@ -1,6 +1,8 @@
 package com.dq.aquaranth.rolegroup.service.impl;
 
 import com.dq.aquaranth.rolegroup.domain.RoleGroup;
+import com.dq.aquaranth.rolegroup.mapper.MenuRoleMapper;
+import com.dq.aquaranth.rolegroup.service.MenuRoleService;
 import com.dq.aquaranth.rolegroup.service.RoleGroupService;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.DisplayName;
@@ -14,9 +16,10 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @SpringBootTest
 @Log4j2
 class RoleGroupServiceImplTest {
-
     @Autowired
     RoleGroupService roleGroupService;
+    @Autowired(required = false)
+    MenuRoleMapper menuRoleMapper;
 
     @Test
     @DisplayName("권한그룹을 삭제할때, 없는번호라면 예외를 반환하나요?")
@@ -30,17 +33,18 @@ class RoleGroupServiceImplTest {
     }
 
     @Test
-    @DisplayName("권한그룹을 삭제가 정상적으로 이루어지나요?")
+    @DisplayName("권한그룹을 삭제시 조직권한, 메뉴권한테이블에 연관된 데이터들도 전부 삭제합니다.")
     void delete_success() {
         // given
-        Long deleteNo = 5L; // 존재하는 권한그룹번호
-        RoleGroup findDTO = roleGroupService.findById(deleteNo);
+        Long deleteRoleGroupNo = 5L; // 존재하는 권한그룹번호
+        RoleGroup findDTO = roleGroupService.findById(deleteRoleGroupNo);
         log.info("삭제할 권한그룹 {}", findDTO);
 
         // when
-        roleGroupService.deleteById(deleteNo);
+        roleGroupService.deleteById(deleteRoleGroupNo);
 
         // then
-        assertNull(roleGroupService.findById(findDTO.getRoleGroupNo()));
+        assertNull(roleGroupService.findById(deleteRoleGroupNo));
+        assertNull(menuRoleMapper.findAllByRoleGroupNo(deleteRoleGroupNo));
     }
 }

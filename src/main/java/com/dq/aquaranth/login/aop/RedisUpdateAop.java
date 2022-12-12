@@ -43,17 +43,18 @@ public class RedisUpdateAop {
      */
     @After("cut() && @annotation(redisUpdate)")
     public void after(RedisUpdate redisUpdate) {
-        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
-        String username = request.getUserPrincipal().getName();
-        LoginUserInfo loginUserInfo = userSessionService.findUserInfoInRedis(username);
-        redisService.updateMenuRoles();
+        // 접속한 모든유저의 레디스 정보 업데이트
+        redisService.keys(RedisKeys.ROLE_KEY.getKey()).forEach(key -> {
+            String username = key.replace(RedisKeys.ROLE_KEY.getKey(), "");
+            LoginUserInfo loginUserInfo = userSessionService.findUserInfoInRedis(username);
 
-        LoginUserInfo savedLoginUserInfo = userSessionService.loadUserInfoByLoginUser(LoginUser.builder()
-                .loginDeptNo(loginUserInfo.getDept().getDeptNo())
-                .loginCompanyNo(loginUserInfo.getCompany().getCompanyNo())
-                .username(username)
-                .build());
+            userSessionService.loadUserInfoByLoginUser(LoginUser.builder()
+                    .loginDeptNo(loginUserInfo.getDept().getDeptNo())
+                    .loginCompanyNo(loginUserInfo.getCompany().getCompanyNo())
+                    .username(username)
+                    .build());
 
-        log.info("Redis 에 {}님의 정보가 업데이트 되었습니다. => {}", username, savedLoginUserInfo);
+            log.info("Redis 에 {}님의 정보가 업데이트 되었습니다.", username);
+        });
     }
 }
