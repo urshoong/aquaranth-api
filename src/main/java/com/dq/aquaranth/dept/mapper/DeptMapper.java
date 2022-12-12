@@ -9,9 +9,11 @@ import java.util.List;
 public interface DeptMapper {
     public DeptDTO select(Long deptNo);
 
+    public DeptDTO selectDept(Long deptNo);
+
     public Long selectDeptOrgaNo(Long deptNo);
 
-    public int delete(Long deptNo);
+    public Long delete(Long deptNo);
 
     public int update(DeptDTO deptDTO2);
 
@@ -19,15 +21,16 @@ public interface DeptMapper {
 
     //===========================등록 트랜잭션======================================
 
-    int getNextOrd(@Param("company") Integer company, @Param("parentDeptNo") Long parentDeptNo);
+    Integer getNextOrd(@Param("company") Long company, @Param("parentDeptNo") Long parentDeptNo);
 
-    void arrangeOrd(@Param("company") Integer company, @Param("ord") int ord);
+    void arrangeOrd(@Param("company") Long company, @Param("ord") Long ord);
 
-    void fixOrd (@Param("deptNo") Long deptNo, @Param("ord") int ord);
+    void fixOrd (@Param("deptNo") Long deptNo, @Param("ord") Long ord);
 
     void updateLastDno(@Param("parentDeptNo") Long parentDeptNo, @Param("deptNo") Long deptNo);
 
     public int insert(DeptRegisterDTO deptRegisterDTO);
+
     int insertOrga(DeptOrgaRegisterDTO deptOrgaRegisterDTO);
 
     int insertOrgaMapping(DeptMappingRegisterDTO deptMappingRegisterDTO);
@@ -43,7 +46,11 @@ public interface DeptMapper {
     List<DeptDTO> getSubDepth(GetSubDeptDTO getSubDeptDTO);
 
     // 검색
-    List<DeptSearchDTO> deptSearch(@Param("deptName") String deptName,@Param("deptNo") Long deptNo);
+    List<DeptSearchDTO> deptSearch(String deptSearch);
+
+    // 부서원 정보 조회
+    List<DeptMemberDTO> deptMember(Long orgaNo);
+
 
     /**
      * 선택한 회사의 부서 목록을 조회합니다.

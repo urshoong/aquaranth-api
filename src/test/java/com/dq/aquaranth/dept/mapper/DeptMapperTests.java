@@ -4,6 +4,7 @@ package com.dq.aquaranth.dept.mapper;
 
 
 import com.dq.aquaranth.dept.dto.DeptDTO;
+import com.dq.aquaranth.dept.dto.DeptMemberDTO;
 import com.dq.aquaranth.dept.dto.DeptRegisterDTO;
 import com.dq.aquaranth.dept.dto.DeptSearchDTO;
 import lombok.extern.log4j.Log4j2;
@@ -24,19 +25,17 @@ public class DeptMapperTests {
 
     @Test
     public void testSelect() {
-        DeptDTO selectOne = deptMapper.select(5L);
+        DeptDTO selectOne = deptMapper.select(14L);
         log.info(selectOne);
     }
 
     @Test
-    public void testDelete() {
-        Long no = 30L;
-        int result = deptMapper.delete(no);
-        log.info("delete : " + result);
+    void testDelete() {
+        deptMapper.delete(44L);
     }
 
     @Test
-    public void testUpdate() {
+    void testUpdate() {
         DeptDTO deptDTO2 = DeptDTO
                 .builder()
                 .deptNo(23L)
@@ -53,7 +52,7 @@ public class DeptMapperTests {
 
     @Test
     //@Transactional(rollbackFor = RuntimeException.class)
-    public void testInsert2() {
+    void testInsert2() {
 
         DeptRegisterDTO deptDTO2 = DeptRegisterDTO.builder()
                 .deptName("개발1-1팀")
@@ -80,19 +79,19 @@ public class DeptMapperTests {
     }
 
     @Test
-    public void testSub1() {
+    void testSub1() {
 
-        int ord = deptMapper.getNextOrd(1, 6L);
+        //Long ord = deptMapper.getNextOrd(1L, Long.valueOf(6));
 
-        log.info("ORD " + ord); //2
+       // log.info("ORD " + ord); //2
 
     }
 
     @Test
-    public void testSub2() {
+    void testSub2() {
 
-        int ord = 3;
-        int companyNo = 1;
+        Long ord = 3L;
+        Long companyNo = 1L;
 
         deptMapper.arrangeOrd(companyNo, ord);
 
@@ -100,9 +99,9 @@ public class DeptMapperTests {
     }
 
     @Test
-    public void testSub3() {
+    void testSub3() {
 
-        int ord = 3;
+        Long ord = 3L;
         Long deptNo = 22L;
 
         deptMapper.fixOrd(deptNo,ord);
@@ -110,7 +109,7 @@ public class DeptMapperTests {
     }
 
     @Test
-    public void testSub4() {
+    void testSub4() {
 
         //#{lastDno} where deptNo = #{parentDeptNo}
 
@@ -124,13 +123,22 @@ public class DeptMapperTests {
     @Test
     @DisplayName("부서 번호, 부서 이름으로 검색 test")
     void search() {
-        String deptName = "개발";
-        Long deptNo = 1L;
+        String deptSearch = "개발";
 
-        List<DeptSearchDTO> deptSearchDTO = deptMapper.deptSearch(deptName, deptNo);
+        List<DeptSearchDTO> deptSearchDTO = deptMapper.deptSearch(deptSearch);
 
         deptSearchDTO.forEach(log::info);
     }
+
+    @Test
+    @DisplayName("부서에 맞는 부서원 정보 조회")
+    void deptMember() {
+        Long orgaNo = 24L;
+
+        List<DeptMemberDTO> list = deptMapper.deptMember(orgaNo);
+        list.forEach(log::info);
+    }
+
 
     public void findByCompanyNoTest(){
         log.info(deptMapper.findByCompanyNo(1L));

@@ -20,6 +20,5 @@ public class DeptDTO {
     private int ord, depth;
     private LocalDateTime regDate, modDate;
     private Long lastDno;
-    /*
-*/
+
 }
