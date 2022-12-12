@@ -1,7 +1,7 @@
 package com.dq.aquaranth.emp.service;
 
 import com.dq.aquaranth.emp.dto.emp.*;
-import com.dq.aquaranth.emp.dto.login.EmpLoggingDTO;
+import com.dq.aquaranth.emp.dto.login.EmpRedisDTO;
 import com.dq.aquaranth.emp.dto.login.EmpLoginEmpDTO;
 import com.dq.aquaranth.emp.dto.login.EmpUpdateRecentAccessDTO;
 import com.dq.aquaranth.emp.dto.orga.EmpOrgaDTO;
@@ -227,22 +227,26 @@ public class EmpServiceImpl implements EmpService {
 
 
     @Override
-    public EmpLoggingDTO findLoggingInformation(String username) {
-        Long dept = userSessionService.findUserInfoInRedis(username).getDept().getDeptNo();
+    public EmpRedisDTO findLoggingInformation(String username) {
         Long company = userSessionService.findUserInfoInRedis(username).getCompany().getCompanyNo();
+        String companyName = userSessionService.findUserInfoInRedis(username).getCompany().getCompanyName();
+        Long dept = userSessionService.findUserInfoInRedis(username).getDept().getDeptNo();
+        String deptName = userSessionService.findUserInfoInRedis(username).getDept().getDeptName();
         String empRank = userSessionService.findUserInfoInRedis(username).getEmpMapping().getEmpRank();
         Long orgaNo = userSessionService.findUserInfoInRedis(username).getEmpMapping().getOrgaNo();
         String hierarchy = empMapper.functionHierarchy(orgaNo);
 
         // 현재 접속한 사원의 회사, 부서, 조직에 속한 사원의 정보
-        EmpLoggingDTO empLoggingDTO = EmpLoggingDTO.builder()
+        EmpRedisDTO empRedisDTO = EmpRedisDTO.builder()
                 .loginCompany(company)
+                .loginCompanyName(companyName)
                 .loginDept(dept)
+                .loginDeptName(deptName)
                 .loginEmpRank(empRank)
                 .hierarchy(hierarchy)
                 .build();
 
-        return empLoggingDTO;
+        return empRedisDTO;
     }
 
     @Override
