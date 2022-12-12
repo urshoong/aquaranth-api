@@ -2,8 +2,8 @@ package com.dq.aquaranth.login.dto;
 
 import com.dq.aquaranth.company.dto.CompanyInformationDTO;
 import com.dq.aquaranth.dept.dto.DeptDTO;
-import com.dq.aquaranth.emp.dto.EmpDTO;
-import com.dq.aquaranth.emp.dto.EmpMappingDTO;
+import com.dq.aquaranth.emp.dto.emp.EmpDTO;
+import com.dq.aquaranth.emp.dto.emp.EmpMappingDTO;
 import com.dq.aquaranth.rolegroup.domain.RoleGroup;
 import lombok.*;
 
