@@ -27,9 +27,9 @@
              from tbl_dept td
              where td.company_no = tc.company_no
              and td.depth = 1) lower_dept_cnt,
-            tc.orga_no
-            from tbl_company tc
-            where tc.company_no = (select company_no from tbl_company where orga_no = #{companyNo})
+             tc.orga_no
+             from tbl_company tc
+             where tc.company_no = (select company_no from tbl_company where orga_no = #{companyNo})
             union all
         </if>
         select td.dept_no, td.upper_dept_no, td.dept_name, td.ord, td.depth, td.last_dno, td.company_no
@@ -48,7 +48,15 @@
         where (td.upper_dept_no = #{upperDeptNo} OR
                td.upper_dept_no is null )
         and td.depth = #{depth}
-        and td.company_no = (select company_no from tbl_company where orga_no = #{companyNo})
+        <if test="depth > 1">
+            and td.company_no = (select company_no
+                                 from tbl_dept dd
+                                 join tbl_dept_mapping mm on dd.dept_no = mm.dept_no
+                                 where mm.orga_no = #{companyNo})
+        </if>
+        <if test="2 > depth">
+            and td.company_no = (select company_no from tbl_company where orga_no = #{companyNo})
+        </if>
     </select>
 
     <select id="findOrgaList" resultType="com.dq.aquaranth.userrole.dto.tree.TreeOrgaListDTO">
