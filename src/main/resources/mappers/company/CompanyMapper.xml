@@ -10,7 +10,7 @@
     <!--회사 일부정보(회사번호, 회사명, 대표자명, 사용여부만)가 포함된 전체 리스트 출력-->
     <select id="findAllCompany" resultType="com.dq.aquaranth.company.dto.CompanyListDTO">
         select company_no, company_name, owner_name, company_use
-        from tbl_company;
+        from tbl_company
     </select>
 
     <!--해당 회사에 대한 기본정보 출력-->
@@ -18,7 +18,7 @@
         select company_no, orga_no, company_name, company_address, company_tel
              , owner_name, founding_date, business_number, company_use
         from tbl_company
-        where company_no = #{companyNo};
+        where company_no = #{companyNo}
     </select>
 
 
@@ -26,7 +26,7 @@
     <!--상위 조직번호가 없고 'company' 타입인 조직 추가-->
     <insert id="insertOrga">
         insert into tbl_orga (upper_orga_no, orga_type, reg_user)
-        values (#{upperOrgaNo}, #{orgaType}, #{regUser});
+        values (#{upperOrgaNo}, #{orgaType}, #{regUser})
         <selectKey keyProperty="orgaNo" resultType="long" order="AFTER">
             select LAST_INSERT_ID()
         </selectKey>
@@ -42,7 +42,7 @@
         values (
                 #{orgaNo}, #{companyName}, #{companyAddress}, #{companyTel},
                 #{ownerName}, #{foundingDate}, #{businessNumber}, #{companyUse}, #{regUser}
-                );
+                )
         <selectKey keyProperty="companyNo" resultType="long" order="AFTER">
             select LAST_INSERT_ID()
         </selectKey>
@@ -74,7 +74,7 @@
         set company_name=#{companyName}, company_address=#{companyAddress}, company_tel=#{companyTel}
           , owner_name=#{ownerName}, company_use=#{companyUse}, mod_user=#{modUser}
           , mod_date = now()
-        where company_no = #{companyNo};
+        where company_no = #{companyNo}
     </update>
 
 
@@ -83,7 +83,7 @@
     <delete id="deleteByCompanyNo">
         update tbl_company
         set company_use = false
-        where company_no = ${companyNo} and company_use = true;
+        where company_no = ${companyNo} and company_use = true
     </delete>
 
 
@@ -92,9 +92,18 @@
     <select id="search" resultType="com.dq.aquaranth.company.dto.CompanyListDTO">
         select company_no, company_name, owner_name, company_use
         from tbl_company
-        where company_use=#{companyUse}
-          and (company_no like concat('%', #{companySearch}, '%')
-            or company_name like concat('%', #{companySearch}, '%'));
+        <where>
+            <if test="companyUse == 'true'">
+                company_use=1
+            </if>
+            <if test="companyUse == 'false'">
+                company_use=0
+            </if>
+            <if test="companySearch != null or companySearch != ''">
+                and (company_no like concat('%', #{companySearch}, '%')
+                or company_name like concat('%', #{companySearch}, '%'))
+            </if>
+        </where>
     </select>
 
 

@@ -11,7 +11,7 @@ public interface CompanyService {
     Long insert(CompanyInformationDTO companyInformationDTO, String username);
     Long update(CompanyUpdateDTO companyUpdateDTO, String username);
     Long deleteByCompanyNo(Long companyNo);
-    List<CompanyListDTO> search(Boolean companyUse, String companySearch);
+    List<CompanyListDTO> search(String companyUse, String companySearch);
     List<CompanyListDTO> sort(String sortValue);
 }
 

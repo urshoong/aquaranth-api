@@ -106,9 +106,14 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     @Override
-    public List<CompanyListDTO> search(Boolean companyUse, String companySearch) {
+    public List<CompanyListDTO> search(String companyUse, String companySearch) {
         log.info("회사코드, 회사명, 사용여부로 회사 기본정보 검색");
-        return companyMapper.search(companyUse, companySearch);
+
+        // 회사 사용여부와 검색정보를 DTO 에 넣어 넘긴다.
+        CompanySearchDTO companySearchDTO = new CompanySearchDTO();
+        companySearchDTO.setCompanyUse(companyUse);
+        companySearchDTO.setCompanySearch(companySearch);
+        return companyMapper.search(companySearchDTO);
     }
 
     @Override
