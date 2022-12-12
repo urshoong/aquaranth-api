@@ -1,6 +1,11 @@
 package com.dq.aquaranth.emp.controller;
 
-import com.dq.aquaranth.emp.dto.*;
+import com.dq.aquaranth.emp.dto.emp.*;
+import com.dq.aquaranth.emp.dto.login.EmpLoginEmpDTO;
+import com.dq.aquaranth.emp.dto.orga.EmpOrgaDTO;
+import com.dq.aquaranth.emp.dto.orga.EmpOrgaInsertDTO;
+import com.dq.aquaranth.emp.dto.orga.EmpOrgaUpdateListDTO;
+import com.dq.aquaranth.emp.dto.orga.EmpOrgaSelectDTO;
 import com.dq.aquaranth.emp.service.EmpService;
 import com.dq.aquaranth.login.domain.LoginUser;
 import com.dq.aquaranth.login.service.UserSessionService;
@@ -15,7 +20,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -28,31 +32,31 @@ public class EmpController {
     private final UserSessionService userSessionService;
 
     /**
-     * 사원테이블에 있는 모든 정보를 요청합니다.
-     * @return 사원리스트
+     * 모든 사원의 정보를 조회합니다.
      */
     @GetMapping("/information")
     public List<EmpDTO> getEmpList() {
         return empService.findAll();
     }
 
+    /**
+     * 선택된 사원의 모든 정보를 조회합니다.
+     */
     @GetMapping("/read/{empNo}")
     public EmpDTO getEmp(@PathVariable("empNo") Long empNo) {
         return empService.findById(empNo);
     }
 
-    @GetMapping("/readOrga/{empNo}")
-    public List<EmpSelectOrga> empOrgaList(@PathVariable("empNo") Long empNo) {
-        return empService.findAllOrga(empNo);
-    }
-
+    /**
+     * 사원을 추가합니다.
+     */
     @PostMapping("/register")
-    public EmpDTO registerEmp (@Valid @RequestBody  EmpInsertInformationDTO reqDTO, Authentication authentication) throws IllegalAccessException{
+    public EmpDTO registerEmp (@Valid @RequestBody EmpInsertDTO reqDTO, Authentication authentication) throws IllegalAccessException{
         log.info(reqDTO);
 
         String registrant = authentication.getName();
 
-        //조직 DTO에 받은 값 넣기
+        //조직
         EmpOrgaDTO orgaDTO = EmpOrgaDTO.builder()
                 .deptNo(reqDTO.getDeptNo())
                 .regUser(registrant)
@@ -61,6 +65,7 @@ public class EmpController {
         //조직 테이블의 last_insert_id 저장
         Long orgaId = orgaDTO.getOrgaNo();
 
+        //사원
         EmpDTO empDTO = EmpDTO.builder()
                 .empName(reqDTO.getEmpName())
                 .username(reqDTO.getUsername())
@@ -73,11 +78,10 @@ public class EmpController {
                 .regUser(registrant)
                 .build();
 
-
         //사원 테이블의 last_insert_id 저장
         Long empNo = empDTO.getEmpNo();
 
-        //사원 매핑 테이블
+        //사원 매핑
         EmpMappingDTO empMappingDTO = EmpMappingDTO.builder()
                 .empNo(empNo)
                 .orgaNo(orgaId)
@@ -91,12 +95,50 @@ public class EmpController {
         return empDTO;
     }
 
+    /**
+     * 사원의 정보를 수정합니다.
+     */
+    @PutMapping(value = "/modify/{empNo}")
+    public Long modifyEmp(@Valid @RequestBody EmpUpdateDTO empUpdateDTO, Authentication authentication) {
+        String username = authentication.getName();
+        empUpdateDTO.setModUser(username);
+
+        return empService.update(empUpdateDTO);
+    }
+
+    /**
+     * 사원의 프로필 사진을 업데이트합니다.
+     */
+    @PutMapping(value = "/updateprofile", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public Long updateEmpProfile(MultipartFileDTO fileDto) throws Exception {
+        return empService.updateFile(fileDto);
+    }
+
+    /**
+     * 사원의 프로필 사진을 삭제합니다.
+     */
+    @PutMapping(value = "/removeProfile/{empNo}")
+    public long removeProfile(@PathVariable("empNo") Long empNo){
+        return empService.deleteProfile(empNo);
+    }
+
+    /**
+     * 선택된 사원의 모든 회사, 부서(조직) 정보를 조회합니다.
+     */
+    @GetMapping("/readOrga/{empNo}")
+    public List<EmpOrgaSelectDTO> empOrgaList(@PathVariable("empNo") Long empNo) {
+        return empService.findOrgaById(empNo);
+    }
+
+    /**
+     * 사원의 회사, 부서(조직) 정보를 추가합니다.
+     */
     @PostMapping("/registerOrga")
     public Long registerEmpOrga (@RequestBody EmpOrgaInsertDTO reqDTO, Authentication authentication){
         String registrant = authentication.getName();
         Long empNo = reqDTO.getEmpNo();
 
-        //조직 DTO에 받은 값 넣기
+        //조직
         EmpOrgaDTO orgaDTO = EmpOrgaDTO.builder()
                 .deptNo(reqDTO.getDeptNo())
                 .regUser(registrant)
@@ -105,7 +147,7 @@ public class EmpController {
         //조직 테이블의 last_insert_id 저장
         Long orgaNo = orgaDTO.getOrgaNo();
 
-        //사원 매핑 테이블
+        //사원 매핑
         EmpMappingDTO empMappingDTO = EmpMappingDTO.builder()
                 .empNo(empNo)
                 .orgaNo(orgaNo)
@@ -116,52 +158,18 @@ public class EmpController {
         return empService.empOrgaInsert(orgaDTO, empMappingDTO, empNo);
     }
 
-    @PutMapping(value = "/modify/{empNo}")
-    public Long modifyEmp(@Valid @RequestBody EmpUpdateDTO empUpdateDTO, Authentication authentication) {
-        String username = authentication.getName();
-
-        empUpdateDTO.setModUser(username);
-        empUpdateDTO.setModDate(LocalDateTime.now());
-
-        return empService.update(empUpdateDTO);
-    }
-
+    /**
+     * 사원의 조직 정보를 수정합니다.
+     */
     @PutMapping(value = "/modifyOrga")
-    public Long modifyOrga(@RequestBody ListDTO listDTO, Authentication authentication) {
-
-        // 로그인한 사용자의 아이디 가져오기
+    public Long modifyOrga(@RequestBody EmpOrgaUpdateListDTO orgaUpdateListDTO, Authentication authentication) {
         String modUser = authentication.getName();
 
-        log.info(listDTO);
-        Long result = 0L;
-
-//        String registrant = "종현";
-////      list.setModUser(registrant);
-
-        listDTO.getList().forEach(item -> item.setModUser(modUser));
-
-        for (int i = 0; i < listDTO.getList().size(); i++) {
-            result += empService.orgaUpdate(listDTO.getList().get(i));
-        }
-        log.info("result: "+result);
-        return result;
+        return empService.updateOrga(orgaUpdateListDTO, modUser);
     }
 
     /**
-     * 사원 프로필 업데이트
-     */
-    @PutMapping(value = "/updateprofile", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public Long updateEmpProfile(MultipartFileDTO fileDto) throws Exception {
-        return empService.updateFile(fileDto);
-    }
-
-    @PutMapping(value = "/removeProfile/{empNo}")
-    public long removeProfile(@PathVariable("empNo") Long empNo){
-        return empService.deleteProfile(empNo);
-    }
-
-    /**
-     * 로그인한 회원 정보
+     * 로그인한 회원의 회사, 부서, 사원 정보를 조회합니다.
      */
     @GetMapping("/loginlist")
     public List<EmpLoginEmpDTO> findLoginUser(Authentication authentication){
@@ -169,22 +177,28 @@ public class EmpController {
         return empService.findLoginUser(username);
     }
 
-
-
     /**
-     * 로그인한 회원 정보 보내서 redis에 올리기
+     * 로그인한 사원의 정보를 Redis에 등록합니다.
      */
     @PostMapping("/registerLoginUser")
     public LoginUser registerLoginUser(@RequestBody LoginUser loginUser, Authentication authentication) {
         log.error(loginUser);
         String username = authentication.getName();
         loginUser.setUsername(username);
-
-        log.info(loginUser);
-
-        //레디스에 올린다.
+        // 접속한 아이디에 대한 정보를 레디스에 올린다.
         userSessionService.loadUserInfoByLoginUser(loginUser);
+        // 현재 ip와 시간을 업데이트한다.
+        empService.updateRecentAccessInfo(username);
 
         return loginUser;
+    }
+
+    @GetMapping("/empinfo")
+    public EmpInfo getEmpInfo(Authentication authentication) {
+        String username = authentication.getName();
+        return EmpInfo.builder()
+                .empDTOList(empService.findLoginUser(username))
+                .empLoggingDTO(empService.findLoggingInformation(username))
+                .build();
     }
 }

@@ -1,4 +1,4 @@
-package com.dq.aquaranth.emp.dto;
+package com.dq.aquaranth.emp.dto.login;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,6 +7,9 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+/**
+ * 현재 로그인한 사원의 모든 회사, 부서, 사원 정보 DTO 입니다.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

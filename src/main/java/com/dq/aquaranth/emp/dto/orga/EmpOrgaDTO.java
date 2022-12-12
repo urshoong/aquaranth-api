@@ -1,4 +1,4 @@
-package com.dq.aquaranth.emp.dto;
+package com.dq.aquaranth.emp.dto.orga;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,17 +8,18 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDate;
 
 /**
- * 사원을 넣을 때,
- * 사원에게 매핑될 조직 부서와
- * 상위 조직 번호 (부서의 조직 번호)를 저장할 DTO
+ * 사원의 회사, 부서(조직) DTO 입니다.
  */
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class EmpOrgaDTO {
-    private Long orgaNo, upperOrgaNo;
+    private Long orgaNo;
+    private Long upperOrgaNo;
     private Long deptNo;
-    private String orgaType, regUser, modUser;
+    private String orgaType;
+    private String regUser;
+    private String modUser;
     private LocalDate regDate, modDate;
 }

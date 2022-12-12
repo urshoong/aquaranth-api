@@ -1,6 +1,12 @@
 package com.dq.aquaranth.emp.service;
 
-import com.dq.aquaranth.emp.dto.*;
+import com.dq.aquaranth.emp.dto.emp.*;
+import com.dq.aquaranth.emp.dto.login.EmpLoggingDTO;
+import com.dq.aquaranth.emp.dto.login.EmpLoginEmpDTO;
+import com.dq.aquaranth.emp.dto.login.EmpUpdateRecentAccessDTO;
+import com.dq.aquaranth.emp.dto.orga.EmpOrgaDTO;
+import com.dq.aquaranth.emp.dto.orga.EmpOrgaSelectDTO;
+import com.dq.aquaranth.emp.dto.orga.EmpOrgaUpdateListDTO;
 import com.dq.aquaranth.emp.mapper.EmpMapper;
 import com.dq.aquaranth.emp.mapper.EmpMappingMapper;
 import com.dq.aquaranth.login.service.UserSessionService;
@@ -24,22 +30,26 @@ import java.util.*;
 @RequiredArgsConstructor
 @Log4j2
 public class EmpServiceImpl implements EmpService {
+
     private final EmpMapper empMapper;
     private final EmpMappingMapper empMappingMapper;
     private final PasswordEncoder passwordEncoder;
     private final ObjectStorageService objectStorageService;
     private final UserSessionService userSessionService;
 
+
+    // 사원
+
     @Override
     public List<EmpDTO> findAll() {
         List<EmpDTO> empDTOList = empMapper.findAll();
 
         empDTOList.forEach(empDTO -> {
+            // 파일이 있는 사원만 profileUrl 생성
             if(empDTO.getUuid() != null && empDTO.getFilename() != null){
                 ObjectGetRequestDTO objectRequestDTO = ObjectGetRequestDTO.builder()
                         .filename(empDTO.getUuid() + empDTO.getFilename())
                         .build();
-
                 try {
                     empDTO.setProfileUrl(objectStorageService.getObject(objectRequestDTO).getUrl());
                 } catch (Exception e) {
@@ -47,7 +57,6 @@ public class EmpServiceImpl implements EmpService {
                 }
             }
         });
-
         return empDTOList;
     }
 
@@ -55,57 +64,30 @@ public class EmpServiceImpl implements EmpService {
     public EmpDTO findById(Long empNo) {
         EmpDTO empDTO = empMapper.findById(empNo);
 
-        // 파일이 없는 사원만 filename
         if(empDTO.getUuid() != null && empDTO.getFilename() != null) {
             ObjectGetRequestDTO objectRequestDTO = ObjectGetRequestDTO.builder()
                     .filename(empDTO.getUuid() + empDTO.getFilename())
                     .build();
-
             try {
                 empDTO.setProfileUrl(objectStorageService.getObject(objectRequestDTO).getUrl());
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
         }
-
         return empDTO;
     }
 
     @Override
-    public Long update(EmpUpdateDTO empUpdateDTO)
-    {
-        Long empNo = empUpdateDTO.getEmpNo();
-        if(empUpdateDTO.getLastRetiredDate() != null){
-            //해당 orga들 퇴사일 now로.
-            //알고있는 정보 empNo, RetiredDate
-            empMappingMapper.updateEmpMappingRetiredDate(empNo);
-        }
-        return empMapper.update(empUpdateDTO);
-    }
-
-    @Override
-    public Long orgaUpdate(EmpOrgaUpdateDTO empOrgaUpdateDTO) {
-        Long orgaList = empMapper.orgaUpdate(empOrgaUpdateDTO);
-        log.info("service result : "+orgaList);
-        return orgaList;
-
-//        Long orgaList = empMapper.orgaUpdate(empOrgaUpdateDTO);
-//        log.info("service result : "+orgaList);
-//        return orgaList;
-    }
-
-
-    @Override
     @Transactional
     public EmpDTO insert(EmpOrgaDTO orgaReqDTO, EmpDTO empReqDTO, EmpMappingDTO mapperReqDTO) throws IllegalAccessException {
-        // 이미 가입된 유저라면
+        // 이미 가입된 유저
         if (Objects.nonNull(empMapper.findByUsername(empReqDTO.getUsername()))) {
             log.error("이미 가입된 유저입니다. username -> " + empReqDTO.getUsername());
             throw new KeyAlreadyExistsException("이미 가입된 유저입니다. username -> " + empReqDTO.getUsername());
         }
 
         // 조직 테이블 insert
-        empMapper.orgaInsert(orgaReqDTO);
+        empMapper.insertOrga(orgaReqDTO);
 
         // 조직 테이블의 last_insert_id 저장
         Long orgaNo = orgaReqDTO.getOrgaNo();
@@ -126,26 +108,14 @@ public class EmpServiceImpl implements EmpService {
     }
 
     @Override
-    @Transactional
-    public Long empOrgaInsert(EmpOrgaDTO orgaReqDTO, EmpMappingDTO mapperReqDTO, Long empNo) {
-        // 조직 테이블 insert
-        empMapper.orgaInsert(orgaReqDTO);
+    public Long update(EmpUpdateDTO empUpdateDTO)
+    {
+        Long empNo = empUpdateDTO.getEmpNo();
+        if(empUpdateDTO.getLastRetiredDate() != null){
+            empMappingMapper.updateEmpMappingRetiredDate(empNo);
+        }
 
-        // 조직 테이블의 last_insert_id 저장
-        Long orgaNo = orgaReqDTO.getOrgaNo();
-
-        // 사원매핑 테이블 insert
-        mapperReqDTO.setOrgaNo(orgaNo);
-        mapperReqDTO.setEmpNo(empNo);
-
-        return empMappingMapper.empMappingInsert(mapperReqDTO);
-    }
-
-
-    @Override
-    @Transactional
-    public List<EmpSelectOrga> findAllOrga(Long empNo) {
-        return empMapper.orgaFindById(empNo);
+        return empMapper.update(empUpdateDTO);
     }
 
     @Override
@@ -164,11 +134,59 @@ public class EmpServiceImpl implements EmpService {
         return empMapper.updateProfile(empFileDTO);
     }
 
-    // 프로필 filename, uuid null 로 업데이트. 인데 그것이 삭제하는 것임.
+    @Override
+    public Long deleteProfile(Long empNo) {
+        EmpFileDTO empFileDTO = EmpFileDTO
+                .builder()
+                .uuid(null)
+                .filename(null)
+                .empNo(empNo)
+                .build();
 
-    /**
-     * 로그인한 회원 가져오기
-     */
+        return empMapper.updateProfile(empFileDTO);
+    }
+
+
+    // 사원 회사, 부서(조직)
+
+    @Override
+    public List<EmpOrgaSelectDTO> findOrgaById(Long empNo) {
+        return empMapper.findOrgaById(empNo);
+    }
+
+    @Override
+    @Transactional
+    public Long empOrgaInsert(EmpOrgaDTO orgaReqDTO, EmpMappingDTO mapperReqDTO, Long empNo) {
+        // 조직 테이블 insert
+        empMapper.insertOrga(orgaReqDTO);
+
+        // 조직 테이블의 last_insert_id 저장
+        Long orgaNo = orgaReqDTO.getOrgaNo();
+
+        // 사원매핑 테이블 insert
+        mapperReqDTO.setOrgaNo(orgaNo);
+        mapperReqDTO.setEmpNo(empNo);
+
+        return empMappingMapper.empMappingInsert(mapperReqDTO);
+    }
+
+    @Override
+    public Long updateOrga(EmpOrgaUpdateListDTO orgaUpdateListDTO, String modUser) {
+        Long orgaList = 0L;
+        // 목록에 modUser 저장
+        orgaUpdateListDTO.getList().forEach(orga -> orga.setModUser(modUser));
+
+        // 리스트 정보들 하나씩 업데이트
+        for (int i = 0; i < orgaUpdateListDTO.getList().size(); i++) {
+            orgaList += empMapper.updateOrga(orgaUpdateListDTO.getList().get(i));
+        }
+
+        return orgaList;
+    }
+
+
+    // 접속 중인 사원
+
     @Override
     public List<EmpLoginEmpDTO> findLoginUser(String username) {
         String ip = null;
@@ -179,7 +197,7 @@ public class EmpServiceImpl implements EmpService {
             throw new RuntimeException(e);
         }
 
-        // 접속한 아이디로 로그인한 사원의 정보를 찾아 계층형 구조의 값을 저장한다.
+        // 접속한 아이디로 로그인한 사원의 정보를 찾아 데이터 저장
         List<EmpLoginEmpDTO> loginEmpList = empMapper.findLoginUser(username);
 
         String finalIp = ip;
@@ -198,7 +216,7 @@ public class EmpServiceImpl implements EmpService {
             }
         }
 
-        // 계층 구조에 회원 정보 값을 넣는다.
+        // 현재 접속한 ip와 해당 사원의 profileUrl을 사원 정보로 저장
         loginEmpList.forEach(emp -> {
             emp.setLoginIp(finalIp);
             emp.setProfileUrl(empDTO.getProfileUrl());
@@ -207,19 +225,16 @@ public class EmpServiceImpl implements EmpService {
         return loginEmpList;
     }
 
-    /**
-     * 현재 로그인한 사원의 정보 companyNo, deptNo, empno 두 가지 redis가져옴.
-     */
+
     @Override
     public EmpLoggingDTO findLoggingInformation(String username) {
-
         Long dept = userSessionService.findUserInfoInRedis(username).getDept().getDeptNo();
         Long company = userSessionService.findUserInfoInRedis(username).getCompany().getCompanyNo();
         String empRank = userSessionService.findUserInfoInRedis(username).getEmpMapping().getEmpRank();
         Long orgaNo = userSessionService.findUserInfoInRedis(username).getEmpMapping().getOrgaNo();
-
         String hierarchy = empMapper.functionHierarchy(orgaNo);
 
+        // 현재 접속한 사원의 회사, 부서, 조직에 속한 사원의 정보
         EmpLoggingDTO empLoggingDTO = EmpLoggingDTO.builder()
                 .loginCompany(company)
                 .loginDept(dept)
@@ -227,7 +242,11 @@ public class EmpServiceImpl implements EmpService {
                 .hierarchy(hierarchy)
                 .build();
 
-        //-------------------------------------------
+        return empLoggingDTO;
+    }
+
+    @Override
+    public Long updateRecentAccessInfo(String username) {
         String ip = null;
 
         try {
@@ -238,7 +257,7 @@ public class EmpServiceImpl implements EmpService {
 
         Long empNo = userSessionService.findUserInfoInRedis(username).getEmp().getEmpNo();
 
-        // 확인 버튼 클릭 시, emp 최근 접속 ip, 시간을 empno으로 찾아 업데이트.
+        // 최근 접속 ip, 시간 업데이트
         EmpUpdateRecentAccessDTO updateDTO
                 = EmpUpdateRecentAccessDTO.builder()
                 .lastLoginIp(ip)
@@ -246,22 +265,6 @@ public class EmpServiceImpl implements EmpService {
                 .empNo(empNo)
                 .build();
 
-        empMapper.updateRecentAccessInfo(updateDTO);
-
-        return empLoggingDTO;
+        return empMapper.updateRecentAccessInfo(updateDTO);
     }
-
-    @Override
-    public Long deleteProfile(Long empNo) {
-
-        EmpFileDTO empFileDTO = EmpFileDTO
-                .builder()
-                .uuid(null)
-                .filename(null)
-                .empNo(empNo)
-                .build();
-
-        return empMapper.updateProfile(empFileDTO);
-    }
-
 }

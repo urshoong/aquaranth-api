@@ -1,6 +1,6 @@
 package com.dq.aquaranth.login.controller;
 
-import com.dq.aquaranth.emp.dto.EmpLoggingDTO;
+import com.dq.aquaranth.emp.dto.login.EmpLoggingDTO;
 import com.dq.aquaranth.emp.service.EmpService;
 import com.dq.aquaranth.login.constant.RedisKeys;
 import com.dq.aquaranth.login.dto.LoginUserInfo;
