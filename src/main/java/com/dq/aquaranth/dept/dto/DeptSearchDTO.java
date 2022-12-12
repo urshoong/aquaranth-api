@@ -17,4 +17,5 @@ public class DeptSearchDTO {
      */
     private String deptName, path;
     private Long deptNo;
+    private boolean mainFlag;
 }

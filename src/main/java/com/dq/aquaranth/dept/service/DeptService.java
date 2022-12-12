@@ -41,16 +41,51 @@ public class DeptService {
 
         log.info("before: ", deptRegisterDTO.getDeptNo());
 
-        // 부서테이블 추가
+        //등록에 필요한 정보 입력하고 등록
         insertDept = deptMapper.insert(deptRegisterDTO);
+        log.info("insertDept : " + insertDept);
+
+        //등록한 부서의 부서번호를 얻어와서 lastDeptNo에 초기화
         Long lastDeptNo = deptRegisterDTO.getDeptNo();
 
+        Long company = deptRegisterDTO.getCompanyNo();
+        Long parent = deptRegisterDTO.getUpperDeptNo();
+
+        //2. 회사번호와, 상위부서번호로 ord(부서 내 정렬)값 생성
+        Long ord = new Long(deptMapper.getNextOrd(company, parent));
+
+        //3. 같은회사 중 ord값보다 크거나 같은 ord 모두 +1 씩 추가
+        deptMapper.arrangeOrd(company, ord);
         log.info("after: ", deptRegisterDTO.getDeptNo());
+
+        //4. 직접 추가한 부서에 2번에서 추출한 ord값 업데이트
+        deptMapper.fixOrd(lastDeptNo, ord);
+
+        Long lastDno = lastDeptNo;
+        Long parentDeptNo = parent;
+
+        //5. deptNo가 상위부서번호와 일치하는 곳의 lastDno에 추가한 deptNo번호 업데이트
+
+        log.info("==============================================");
+
+        log.info("==============================================");
+
+        log.info("lastDno " + lastDno);
+        log.info("parentDeptno " + parentDeptNo);
+
+        log.info("==============================================");
+
+
+        log.info("==============================================");
+
+
+        deptMapper.updateLastDno(parentDeptNo, lastDno);
 
         /** 2. 조직 추가 */
         // 회사면 회사 orgaNo 넣어야되고, 부서면 부서 orgaNo넣어야됨.
-        DeptDTO deptDTO = deptMapper.select(lastDeptNo);
+        DeptDTO deptDTO = deptMapper.selectDept(lastDeptNo);
 
+        //사용자 넣고 등록 (사용자 아이디로)
         DeptOrgaRegisterDTO deptOrgaRegisterDTO = DeptOrgaRegisterDTO
                 .builder()
                 .regUser(deptRegisterDTO.getUsername())
@@ -58,10 +93,12 @@ public class DeptService {
 
         Long tempUpperOrgaNo = 0L;
 
+
         if (deptDTO.getUpperDeptNo() == null || deptDTO.getUpperDeptNo() == 0L) {
             // 상위 부서 번호가 0인 경우 > 최상위 부서
             // 해당 회사의 조직번호 찾기
             tempUpperOrgaNo = companyMapper.findByCompanyNo(deptDTO.getCompanyNo()).getOrgaNo();
+            log.info(tempUpperOrgaNo);
         } else {
             // 상위 부서 번호가 있을 경우 > 하위 부서
             // 해당 상위부서의 조직번호 찾기
@@ -110,9 +147,8 @@ public class DeptService {
     }
 
     // 삭제
-    public Long remove(Long deptNo) {
-        deptMapper.delete(deptNo);
-        return deptNo;
+    public Long delete(Long deptNo) {
+        return deptMapper.delete(deptNo);
     }
 
     // ord번호로 오름차순 정렬 리스트 조회
@@ -139,9 +175,15 @@ public class DeptService {
     }
 
     // 검색
-    public List<DeptSearchDTO> searchList(String deptName, Long deptNo) {
+    public List<DeptSearchDTO> searchList(String deptSearch) {
         log.info("부서명, 부서이름으로 해당 부서 검색합니다.");
-        return deptMapper.deptSearch(deptName, deptNo);
+        return deptMapper.deptSearch(deptSearch);
+    }
+
+    // 부서에 맞는 부서원 정보 조회
+    public List<DeptMemberDTO> deptMember(Long orgaNo) {
+        log.info("부서원 정보 조회");
+        return deptMapper.deptMember(orgaNo);
     }
 
     // 회사 번호로 부서 목록 조회

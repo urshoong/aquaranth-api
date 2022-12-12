@@ -21,7 +21,11 @@ public class DeptController {
 
     private final DeptService deptService;
 
-    //조회
+    /**
+     * 부서 1개 상세 조회
+     * @param dept_no
+     * @return
+     */
     @GetMapping("/{dept_no}")
     public DeptDTO getOne(@PathVariable("dept_no") Long dept_no){
 
@@ -31,9 +35,13 @@ public class DeptController {
 
     }
 
-    //등록
+    /**
+     * 부서 등록
+     * @param deptRegisterDTO
+     * @param authentication
+     * @return
+     */
     @PostMapping
-//    public Map<Object, Object> register(@RequestBody DeptDTO deptDTO2, Authentication authentication) {
     public Integer register(@RequestBody DeptRegisterDTO deptRegisterDTO, Authentication authentication) {
 
         log.info(deptRegisterDTO);
@@ -43,21 +51,26 @@ public class DeptController {
         log.info("username : " + username);
         deptRegisterDTO.setUsername(username);
 
-//        Map<Object, Object> result = deptService.insert(deptDTO2);
+//      Map<Object, Object> result = deptService.insert(deptDTO2);
         Integer result = deptService.insert(deptRegisterDTO);
 
         return result;
     }
 
-    //삭제
-    @DeleteMapping("/{dept_no}")
-    public Map<Object, Object> remove(@PathVariable("dept_no") Long dept_no) {
-        Long result =  deptService.remove(dept_no);
-
-        return Map.of("result", "success");
+    /**
+     * 삭제 (부서 사용여부가 '사용'인 부서를 '미사용' 으로 변경)
+     */
+    @GetMapping ("/remove/{deptNo}")
+    public Long removeDept(@PathVariable Long deptNo) {
+        return deptService.delete(deptNo);
     }
 
-    //수정
+    /**
+     * 부서 정보 수정
+     * @param dept_no
+     * @param deptDTO
+     * @return
+     */
     @PutMapping("/{dept_no}")
     public DeptDTO modify(@PathVariable("dept_no") Long dept_no , @RequestBody DeptDTO deptDTO) {
         log.info("controller modify : " + deptDTO);
@@ -69,42 +82,77 @@ public class DeptController {
 
     }
 
+    /**
+     * 부서 회사 번호별로 조회
+     * @param companyNo
+     * @return
+     */
     @GetMapping("/list/{companyNo}")
     public List<DeptDTO> listDept (@PathVariable Long companyNo) {
 
         return deptService.listDept(companyNo);
     }
-    //에로사항 : /api/dept2/{gno} 는 /api/dept2/{dept_no}와 곂쳐서 에러 뜸 => 앞에 list붙여서 출력함
 
 
-    //상위부서 밑의 하위부서만 조회
+    /**
+     * 상위 부서 바로 밑 하위부서 조회
+     * @param upper_dept_no
+     * @param depth
+     * @return
+     */
     @GetMapping("/list/{upper_dept_no}/{depth}")
     public List<DeptDTO> listDept2 (@PathVariable("upper_dept_no") Long upper_dept_no, @PathVariable("depth") int depth) {
 
         return deptService.listDepth(upper_dept_no, depth);
     }
 
-//    트리 구조 조회
+    /**
+     * 트리 구조 조회
+     * @param companyCode
+     * @return
+     */
     @GetMapping("/tree/{companyCode}")
     public List<DeptTreeDTO> listTree(@PathVariable("companyCode") Long companyCode ){
 
         return deptService.getTree(companyCode);
       }
 
-      //회사 바로 출력 되고 클릭하면 바로 밑 하위 부서만 조회(준성이형)
+    /**
+     * 회사 바로 출력 하고 클릭하면 바로 밑 하위 부서 조회
+     * @param getSubDeptDTO
+     * @return
+     */
       @GetMapping("/findTree/{companyNo}/{depth}/{upperDeptNo}")
-//      public List<DeptDTO> findTree(@PathVariable("companyNo")Long companyNo ,@PathVariable("depth")int depth, @PathVariable("upperDeptNo")Long upperDeptNo ,GetSubDeptDTO getSubDeptDTO) {
       public List<DeptDTO> findTree(GetSubDeptDTO getSubDeptDTO) {
         return deptService.getSubDepth(getSubDeptDTO);
       }
 
-      // 부서를 검색 조건에 맞게 조회
+    /**
+     * 부서 검색
+     * @param deptSearch
+     * @return
+     */
     @GetMapping("/search")
-    public List<DeptSearchDTO> searchDept(@RequestBody String deptName, Long deptNo) {
-        return deptService.searchList(deptName, deptNo);
+    public List<DeptSearchDTO> searchDept(@RequestParam String deptSearch) {
+        return deptService.searchList(deptSearch);
     }
 
-    // 해당 회사의 부서 목록 출력
+    /**
+     * 부서에 해당하는 부서원 조회
+     * @param orgaNo
+     * @return
+     */
+    @GetMapping("/member/{orgaNo}")
+    public List<DeptMemberDTO> findByDeptOrgaNo(@PathVariable("orgaNo") Long orgaNo){
+        return deptService.deptMember(orgaNo);
+    }
+
+
+    /**
+     * 해당 회사의 부서 목록 출력
+     * @param companyNo
+     * @return
+     */
     @GetMapping("/readName/{companyNo}")
     public List<DepartmentDTO> getDeptName(@PathVariable("companyNo") Long companyNo) {
         return deptService.findByCompanyNo(companyNo);

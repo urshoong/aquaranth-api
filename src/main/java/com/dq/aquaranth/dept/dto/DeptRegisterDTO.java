@@ -11,8 +11,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class DeptRegisterDTO {
-    //등록시 필요한 정보
-    //상위부서번호, 회사번호, 부서이름, 부서약칭, 사용자이름
+    /**
+     * 등록시 필요한 정보
+     */
     private String deptName, deptDesc, username;
-    private Long upperDeptNo, companyNo, deptNo;
+    private Long upperDeptNo, companyNo, deptNo, ord, lastDno, depth;
 }
+

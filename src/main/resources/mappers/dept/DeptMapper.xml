@@ -5,11 +5,32 @@
 
 <mapper namespace="com.dq.aquaranth.dept.mapper.DeptMapper">
 
-
 <!--    1개 조회-->
     <select id="select" resultType="com.dq.aquaranth.dept.dto.DeptDTO">
 <!--        select * from view_dept_tree where dept_no = #{dept_no}-->
-        select * from tbl_dept where dept_no = #{deptNo}
+<!--        조회할 때 사용-->
+        select d.company_no,
+            d.dept_no,
+            d.upper_dept_no,
+            dm.orga_no,
+            d.dept_name,
+            d.dept_desc,
+            d.reg_user,
+            d.main_flag,
+            d.ord,
+            d.depth,
+            d.last_dno
+        from tbl_dept d
+        join tbl_dept_mapping dm on d.dept_no = dm.dept_no
+        where d.dept_no = #{deptNo}
+    </select>
+
+<!--    insert 할때 사용-->
+
+    <select id="selectDept" resultType="com.dq.aquaranth.dept.dto.DeptDTO">
+        select *
+        from tbl_dept
+        where dept_no = #{deptNo};
     </select>
 
     <select id="selectDeptOrgaNo" resultType="long">
@@ -91,16 +112,18 @@
     <update id="updateLastDno">
         update tbl_dept set last_dno = #{deptNo} where dept_no = #{parentDeptNo}
     </update>
+<!--============================================================등록===========================================================================-->
 
-
-
-<!--    삭제-->
+    <!--    삭제  : 사용 여부 true인 부서를 false로 수정-->
     <delete id="delete">
-        delete from tbl_dept where dept_no = #{deptNo}
+        update tbl_dept
+        set main_flag = false
+        where dept_no = #{dpetNo} and main_flag = true
     </delete>
 
 
-<!--    수정-->
+
+    <!--    수정-->
     <update id="update">
             update tbl_dept
             set
@@ -115,21 +138,21 @@
 
 
 
-<!--    ===========================================-->
-
-<!--    전체 리스트 조회-->
+    <!--    전체 리스트 조회-->
     <select id="getList" resultType="com.dq.aquaranth.dept.dto.DeptDTO">
         select * from tbl_dept order by dept_no asc limit #{skip}, #{size}
     </select>
 
 
-<!--    회사별 리스트 조회-->
+
+    <!--    회사별 리스트 조회-->
     <select id="getGnoList" resultType="com.dq.aquaranth.dept.dto.DeptDTO">
         select * from tbl_dept where company_no = #{companyNo} order by ord asc
     </select>
 
 
-<!--모든 회사 통틀어서 하위 부서 뽑기 사실상 안씀-->
+
+    <!--모든 회사 통틀어서 하위 부서 조회-->
     <select id="getFromParent" resultType="com.dq.aquaranth.dept.dto.DeptDTO">
         select *
         from tbl_dept
@@ -137,7 +160,8 @@
     </select>
 
 
-<!--    트리 구조 조회-->
+
+    <!--    트리 구조 조회-->
     <select id="getTree" resultType="com.dq.aquaranth.dept.dto.DeptTreeDTO">
         select
         dept_no, orga_no, dept_name, upper_dept_no, ord, depth, company_no, last_dno
@@ -152,12 +176,14 @@
     </select>
 
 
-<!--    수연-->
+
+    <!--    수연-->
     <select id="findByCompanyNo" resultType="com.dq.aquaranth.dept.dto.DepartmentDTO">
         SELECT * FROM tbl_dept WHERE company_no = #{companyNo};
     </select>
 
-<!--    종현-->
+
+    <!--    종현-->
     <select id="findByUsername" resultType="com.dq.aquaranth.dept.dto.DeptDTO">
         select t.*
         from (with recursive findDept as (select to1.orga_no, to1.upper_orga_no, to1.orga_type
@@ -179,7 +205,8 @@
 
 
 
-<!--    준성이형-->
+
+    <!--    1 depth 밑 하위 부서 조회-->
     <select id="getSubDepth" resultType="com.dq.aquaranth.dept.dto.DeptDTO">
         <if test="depth eq 0">
             select 0 dept_no,
@@ -198,40 +225,64 @@
             where tc.company_no = #{companyNo}
             union all
         </if>
-        select td.dept_no, td.upper_dept_no, td.dept_name, td.ord, td.depth, td.last_dno, td.company_no
-        , (select count(*)
-        from tbl_dept
-        where company_no = td.company_no
-        and upper_dept_no = td.dept_no
-        group by upper_dept_no
-        ) lower_dept_cnt
-        , (select tdm.orga_no
-        from tbl_dept_mapping tdm
-        join tbl_orga t on tdm.orga_no = t.orga_no
-        where tdm.dept_no = td.dept_no
-        ) orga_no
+        select td.dept_no
+            , td.upper_dept_no
+            , td.dept_name
+            , td.ord
+            , td.depth
+            , td.last_dno
+            , td.company_no
+            , (select count(*)
+                from tbl_dept
+                where company_no = td.company_no
+                    and upper_dept_no = td.dept_no
+                group by upper_dept_no
+                ) lower_dept_cnt
+            , (select tdm.orga_no
+                from tbl_dept_mapping tdm
+                    join tbl_orga t on tdm.orga_no = t.orga_no
+                where tdm.dept_no = td.dept_no
+                ) orga_no
         from tbl_dept td
-        where (td.upper_dept_no = #{upperDeptNo} OR
-        td.upper_dept_no is null )
-        and td.depth = #{depth}
-        and td.company_no = #{companyNo}
+        where (td.upper_dept_no = #{upperDeptNo}
+            OR td.upper_dept_no is null )
+            and td.depth = #{depth}
+            and td.company_no = #{companyNo}
     </select>
 
-
-
     <!--############################검색############################################-->
-
     <!--부서 검색-->
     <!--부서코드, 부서명으로 검색-->
     <!--검색 결과 : 부서명(소속경로)-->
 
     <select id="deptSearch" resultType="com.dq.aquaranth.dept.dto.DeptSearchDTO">
         select d.dept_no
-            , d.dept_name
-            , FN_GET_HIERARCHY_ORGA(dm.orga_no) as path
+        , d.dept_name
+        , FN_GET_HIERARCHY_ORGA(dm.orga_no) as path
+        , d.main_flag
         from tbl_dept d
-            join tbl_dept_mapping dm on d.dept_no = dm.dept_no
-        where d.dept_no like concat('%', #{deptNo}, '%')
-            or d.dept_name like concat('%', #{deptName}, '%')
+        join tbl_dept_mapping dm on d.dept_no = dm.dept_no
+        where d.dept_no like concat('%', #{deptSearch}, '%')
+        or d.dept_name like concat('%', #{deptSearch}, '%')
+    </select>
+
+    <!--############################검색############################################-->
+    <!--    조직번호에 맞는 부서원 정보 조회-->
+    <select id="deptMember" resultType="com.dq.aquaranth.dept.dto.DeptMemberDTO">
+        select d.dept_name
+            , em.emp_rank
+            , e.emp_name
+            , e.username
+            , e.emp_phone
+            , em.orga_no
+        from tbl_orga o
+            join tbl_dept_mapping dm on o.upper_orga_no = dm.orga_no
+            join tbl_dept d on dm.dept_no = d.dept_no
+            join tbl_emp_mapping em on o.orga_no = em.orga_no
+            join tbl_emp e on em.emp_no = e.emp_no
+        where o.orga_type = 'emp'
+            and o.upper_orga_no=#{upperOrgaNo}
+            and e.emp_use=true
+            and (em.retired_date is null or DATEDIFF(em.retired_date, curdate()) > 0) ;
     </select>
 </mapper>
