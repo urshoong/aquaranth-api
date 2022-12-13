@@ -1,6 +1,6 @@
 package com.dq.aquaranth.login.controller;
 
-import com.dq.aquaranth.emp.dto.login.EmpLoggingDTO;
+import com.dq.aquaranth.emp.dto.login.EmpInformationDTO;
 import com.dq.aquaranth.emp.service.EmpService;
 import com.dq.aquaranth.login.constant.RedisKeys;
 import com.dq.aquaranth.login.dto.LoginUserInfo;
@@ -49,10 +49,17 @@ public class UserApiController {
         return "success";
     }
 
-    /* 로그인한 회원의 deptno, companyno, empRank 받기 */
-    @GetMapping("/loginRedisValue")
-    public EmpLoggingDTO findLoginRedisValue(Authentication authentication){
+    /**
+     * 로그인한 사원의 정보와 Redis에 있는 데이터를 반환합니다.
+     */
+    @GetMapping("/empinfo")
+    public EmpInformationDTO getEmpInfo(Authentication authentication) {
         String username = authentication.getName();
-        return empService.findLoggingInformation(username);
+        return EmpInformationDTO.builder()
+                .empList(empService.findLoginUser(username))
+                .empLoginInfo(empService.findLoggingInformation(username))
+                .build();
     }
+
+
 }

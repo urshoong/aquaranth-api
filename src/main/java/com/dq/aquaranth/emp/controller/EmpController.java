@@ -169,7 +169,7 @@ public class EmpController {
     }
 
     /**
-     * 로그인한 회원의 회사, 부서, 사원 정보를 조회합니다.
+     * 로그인한 사원의 회사, 부서, 사원 정보를 조회합니다.
      */
     @GetMapping("/loginlist")
     public List<EmpLoginEmpDTO> findLoginUser(Authentication authentication){
@@ -191,14 +191,5 @@ public class EmpController {
         empService.updateRecentAccessInfo(username);
 
         return loginUser;
-    }
-
-    @GetMapping("/empinfo")
-    public EmpInfo getEmpInfo(Authentication authentication) {
-        String username = authentication.getName();
-        return EmpInfo.builder()
-                .empDTOList(empService.findLoginUser(username))
-                .empLoggingDTO(empService.findLoggingInformation(username))
-                .build();
     }
 }

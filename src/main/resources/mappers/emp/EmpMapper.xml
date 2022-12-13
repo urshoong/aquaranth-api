@@ -163,27 +163,6 @@
         WHERE emp_no = #{empNo}
     </update>
 
-<!--    <select id="findLoginInformationByUsername" resultType="com.dq.aquaranth.emp.dto.login.EmpLoginDTO">-->
-<!--        SELECT te.emp_name,-->
-<!--               te.emp_no,-->
-<!--               te.username,-->
-<!--               te.last_login_time,-->
-<!--               te.last_login_ip,-->
-<!--               tem.emp_rank,-->
-<!--               tc.company_name,-->
-<!--               td.dept_name,-->
-<!--               tem.orga_no,-->
-<!--               td.dept_no,-->
-<!--               tc.company_no-->
-<!--        FROM tbl_emp te-->
-<!--                 LEFT JOIN tbl_emp_mapping tem on te.emp_no = tem.emp_no-->
-<!--                 LEFT JOIN tbl_orga tor on tor.orga_no = tem.orga_no-->
-<!--                 LEFT JOIN tbl_dept_mapping tdm on tor.upper_orga_no = tdm.orga_no-->
-<!--                 LEFT JOIN tbl_dept td on td.dept_no = tdm.dept_no-->
-<!--                 LEFT JOIN tbl_company tc on td.company_no = tc.company_no-->
-<!--        WHERE username = #{username}-->
-<!--    </select>-->
-
     <select id="findLoginUser" resultMap="empMap">
         SELECT te.emp_name,
                te.emp_no,

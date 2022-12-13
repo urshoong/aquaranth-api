@@ -6,16 +6,18 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * 접속 시 회사 선택 또는 접속 중 회사 변경 시
- * 선택한(접속중) 회사, 부서에 따라 달라지는 정보 DTO 입니다.
+ * 접속회사 선택 또는 변경 시,
+ * Redis에 있는 정보를 가져오기 위한 DTO 입니다.
  */
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Data
-public class EmpLoggingDTO {
-    private Long loginDept;
+public class EmpRedisDTO {
     private Long loginCompany;
+    private String loginCompanyName;
+    private Long loginDept;
+    private String loginDeptName;
     private String loginEmpRank;
     private String hierarchy;
 }

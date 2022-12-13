@@ -25,7 +25,7 @@ public class EmpLoginEmpDTO {
     private String username;
     private String loginIp;
     private String profileUrl;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime lastLoginTime;
 
     private List<EmpLoginCompanyDTO> companyList;

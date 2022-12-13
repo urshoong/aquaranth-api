@@ -4,7 +4,7 @@ import com.dq.aquaranth.emp.dto.emp.EmpDTO;
 import com.dq.aquaranth.emp.dto.emp.EmpMappingDTO;
 import com.dq.aquaranth.emp.dto.orga.EmpOrgaSelectDTO;
 import com.dq.aquaranth.emp.dto.emp.EmpUpdateDTO;
-import com.dq.aquaranth.emp.dto.login.EmpLoggingDTO;
+import com.dq.aquaranth.emp.dto.login.EmpRedisDTO;
 import com.dq.aquaranth.emp.dto.login.EmpLoginEmpDTO;
 import com.dq.aquaranth.emp.dto.orga.EmpOrgaDTO;
 import com.dq.aquaranth.emp.dto.orga.EmpOrgaUpdateListDTO;
@@ -126,7 +126,7 @@ public interface EmpService {
      *
      * @param username : 접속한 사원 아이디
      */
-    EmpLoggingDTO findLoggingInformation(String username);
+    EmpRedisDTO findLoggingInformation(String username);
 
     /**
      * 최근 로그인 ip와 시간을 업데이트합니다.
