@@ -5,27 +5,27 @@
 
 <mapper namespace="com.dq.aquaranth.dept.mapper.DeptMapper">
 
-<!--    1개 조회-->
+    <!--    1개 조회-->
     <select id="select" resultType="com.dq.aquaranth.dept.dto.DeptDTO">
-<!--        select * from view_dept_tree where dept_no = #{dept_no}-->
-<!--        조회할 때 사용-->
+        <!--        select * from view_dept_tree where dept_no = #{dept_no}-->
+        <!--        조회할 때 사용-->
         select d.company_no,
-            d.dept_no,
-            d.upper_dept_no,
-            dm.orga_no,
-            d.dept_name,
-            d.dept_desc,
-            d.reg_user,
-            d.main_flag,
-            d.ord,
-            d.depth,
-            d.last_dno
+        d.dept_no,
+        d.upper_dept_no,
+        dm.orga_no,
+        d.dept_name,
+        d.dept_desc,
+        d.reg_user,
+        d.main_flag,
+        d.ord,
+        d.depth,
+        d.last_dno
         from tbl_dept d
         join tbl_dept_mapping dm on d.dept_no = dm.dept_no
         where d.dept_no = #{deptNo}
     </select>
 
-<!--    insert 할때 사용-->
+    <!--    insert 할때 사용-->
 
     <select id="selectDept" resultType="com.dq.aquaranth.dept.dto.DeptDTO">
         select *
@@ -40,8 +40,8 @@
         where t.dept_no = #{deptNo};
     </select>
 
-<!--    =================================등록 트랜잭션 ========================================-->
-<!--    조직 추가-->
+    <!--    =================================등록 트랜잭션 ========================================-->
+    <!--    조직 추가-->
     <insert id="insertOrga">
         <selectKey keyProperty="orgaNo" order="AFTER" resultType="long">
             select LAST_INSERT_ID()
@@ -50,19 +50,19 @@
         values (#{upperOrgaNo}, 'dept' , #{regUser})
     </insert>
 
-<!--    조직 매핑 테이블 추가-->
+    <!--    조직 매핑 테이블 추가-->
     <insert id="insertOrgaMapping">
         insert into tbl_dept_mapping (dept_no, orga_no, dept_main, reg_user)
         values (#{deptNo}, #{orgaNo}, '0', #{regUser})
     </insert>
 
-<!--    임의의 부서를 직접 추가-->
+    <!--    임의의 부서를 직접 추가-->
     <insert id="insert">
         <selectKey keyProperty="deptNo" order="AFTER" resultType="long">
             SELECT LAST_INSERT_ID()
         </selectKey>
         insert into tbl_dept (
-          upper_dept_no
+        upper_dept_no
         , company_no
         , dept_name
         , dept_desc
@@ -70,49 +70,49 @@
         , reg_user)
         values (
         <if test="upperDeptNo == 0">
-        null
+            null
         </if>
         <if test="upperDeptNo != 0">
-        #{upperDeptNo}
+            #{upperDeptNo}
         </if>
         , #{companyNo}
         , #{deptName}
         , #{deptDesc}
         <if test="upperDeptNo == 0">
-        , 1
+            , 1
         </if>
         <if test="upperDeptNo != 0">
-        , (
-        select d2.depth+1 as depth
-        from tbl_dept d2
-        where dept_no=#{upperDeptNo}
-        )
+            , (
+            select d2.depth+1 as depth
+            from tbl_dept d2
+            where dept_no=#{upperDeptNo}
+            )
         </if>
         , #{username}
         )
         ;
     </insert>
 
-<!--    만든 함수를 이용해서 (상위부서 번호와 그룹번호를 사용)  ord값 조회-->
+    <!--    만든 함수를 이용해서 (상위부서 번호와 그룹번호를 사용)  ord값 조회-->
     <select id="getNextOrd" resultType="int">
         select FN_GET_DEPT_ORD(#{parentDeptNo},#{company})
     </select>
 
-<!--    동일한 company를 가지는 부서중에 조회한 ord값 보다 크거나 같은 모든 ord를 1씩 추가-->
+    <!--    동일한 company를 가지는 부서중에 조회한 ord값 보다 크거나 같은 모든 ord를 1씩 추가-->
     <update id="arrangeOrd">
         update tbl_dept set ord = ord + 1 where company_no = #{company} and ord >=  #{ord}
     </update>
 
-<!--    직접 추가한 부서에 위에서 조회한 ord값을 업데이트-->
+    <!--    직접 추가한 부서에 위에서 조회한 ord값을 업데이트-->
     <update id="fixOrd">
         update tbl_dept set ord = #{ord} where dept_no = #{deptNo}
     </update>
 
-<!--    추가한 부서의 dept_no를 상위 부서의 last_dno에 업데이트 -->
+    <!--    추가한 부서의 dept_no를 상위 부서의 last_dno에 업데이트 -->
     <update id="updateLastDno">
         update tbl_dept set last_dno = #{deptNo} where dept_no = #{parentDeptNo}
     </update>
-<!--============================================================등록===========================================================================-->
+    <!--============================================================등록===========================================================================-->
 
     <!--    삭제  : 사용 여부 true인 부서를 false로 수정-->
     <delete id="delete">
@@ -125,15 +125,15 @@
 
     <!--    수정-->
     <update id="update">
-            update tbl_dept
-            set
-            upper_dept_no = #{upperDeptNo},
-            dept_name = #{deptName},
-            del_flag = #{delFlag},
-            main_flag = #{mainFlag},
-            dept_desc = #{deptDesc},
-            mod_date = now()
-            where dept_no = #{deptNo}
+        update tbl_dept
+        set
+        upper_dept_no = #{upperDeptNo},
+        dept_name = #{deptName},
+        del_flag = #{delFlag},
+        main_flag = #{mainFlag},
+        dept_desc = #{deptDesc},
+        mod_date = now()
+        where dept_no = #{deptNo}
     </update>
 
 
@@ -226,28 +226,28 @@
             union all
         </if>
         select td.dept_no
-            , td.upper_dept_no
-            , td.dept_name
-            , td.ord
-            , td.depth
-            , td.last_dno
-            , td.company_no
-            , (select count(*)
-                from tbl_dept
-                where company_no = td.company_no
-                    and upper_dept_no = td.dept_no
-                group by upper_dept_no
-                ) lower_dept_cnt
-            , (select tdm.orga_no
-                from tbl_dept_mapping tdm
-                    join tbl_orga t on tdm.orga_no = t.orga_no
-                where tdm.dept_no = td.dept_no
-                ) orga_no
+        , td.upper_dept_no
+        , td.dept_name
+        , td.ord
+        , td.depth
+        , td.last_dno
+        , td.company_no
+        , (select count(*)
+        from tbl_dept
+        where company_no = td.company_no
+        and upper_dept_no = td.dept_no
+        group by upper_dept_no
+        ) lower_dept_cnt
+        , (select tdm.orga_no
+        from tbl_dept_mapping tdm
+        join tbl_orga t on tdm.orga_no = t.orga_no
+        where tdm.dept_no = td.dept_no
+        ) orga_no
         from tbl_dept td
         where (td.upper_dept_no = #{upperDeptNo}
-            OR td.upper_dept_no is null )
-            and td.depth = #{depth}
-            and td.company_no = #{companyNo}
+        OR td.upper_dept_no is null )
+        and td.depth = #{depth}
+        and td.company_no = #{companyNo}
     </select>
 
     <!--############################검색############################################-->
@@ -262,27 +262,30 @@
         , d.main_flag
         from tbl_dept d
         join tbl_dept_mapping dm on d.dept_no = dm.dept_no
-        where d.dept_no like concat('%', #{deptSearch}, '%')
-        or d.dept_name like concat('%', #{deptSearch}, '%')
+        join tbl_company c on c.company_no = d.company_no
+        where (d.dept_no like concat('%', #{deptSearch}, '%')
+        or
+        d.dept_name like concat('%', #{deptSearch}, '%'))
+        and d.company_no=#{companyNo};
     </select>
 
     <!--############################검색############################################-->
     <!--    조직번호에 맞는 부서원 정보 조회-->
     <select id="deptMember" resultType="com.dq.aquaranth.dept.dto.DeptMemberDTO">
         select d.dept_name
-            , em.emp_rank
-            , e.emp_name
-            , e.username
-            , e.emp_phone
-            , em.orga_no
+        , em.emp_rank
+        , e.emp_name
+        , e.username
+        , e.emp_phone
+        , em.orga_no
         from tbl_orga o
-            join tbl_dept_mapping dm on o.upper_orga_no = dm.orga_no
-            join tbl_dept d on dm.dept_no = d.dept_no
-            join tbl_emp_mapping em on o.orga_no = em.orga_no
-            join tbl_emp e on em.emp_no = e.emp_no
+        join tbl_dept_mapping dm on o.upper_orga_no = dm.orga_no
+        join tbl_dept d on dm.dept_no = d.dept_no
+        join tbl_emp_mapping em on o.orga_no = em.orga_no
+        join tbl_emp e on em.emp_no = e.emp_no
         where o.orga_type = 'emp'
-            and o.upper_orga_no=#{upperOrgaNo}
-            and e.emp_use=true
-            and (em.retired_date is null or DATEDIFF(em.retired_date, curdate()) > 0) ;
+        and o.upper_orga_no=#{upperOrgaNo}
+        and e.emp_use=true
+        and (em.retired_date is null or DATEDIFF(em.retired_date, curdate()) > 0) ;
     </select>
 </mapper>

@@ -115,26 +115,25 @@ public class DeptController {
     public List<DeptTreeDTO> listTree(@PathVariable("companyCode") Long companyCode ){
 
         return deptService.getTree(companyCode);
-      }
+    }
 
     /**
      * 회사 바로 출력 하고 클릭하면 바로 밑 하위 부서 조회
      * @param getSubDeptDTO
      * @return
      */
-      @GetMapping("/findTree/{companyNo}/{depth}/{upperDeptNo}")
-      public List<DeptDTO> findTree(GetSubDeptDTO getSubDeptDTO) {
+    @GetMapping("/findTree/{companyNo}/{depth}/{upperDeptNo}")
+    public List<DeptDTO> findTree(GetSubDeptDTO getSubDeptDTO) {
         return deptService.getSubDepth(getSubDeptDTO);
-      }
+    }
 
     /**
      * 부서 검색
-     * @param deptSearch
      * @return
      */
     @GetMapping("/search")
-    public List<DeptSearchDTO> searchDept(@RequestParam String deptSearch) {
-        return deptService.searchList(deptSearch);
+    public List<DeptSearchDTO> searchDept(DeptSearchParamDTO deptSearchParamDTO) {
+        return deptService.searchList(deptSearchParamDTO);
     }
 
     /**

@@ -175,9 +175,9 @@ public class DeptService {
     }
 
     // 검색
-    public List<DeptSearchDTO> searchList(String deptSearch) {
-        log.info("부서명, 부서이름으로 해당 부서 검색합니다.");
-        return deptMapper.deptSearch(deptSearch);
+    public List<DeptSearchDTO> searchList(DeptSearchParamDTO deptSearchParamDTO) {
+        log.info("부서명, 부서이름으로 회사의 해당 부서 검색합니다.");
+        return deptMapper.deptSearch(deptSearchParamDTO);
     }
 
     // 부서에 맞는 부서원 정보 조회

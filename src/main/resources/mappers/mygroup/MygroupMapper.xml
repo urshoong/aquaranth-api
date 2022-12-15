@@ -13,14 +13,14 @@
              , my.mygroup_name
              , my.emp_no
              , sum(case when ((em.retired_date is null
-                                or DATEDIFF(em.retired_date, (select curdate())) >= 0)
-                                and e.emp_use = true
-                                ) then 1 else 0 end
-                    ) as countEmp
+            or DATEDIFF(em.retired_date, (select curdate())) >= 0)
+            and e.emp_use = true
+            ) then 1 else 0 end
+            ) as countEmp
         from tbl_mygroup my
                  left join tbl_favorite fa on my.mygroup_no = fa.mygroup_no
-                 join tbl_emp_mapping em on fa.favorite_emp_no = em.orga_no
-                 join tbl_emp e on em.emp_no = e.emp_no
+                 left join tbl_emp_mapping em on fa.favorite_emp_no = em.orga_no
+                 left join tbl_emp e on em.emp_no = e.emp_no
         where my.emp_no = (select tbl_emp.emp_no
                            from tbl_emp
                            where username = #{username})

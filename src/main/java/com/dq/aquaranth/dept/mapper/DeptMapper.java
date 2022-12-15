@@ -46,7 +46,7 @@ public interface DeptMapper {
     List<DeptDTO> getSubDepth(GetSubDeptDTO getSubDeptDTO);
 
     // 검색
-    List<DeptSearchDTO> deptSearch(String deptSearch);
+    List<DeptSearchDTO> deptSearch(DeptSearchParamDTO deptSearchParamDTO);
 
     // 부서원 정보 조회
     List<DeptMemberDTO> deptMember(Long orgaNo);
