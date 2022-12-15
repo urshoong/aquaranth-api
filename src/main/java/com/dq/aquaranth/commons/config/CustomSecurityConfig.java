@@ -67,10 +67,6 @@ public class CustomSecurityConfig {
                 .logout()
                 .disable()
 
-                .cors()
-                .configurationSource(corsConfigurationSource())
-                .and()
-
                 .authenticationManager(authenticationManager)
                 .addFilter(authenticationFilter) // 인증필터
                 .addFilterBefore(new JwtAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class); // 권한필터, 모든 요청을 받으려면 다른 필터들 보다 먼저 처리되어야 한다.
@@ -86,9 +82,9 @@ public class CustomSecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOriginPatterns(List.of("*"));
-        configuration.setAllowedMethods(Arrays.asList("HEAD", "GET", "POST", "PUT", "DELETE"));
-        configuration.setAllowedHeaders(Arrays.asList("Origin", "Accept", "Access-Control-Request-Headers", "Authorization", "Cache-Control", "Content-Type", "Request-URI"));
+        configuration.addAllowedOrigin("https://dq-front.run.goorm.io/");
+        configuration.setAllowedMethods(Arrays.asList("HEAD", "OPTIONS", "GET", "POST", "PUT", "DELETE"));
+        configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
