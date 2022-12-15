@@ -57,6 +57,7 @@
         <if test="2 > depth">
             and td.company_no = (select company_no from tbl_company where orga_no = #{companyNo})
         </if>
+        and td.main_flag = true
     </select>
 
     <select id="findOrgaList" resultType="com.dq.aquaranth.userrole.dto.tree.TreeOrgaListDTO">
@@ -64,21 +65,44 @@
         from (
         <if test="recursive">
             with recursive cte as(
-                select orga_no, upper_orga_no, orga_type
-                from tbl_orga
-                where orga_no = #{orgaNo}
+                select x.orga_no, x.upper_orga_no, x.orga_type, x.main_flag
+                from (
+                      select t.orga_no, t.upper_orga_no, t.orga_type,
+                             case when t.orga_type = 'company' then (select tc.company_use from tbl_company tc where tc.orga_no = t.orga_no)
+                                  when t.orga_type = 'dept' then (select td.main_flag from tbl_dept td join tbl_dept_mapping tdm on td.dept_no = tdm.dept_no where tdm.orga_no = t.orga_no)
+                                  when t.orga_type = 'emp' then (select te.emp_use from tbl_emp te join tbl_emp_mapping tem on te.emp_no = tem.emp_no where tem.orga_no = t.orga_no)
+                                  else false end main_flag
+                      from tbl_orga t
+                      where t.orga_no = #{orgaNo}
+                ) x
+                where x.main_flag = true
                 union all
-                select t.orga_no, t.upper_orga_no, t.orga_type
-                from cte c
-                join tbl_orga t on t.upper_orga_no = c.orga_no
+                select x.orga_no, x.upper_orga_no, x.orga_type, x.main_flag
+                from (
+                      select t.orga_no, t.upper_orga_no, t.orga_type,
+                             case when t.orga_type = 'company' then (select tc.company_use from tbl_company tc where tc.orga_no = t.orga_no)
+                                  when t.orga_type = 'dept' then (select td.main_flag from tbl_dept td join tbl_dept_mapping tdm on td.dept_no = tdm.dept_no where tdm.orga_no = t.orga_no)
+                                  when t.orga_type = 'emp' then (select te.emp_use from tbl_emp te join tbl_emp_mapping tem on te.emp_no = tem.emp_no where tem.orga_no = t.orga_no)
+                                  else false end main_flag
+                      from cte c
+                      join tbl_orga t on t.upper_orga_no = c.orga_no
+                ) x
+                where x.main_flag = true
             )
         </if>
         <if test="!recursive">
             with cte as (
-                select orga_no, upper_orga_no, orga_type
-                from tbl_orga
-                where orga_no = #{orgaNo}
-                or upper_orga_no = #{orgaNo}
+                select x.orga_no, x.upper_orga_no, x.orga_type, x.main_flag
+                from (
+                      select t.orga_no, t.upper_orga_no, t.orga_type,
+                             case when t.orga_type = 'company' then (select tc.company_use from tbl_company tc where tc.orga_no = t.orga_no)
+                                  when t.orga_type = 'dept' then (select td.main_flag from tbl_dept td join tbl_dept_mapping tdm on td.dept_no = tdm.dept_no where tdm.orga_no = t.orga_no)
+                                  else false end main_flag
+                      from tbl_orga t
+                      where t.orga_no = #{orgaNo}
+                      or upper_orga_no = #{orgaNo}
+                ) x
+                where x.main_flag = true
             )
         </if>
         select case when cte.orga_type = 'company' then (select tc.company_name from tbl_company tc where tc.orga_no = cte.orga_no)

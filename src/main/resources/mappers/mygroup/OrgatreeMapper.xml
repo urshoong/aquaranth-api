@@ -11,13 +11,13 @@
     <select id="findAllOrga" resultType="com.dq.aquaranth.mygroup.dto.orgatree.OrgaTreeDTO">
         <if test="depth eq 0">
             select 0 dept_no,
-                   orga_no,
-                    null upper_dept_no,
-                    company_name dept_name,
-                    0 ord,
-                    0 depth,
-                    null last_dno,
-                    company_no
+            null upper_dept_no,
+            company_name dept_name,
+            0 ord,
+            0 depth,
+            null last_dno,
+            company_no,
+            orga_no
             from tbl_company
             where company_no = #{companyNo} and company_use = true
             union all
@@ -44,8 +44,8 @@
                  join tbl_orga o on o.orga_no=em.orga_no
         where o.upper_orga_no=#{orgaNo}
           and (em.retired_date is null
-                   or DATEDIFF(em.retired_date, (select curdate())) >= 0
-              )
+            or DATEDIFF(em.retired_date, (select curdate())) >= 0
+            )
           and e.emp_use = true
     </select>
 

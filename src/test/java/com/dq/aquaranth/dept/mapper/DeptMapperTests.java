@@ -3,10 +3,7 @@
 package com.dq.aquaranth.dept.mapper;
 
 
-import com.dq.aquaranth.dept.dto.DeptDTO;
-import com.dq.aquaranth.dept.dto.DeptMemberDTO;
-import com.dq.aquaranth.dept.dto.DeptRegisterDTO;
-import com.dq.aquaranth.dept.dto.DeptSearchDTO;
+import com.dq.aquaranth.dept.dto.*;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -43,7 +40,7 @@ public class DeptMapperTests {
                 .deptName("철강 1팀 업데이트")
                 .delFlag(false)
                 .mainFlag(false)
-                 .deptDesc("철강 1팀 업데이트")
+                .deptDesc("철강 1팀 업데이트")
                 .build();
 
         int result = deptMapper.update(deptDTO2);
@@ -51,7 +48,7 @@ public class DeptMapperTests {
     }
 
     @Test
-    //@Transactional(rollbackFor = RuntimeException.class)
+        //@Transactional(rollbackFor = RuntimeException.class)
     void testInsert2() {
 
         DeptRegisterDTO deptDTO2 = DeptRegisterDTO.builder()
@@ -83,7 +80,7 @@ public class DeptMapperTests {
 
         //Long ord = deptMapper.getNextOrd(1L, Long.valueOf(6));
 
-       // log.info("ORD " + ord); //2
+        // log.info("ORD " + ord); //2
 
     }
 
@@ -121,11 +118,18 @@ public class DeptMapperTests {
     }
 
     @Test
-    @DisplayName("부서 번호, 부서 이름으로 검색 test")
+    @DisplayName("부서 번호, 부서 이름, 회사 번호로 검색 test")
     void search() {
-        String deptSearch = "개발";
+        String testDeptName = "개발";
+        Long testCompanyNo = 4L;
 
-        List<DeptSearchDTO> deptSearchDTO = deptMapper.deptSearch(deptSearch);
+        DeptSearchParamDTO deptSearchParamDTO = DeptSearchParamDTO
+                .builder()
+                .deptSearch(testDeptName)
+                .companyNo(testCompanyNo)
+                .build();
+
+        List<DeptSearchDTO> deptSearchDTO = deptMapper.deptSearch(deptSearchParamDTO);
 
         deptSearchDTO.forEach(log::info);
     }
