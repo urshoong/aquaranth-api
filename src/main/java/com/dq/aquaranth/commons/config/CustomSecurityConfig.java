@@ -86,7 +86,7 @@ public class CustomSecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOriginPatterns(List.of("*"));
         configuration.setAllowedMethods(Arrays.asList("HEAD", "GET", "POST", "PUT", "DELETE"));
-        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type","Request-URI"));
+        configuration.setAllowedHeaders(Arrays.asList("Origin", "Accept", "Access-Control-Request-Headers", "Authorization", "Cache-Control", "Content-Type", "Request-URI"));
         configuration.setAllowCredentials(true);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);

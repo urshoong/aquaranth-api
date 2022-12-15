@@ -10,6 +10,7 @@ import com.dq.aquaranth.menu.annotation.MenuCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -35,6 +36,7 @@ public class UserApiController {
         return userSessionService.checkRefresh(authorizationHeader);
     }
 
+    @CrossOrigin
     @GetMapping("/login/userinfo")
     public LoginUserInfo getLoginUserInfo(Authentication authentication) {
         return userSessionService.findUserInfoInRedis(authentication.getName());
