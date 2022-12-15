@@ -1,7 +1,6 @@
 package com.dq.aquaranth.commons.config;
 
 import com.dq.aquaranth.commons.utils.JWTUtil;
-import com.dq.aquaranth.emp.mapper.EmpMapper;
 import com.dq.aquaranth.login.handler.CustomLogoutSuccessHandler;
 import com.dq.aquaranth.login.jwt.JwtAuthenticationFilter;
 import com.dq.aquaranth.login.jwt.JwtAuthorizationFilter;
@@ -9,7 +8,6 @@ import com.dq.aquaranth.login.service.RedisService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -43,10 +41,10 @@ public class CustomSecurityConfig {
         authenticationManagerBuilder.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder);
         AuthenticationManager authenticationManager = authenticationManagerBuilder.build();
 
-        /**
-         *  원래는 UsernamePasswordAuthenticationFilter 에서 /login 이 기본으로 구현되어 있지만,
-         *  다른 주소로 해주고 싶으면 이런방식을 사용할 수 있습니다.
-         *  해당 개체를 사용하여 URL 을 변경할 수 있으며, 사용자를 지정할 수 있는 몇가지 다른 항목도 있습니다.
+        /*
+           원래는 UsernamePasswordAuthenticationFilter 에서 /login 이 기본으로 구현되어 있지만,
+           다른 주소로 해주고 싶으면 이런방식을 사용할 수 있습니다.
+           해당 개체를 사용하여 URL 을 변경할 수 있으며, 사용자를 지정할 수 있는 몇가지 다른 항목도 있습니다.
          */
         JwtAuthenticationFilter authenticationFilter = new JwtAuthenticationFilter(authenticationManager, jwtUtil);
         authenticationFilter.setFilterProcessesUrl("/api/login");
@@ -68,6 +66,10 @@ public class CustomSecurityConfig {
                 .and()
                 .logout()
                 .disable()
+
+                .cors()
+                .configurationSource(corsConfigurationSource())
+                .and()
 
                 .authenticationManager(authenticationManager)
                 .addFilter(authenticationFilter) // 인증필터
