@@ -53,22 +53,18 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
             return true;
         }
         HandlerMethod handlerMethod = (HandlerMethod) handler;
+        String username = null;
+        String menuCode = null;
+        try{
+            username = request.getUserPrincipal().getName();
+            menuCode = handlerMethod.getBean().getClass().getDeclaredAnnotation(MenuCode.class).value().getCode();
 
-        String username = Optional.ofNullable(request.getUserPrincipal().getName()).orElseThrow(() -> new CommonException(ErrorCodes.ERROR));
-        if (Objects.isNull(username)) {
-            throw new CommonException(ErrorCodes.INVALID_USER);
-        }
-
-        String menuCode = handlerMethod.getBean().getClass().getDeclaredAnnotation(MenuCode.class).value().getCode();
         if (menuCode.equals(MenuCodes.ROOT.getCode())) {
             return true;
         }
-
         List<RoleGroup> loginUserInfo = userSessionService.findUserInfoInRedis(username).getRoleGroups();
-        List<RoleGroup> menuRoles = objectMapper.readValue(redisTemplate.opsForValue().get(RedisKeys.ROLE_KEY.getKey() + menuCode).toString(), new TypeReference<>() {
-        });
-
-        try{loginUserInfo.stream()
+        List<RoleGroup> menuRoles = objectMapper.readValue(redisTemplate.opsForValue().get(RedisKeys.ROLE_KEY.getKey() + menuCode).toString(), new TypeReference<>() {});
+        loginUserInfo.stream()
                 .filter(loginUser -> menuRoles.stream().anyMatch(menuRole -> loginUser.getRoleGroupNo().equals(menuRole.getRoleGroupNo())))
                 .findAny().orElseThrow(NullPointerException::new);}
         catch (NullPointerException e){
@@ -76,7 +72,6 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
             log.info("{} 에 대한 {} 메뉴권한은 허가되지 않았습니다.", username, menuCode);
             return false;
         }
-
         log.info("{} 에 대한 {} 메뉴권한 확인", username, menuCode);
 
         return true;
