@@ -138,6 +138,7 @@
             JOIN tbl_orga t ON t.orga_no = e.orga_no
         SET e.emp_rank      = #{empRank},
             e.emp_role      = #{empRole},
+            e.retired_date  = #{retiredDate},
             e.mod_date      = now(),
             e.mod_user      = #{modUser},
             t.mod_date      = now(),
