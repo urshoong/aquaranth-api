@@ -97,6 +97,7 @@
                       select t.orga_no, t.upper_orga_no, t.orga_type,
                              case when t.orga_type = 'company' then (select tc.company_use from tbl_company tc where tc.orga_no = t.orga_no)
                                   when t.orga_type = 'dept' then (select td.main_flag from tbl_dept td join tbl_dept_mapping tdm on td.dept_no = tdm.dept_no where tdm.orga_no = t.orga_no)
+                                  when t.orga_type = 'emp' then (select te.emp_use from tbl_emp te join tbl_emp_mapping tem on te.emp_no = tem.emp_no where tem.orga_no = t.orga_no)
                                   else false end main_flag
                       from tbl_orga t
                       where t.orga_no = #{orgaNo}
