@@ -79,7 +79,6 @@ public class CustomSecurityConfig {
     public LogoutSuccessHandler logoutSuccessHandler(){
         return new CustomLogoutSuccessHandler(redisService);
     }
-
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
