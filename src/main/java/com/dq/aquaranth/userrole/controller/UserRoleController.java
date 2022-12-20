@@ -88,7 +88,14 @@ public class UserRoleController {
 
         UserRoleResponseDTO result;
         try{
-            result = userRoleService.insertUserRole(userRoleReqInsertOrgaRoleDTO);
+            userRoleService.insertUserRole(userRoleReqInsertOrgaRoleDTO);
+
+            result = UserRoleResponseDTO
+                    .builder()
+                    .title("등록 완료")
+                    .message("권한그룹이 부여되었습니다.")
+                    .state("success")
+                    .build();
         }catch(RuntimeException re){
             result = UserRoleResponseDTO
                     .builder()
