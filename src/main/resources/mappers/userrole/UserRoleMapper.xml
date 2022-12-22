@@ -159,7 +159,9 @@
                         te.emp_name like concat('%', #{keyword1}, '%')
                       )
             ) emps
-         # where emps.roles > 0
+        <if test="keyword2 != null or keyword2 != ''">
+        where emps.roles > 0
+        </if>
         limit #{skip}, #{size}
     </select>
 
